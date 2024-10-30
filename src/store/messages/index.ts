@@ -242,7 +242,7 @@ export const useMessageStore = defineStore(Store.Messages, () => {
     /** Initiates the display of the busy routing indication
      * during the action
      */
-    function asBusy(action: () => {}): void {
+    function asBusy(action: () => any): void {
         isBusyRouting.value = true;
         //NOTE: Vue's nextTick or a to small timeout seems not to work here
         //Let the UI display the busy message first, then invoke the action
