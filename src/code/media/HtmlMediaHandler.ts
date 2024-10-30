@@ -86,13 +86,13 @@ export default class HtmlMediaHandler implements IMediaHandler {
         media.onloadeddata = () => {
             this.isClickToLoadRequired = false;
             const readyState = media.readyState;
-            this.debugLog(`onloadeddata:readyState:${readyState}`);
+            this.debugLog(`onloadeddata:readyState`, readyState);
             this.handleReadyState(readyState);
         };
 
         media.onloadedmetadata = () => {
             const readyState = media.readyState;
-            this.debugLog(`onloadedmetadata:readyState:${readyState}`);
+            this.debugLog(`onloadedmetadata:readyState`, readyState);
             this.handleReadyState(readyState);
         };
 
@@ -104,7 +104,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
 
         media.ondurationchange = () => {
             const duration = media.duration;
-            this.debugLog(`ondurationchange:duration:${duration}`);
+            this.debugLog('ondurationchange:duration:', duration);
             this.updateDuration(duration);
         };
 
@@ -167,11 +167,18 @@ export default class HtmlMediaHandler implements IMediaHandler {
 
     /** Writes a debug log message message for this component */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    debugLog(message: string, ...optionalParams: any[]): void {
-        log.debug(
-            `HtmlMediaHandler(${this._media.src})::${message}:`,
-            optionalParams,
-        );
+    debugLog(
+        message: string,
+        optionalParam: number | string | undefined = undefined,
+    ): void {
+        if (optionalParam) {
+            log.debug(
+                `HtmlMediaHandler(${this._media.src})::${message}:`,
+                optionalParam,
+            );
+        } else {
+            log.debug(`HtmlMediaHandler(${this._media.src})::${message}`);
+        }
     }
 
     public destroy(): void {
@@ -198,7 +205,6 @@ export default class HtmlMediaHandler implements IMediaHandler {
     private singleUpdateCurrentTime(): void {
         const currentTime = this.currentTime;
         if (currentTime !== this.lastEmittedCurrentTime) {
-            //this.debugLog(`updateCurrentTime:${currentTime}`);
             this.onCurrentTimeChanged.emit(currentTime);
             this.lastEmittedCurrentTime = currentTime;
         }
@@ -236,7 +242,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
     omitNextFadeIn(): void {
         if (this._omitNextFadeIn == false) {
             this._omitNextFadeIn = true;
-            this.debugLog(`omitNextFadeIn:ON`);
+            this.debugLog(`omitNextFadeIn`, 'ON');
             this.onNextFadeInOmissionChanged.emit(true);
         }
     }
@@ -244,7 +250,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
     private resetNextFadeInOmission() {
         if (this._omitNextFadeIn == true) {
             this._omitNextFadeIn = false;
-            this.debugLog(`omitNextFadeIn:OFF`);
+            this.debugLog(`omitNextFadeIn`, 'OFF');
             this.onNextFadeInOmissionChanged.emit(false);
         }
     }
