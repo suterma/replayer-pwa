@@ -40,6 +40,8 @@ import {
     onMounted,
 } from 'vue';
 import LevelMeter from './LevelMeter.vue';
+import useLog from '@/composables/LogComposable';
+const { log } = useLog();
 
 /** An simple audio level meter (visualizer), for a single audio source node, using the Web Audio API.
  * @remarks Internally uses the Web Audio API's AnalyserNode. Therefore, because it down-mixes time domain data (See https://webaudio.github.io/web-audio-api/#time-domain-down-mixing), the level is only mono.
@@ -271,8 +273,6 @@ function stop() {
  * @remarks chooses the appropriate algorithm according to the settings
  */
 function loop() {
-    //log.debug('AudioLevelMeter::loop');
-
     if (canUseFloatTimeDomainData) {
         analyser.getFloatTimeDomainData(floatSampleBuffer);
     } else {
