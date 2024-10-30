@@ -85,6 +85,7 @@ import NoSleep from 'nosleep.js';
 import { useSettingsStore } from '@/store/settings';
 import TagsSelector from '@/components/editor/TagsSelector.vue';
 import useLog from '@/composables/LogComposable';
+import { useMessageStore } from '@/store/messages';
 const { log } = useLog();
 
 const app = useAppStore();
@@ -207,7 +208,8 @@ function continueAfterTrack(trackId: string): void {
     }
 }
 
-// --- Tag handling ---
+// --- Tag handling with busy display during tag selection ---
+const message = useMessageStore();
 
 const compilationHasTags = computed(() => {
     return getAllTags.value.size > 0;
@@ -217,12 +219,15 @@ const { selectedTags, isLoopingPlaybackMode } = storeToRefs(app);
 
 function selectTag(tag: string) {
     log.debug('selectTag', tag);
-
-    selectedTags.value.add(tag);
+    message.asBusy(() => {
+        selectedTags.value.add(tag);
+    });
 }
 function deselectTag(tag: string) {
     log.debug('deselectTag', tag);
 
-    selectedTags.value.delete(tag);
+    message.asBusy(() => {
+        selectedTags.value.delete(tag);
+    });
 }
 </script>

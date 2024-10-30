@@ -86,12 +86,8 @@ const router = useRouter();
 const message = useMessageStore();
 
 function navigate() {
-    message.setBusyRouting().then(() => {
+    message.asBusy(() => {
         router.push(props.to);
     });
 }
-
-router.afterEach(() => {
-    message.unsetBusyRouting();
-});
 </script>

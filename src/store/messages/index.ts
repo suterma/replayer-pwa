@@ -240,23 +240,25 @@ export const useMessageStore = defineStore(Store.Messages, () => {
     const isBusyRouting = ref(false);
 
     /** Initiates the display of the busy routing indication
-     * @remarks Resolves at next tick, after the message had the chance to get displayed
-     * in the real DOM.
+     * during the action
      */
-    function setBusyRouting(): Promise<void> {
-        return new Promise((resolve) => {
-            isBusyRouting.value = true;
-
-            //NOTE: Vue's nextTick seems not to work here
-            setTimeout(() => {
-                resolve();
-            }, 0);
-        });
+    function asBusy(action: () => {}): void {
+        isBusyRouting.value = true;
+        //NOTE: Vue's nextTick or a to small timeout seems not to work here
+        //Let the UI display the busy message first, then invoke the action
+        setTimeout(() => {
+            action();
+            unsetBusyRouting();
+        }, 30 /* empirically set value */);
     }
+
     /** Removes the display of the busy routing indication
+     * @remarks To be used after any synchronous action has terminated
      */
     function unsetBusyRouting(): void {
-        isBusyRouting.value = false;
+        nextTick(() => {
+            isBusyRouting.value = false;
+        });
     }
 
     /// --- store access ---
@@ -271,8 +273,7 @@ export const useMessageStore = defineStore(Store.Messages, () => {
         popError,
         popSuccess,
         finishProgress,
-        setBusyRouting,
-        unsetBusyRouting,
+        asBusy,
 
         progressMessage,
         progressMessages,
