@@ -15,10 +15,7 @@
         <CompilationKeyboardHandler :require-ctrl-modifier="isTrackEditable" />
 
         <!-- If available, show the compilation -->
-        <Compilation
-            v-if="hasCompilation"
-            :compilation="compilation as ICompilation"
-        />
+        <Compilation v-if="hasCompilation" />
 
         <!-- Otherwise, show the claim -->
         <div v-else class="section pl-0 pr-0 block">

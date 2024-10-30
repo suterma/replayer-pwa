@@ -12,6 +12,13 @@
         <div class="dropdown-item is-hidden-mobile">
             <p class="menu-label">View</p>
         </div>
+        <div v-if="experimentalRehearse" v-experiment="experimentalRehearse">
+            <DropdownMenuRouterLink
+                to="/rehearse"
+                title="Rehearse"
+                :icon-path="mdiPencil"
+            />
+        </div>
         <DropdownMenuRouterLink
             to="/edit"
             title="Edit"
@@ -97,5 +104,5 @@ defineProps({
 });
 
 const settings = useSettingsStore();
-const { experimentalMultitrack } = storeToRefs(settings);
+const { experimentalMultitrack, experimentalRehearse } = storeToRefs(settings);
 </script>

@@ -219,11 +219,7 @@ function printWindow() {
 
 // --- Tag handling ---
 
-const compilationHasTags = computed(() => {
-    return getAllTags.value.size > 0;
-});
-
-const { selectedTags } = storeToRefs(app);
+const { selectedTags, compilationHasTags } = storeToRefs(app);
 
 function selectTag(tag: string) {
     log.info('selectTag', tag);

@@ -364,6 +364,15 @@
             <div class="field">
                 <div class="control">
                     <LabeledCheckbox
+                        v-model="experimentalRehearse"
+                        label="Show rehearse view"
+                        hint="Allows to edit and play compilations"
+                    ></LabeledCheckbox>
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <LabeledCheckbox
                         v-model="experimentalMultitrack"
                         label="Show multitrack view"
                         hint="Allows to play STEM/multitrack compilations"
@@ -448,6 +457,7 @@ const {
     experimentalShowEverythingEverywhereAllAtOnce,
     experimentalAllowTrackSharingByLink,
     experimentalMultitrack,
+    experimentalRehearse,
     experimentalPitchShift,
     experimentalUseQueueCueMode,
     experimentalUseMeter,

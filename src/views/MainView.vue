@@ -8,8 +8,15 @@
     <!-- NOTE: the same audio context is reused for all playback operations and
          must be resumed once in the main view lifetime, when used.
          To prevent audio playback shutdown during switches of these
-         contained views, v-show is used on the PlaybackView instead of v-if -->
+         contained views, v-show is used instead of v-if -->
     <div @click="resumeAudioContext()">
+        <RehearseView
+            v-show="
+                routedToRehearse ||
+                experimentalShowEverythingEverywhereAllAtOnce
+            "
+        ></RehearseView>
+        <hr v-if="experimentalShowEverythingEverywhereAllAtOnce" />
         <PlaybackView
             v-show="
                 routedToPlayback ||
@@ -41,6 +48,7 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 import PlaybackView from '@/views/main/PlaybackView.vue';
+import RehearseView from '@/views/main/RehearseView.vue';
 import SetlistView from '@/views/main/SetlistView.vue';
 import SettingsView from '@/views/main/SettingsView.vue';
 import AboutView from '@/views/main/AboutView.vue';
@@ -68,9 +76,17 @@ const router = useRouter();
 
 /** Any route that actively controls playback */
 const routedToPlayback = computed(() => {
-    return routedToPlay.value || routedToEdit.value || routedToMix.value;
+    return (
+        routedToRehearse.value ||
+        routedToPlay.value ||
+        routedToEdit.value ||
+        routedToMix.value
+    );
 });
 
+const routedToRehearse = computed(() => {
+    return router.currentRoute.value.name === Route.Rehearse;
+});
 const routedToPlay = computed(() => {
     return router.currentRoute.value.name === Route.Play;
 });

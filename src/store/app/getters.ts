@@ -36,6 +36,11 @@ export const getters = {
         return false;
     }),
 
+    /** whether the current compilation has any tags */
+    compilationHasTags: computed((): boolean => {
+        return getters.getAllTags.value.size > 0;
+    }),
+
     /** The current compilation title */
     compilationTitle: computed(() => {
         return state.compilation.value?.Title;

@@ -27,6 +27,7 @@ const { log } = useLog();
 
 /** A set of route names. */
 export enum Route {
+    Rehearse = 'rehearse',
     Play = 'play',
     Edit = 'edit',
     Mix = 'mix',

@@ -141,6 +141,11 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         false,
     );
 
+    /** EXPERIMENTAL: Whether to show a menu for the rehearse view
+     * @remarks Default is false
+     */
+    const experimentalRehearse = useLocalStorage('experimentalRehearse', false);
+
     /** EXPERIMENTAL: Whether to show a menu for pitch shift
      * @remarks Default is false
      */
@@ -230,6 +235,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         experimentalShowEverythingEverywhereAllAtOnce.value = false;
         experimentalAllowTrackSharingByLink.value = false;
         experimentalMultitrack.value = false;
+        experimentalRehearse.value = false;
         experimentalPitchShift.value = false;
         experimentalUseQueueCueMode.value = false;
         experimentalUseMeter.value = false;
@@ -262,6 +268,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         experimentalShowEverythingEverywhereAllAtOnce,
         experimentalAllowTrackSharingByLink,
         experimentalMultitrack,
+        experimentalRehearse,
         experimentalPitchShift,
         experimentalUseQueueCueMode,
         experimentalUseMeter,

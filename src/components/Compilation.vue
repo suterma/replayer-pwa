@@ -111,26 +111,17 @@ const { preventScreenTimeout } = storeToRefs(settings);
  * If a user scrolls to a certain cue within the same track, no scrolling should occur, to keep the UI calm.
  */
 watch(
-    () => activeTrackId.value,
+    [activeTrackId, trackViewMode],
     () => {
-        if (activeTrackId.value) {
-            scrollToActiveTrack();
+        if (
+            activeTrackId.value &&
+            activeTrackId.value != CompilationHandler.EmptyId &&
+            !hasSingleMediaTrack.value
+        ) {
+            scrollToTrack(activeTrackId.value);
         }
     },
     { immediate: true /* to handle it at least once after mount time */ },
-);
-
-/** Handle scrolling to the active track, when the display mode changes.
- * @remarks This is intentionally only invoked on when the display mode changes (and it's not the only track).
- */
-watch(
-    () => trackViewMode.value,
-    () => {
-        if (activeTrackId.value) {
-            scrollToActiveTrack();
-        }
-    },
-    { immediate: false /* to handle it only at actual change */ },
 );
 
 /**
@@ -169,34 +160,21 @@ function deactivateWakeLock(): void {
     }
 }
 
-/** Visually scrolls to the active track, making it visually at the top of
+/** Visually scrolls to the track, making it visually at the top of
  * the view.
- * @remarks Scrolling is actually only executed if there is more than one track
- * and there is an active track
  */
-function scrollToActiveTrack() {
-    if (
-        activeTrackId.value &&
-        activeTrackId.value != CompilationHandler.EmptyId &&
-        !hasSingleMediaTrack.value
-    ) {
-        nextTick(() => {
-            const trackId = activeTrackId.value;
-            if (trackId != null) {
-                const trackElement = document.getElementById(
-                    'track-' + trackId,
-                );
-                VueScrollTo.scrollTo(trackElement, {
-                    /** Always scroll, make it on top of the view */
-                    force: true,
-                    /** empirical value (taking into account the non-existing fixed top navbar) */
-                    offset: -22,
-                    /** Avoid interference with the key press overlay */
-                    cancelable: false,
-                });
-            }
+function scrollToTrack(trackId: string) {
+    nextTick(() => {
+        const trackElement = document.getElementById('track-' + trackId);
+        VueScrollTo.scrollTo(trackElement, {
+            /** Always scroll, make it on top of the view */
+            force: true,
+            /** empirical value (taking into account the non-existing fixed top navbar) */
+            offset: -22,
+            /** Avoid interference with the key press overlay */
+            cancelable: false,
         });
-    }
+    });
 }
 
 /** Handles the playback after a track has ended.
@@ -211,11 +189,8 @@ function continueAfterTrack(trackId: string): void {
 // --- Tag handling with busy display during tag selection ---
 const message = useMessageStore();
 
-const compilationHasTags = computed(() => {
-    return getAllTags.value.size > 0;
-});
-
-const { selectedTags, isLoopingPlaybackMode } = storeToRefs(app);
+const { selectedTags, isLoopingPlaybackMode, compilationHasTags } =
+    storeToRefs(app);
 
 function selectTag(tag: string) {
     log.debug('selectTag', tag);
