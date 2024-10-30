@@ -117,7 +117,7 @@
     </div>
 
     <!-- display area for busy routing indicator -->
-    <div :class="{ modal: true, 'is-active': isBusyRouting }">
+    <div class="modal busy-indicator" :class="{ 'is-active': isBusyRouting }">
         <div class="modal-background"></div>
         <div class="modal-content is-loading">
             <!--  just show a spinner -->

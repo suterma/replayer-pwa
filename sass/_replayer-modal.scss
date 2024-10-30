@@ -16,11 +16,38 @@
     margin: 0 auto;
 }
 
-/* A wide variant for a modal, taking up more width than usual for wider viewports */ 
+/* A wide variant for a modal, taking up more width than usual for wider viewports */
 @media screen and (min-width: 769px) {
     .modal-content.is-wide,
     .modal-card.is-wide {
-      min-width: 640px;
-      width: 80vw;
+        min-width: 640px;
+        width: 80vw;
     }
-  }
+}
+
+/** **********************************************************
+ * Busy-indication with a modal, with a slightly delayed fade-in
+**************************************************************
+*/
+
+.modal.busy-indicator {
+    opacity: 0;
+    animation-name: delay-fade-in;
+    animation-duration: 600ms;
+}
+
+.modal.busy-indicator.is-active {
+    opacity: 1;
+}
+
+@keyframes delay-fade-in {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}

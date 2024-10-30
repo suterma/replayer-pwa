@@ -14516,6 +14516,31 @@ visually tied to their left button */
     width: 80vw;
   }
 }
+/** **********************************************************
+ * Busy-indication with a modal, with a slightly delayed fade-in
+**************************************************************
+*/
+.modal.busy-indicator {
+  opacity: 0;
+  animation-name: delay-fade-in;
+  animation-duration: 600ms;
+}
+
+.modal.busy-indicator.is-active {
+  opacity: 1;
+}
+
+@keyframes delay-fade-in {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
 /**
  * Optional styling classes for printing pages with the Bulma CSS framework.
  * See https://github.com/suterma/bulma-print for documentation
