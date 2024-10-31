@@ -224,8 +224,6 @@
                     @remove="removeTag"
                 ></TagsDisplay>
             </template>
-            <!-- Slot for additional level items -->
-            <slot name="left-additional"></slot>
         </div>
 
         <!-- Right side -->

@@ -39,10 +39,7 @@
                 :track="track"
                 :is-active="isActiveTrack"
             >
-                <template
-                    v-if="isTrackMixable || isTrackPlayable || isTrackEditable"
-                    #left-start
-                >
+                <template #left-start>
                     <div class="level-item is-narrow">
                         <div v-if="isYoutubeVideoTrack">
                             <OnYouTubeConsent class="mr-2"></OnYouTubeConsent>
@@ -113,9 +110,6 @@
                         ></TrackTitle>
                     </div>
                 </template>
-
-                <template #left-additional> </template>
-
                 <template #right-start>
                     <!-- Placeholder for the audio level meter (used for teleporting from the player component) -->
                     <div class="level-item is-narrow mr-0">
