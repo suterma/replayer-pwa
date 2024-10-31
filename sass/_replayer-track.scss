@@ -7,6 +7,11 @@
 **************************************************************
 */
 
+/*************************************************************
+ * Tag-related styles
+**************************************************************
+*/
+
 /* Keep small tags a little smaller */
 .tags .tag {
     font-size: 0.75rem; /*instead of the default value*/
@@ -32,6 +37,11 @@ as for better legibility */
     display: inline-block;
 }
 
+/*************************************************************
+ * List-related styles
+**************************************************************
+*/
+
 /** In the track item list the tags should be together on a new line.
 There have been display issues with the ellipsis when overflowing.
  */
@@ -39,9 +49,19 @@ There have been display issues with the ellipsis when overflowing.
     display: block;
 }
 
+/*************************************************************
+ * Title-related styles
+**************************************************************
+*/
+
 /** In tracks, title text should be vertically centered and 
 have a very small line height, to keep it together */
 .track .title {
     line-height: 1;
     vertical-align: middle;
+}
+
+/** PDF Links in track headers should break on words */
+.track.is-pdf .track-header a {
+    white-space: normal;
 }

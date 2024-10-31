@@ -304,62 +304,39 @@ const trackHasTags = computed(() => {
 });
 </script>
 
-<style>
-.top-right {
-    right: 0;
-    position: absolute;
-    top: 0;
-}
+<style lang="scss">
+/* PDF Track item styles*/
+.track.is-pdf {
+    /* Define an overall width allocation for fixed right-hand side of the playback control level items*/
 
-.track .notification {
-    /** Make single-lined text vertically aligned with the close button,
-    similar padding for left, for consistency */
-    padding: calc(0.5rem + 2px);
-    padding-right: 2.5rem;
-    min-height: 40px;
-}
-</style>
-
-<style lang="scss" scoped>
-/* Track item styles*/
-
-/* Define an overall width allocation for fixed right-hand side of the playback control level items*/
-
-.level {
-    .level-left {
-        /* 
+    .level {
+        .level-left {
+            /* 
         The value for the basis have been empirically found to work best on
         Google Chrome, Brave and Firefox, on Ubuntu
         for the given set of playback controls
         (slider, next/previous cue, playback mode, pre-roll toggler, fading toggler, volume knob, playback indicator)*/
-        flex-basis: calc(100% - 0px);
-        .level-item {
-            flex-shrink: 1;
+            flex-basis: calc(100% - 0px);
+            .level-item {
+                flex-shrink: 1;
+            }
+        }
+        .level-right {
+            flex-basis: 0px;
+            .level-item {
+                flex-shrink: 1;
+            }
         }
     }
-    .level-right {
-        flex-basis: 0px;
-        .level-item {
-            flex-shrink: 1;
+    /*Note: For PDF tracks, the used width is smaller than in edit mode, 
+since there are less buttons on the right side (no track skip, no play/pause)*/
+    .level.is-editable {
+        .level-left {
+            flex-basis: auto;
+        }
+        .level-right {
+            flex-basis: auto;
         }
     }
-}
-/*Note: The used width is smaller in edit mode, since there are less buttons on the right side (no track skip, no play/pause)*/
-.level.is-editable {
-    .level-left {
-        flex-basis: auto;
-    }
-    .level-right {
-        flex-basis: auto;
-    }
-}
-
-.is-fullwidth {
-    width: 100%;
-}
-
-/** Links in track headers should break on words */
-.track .track-header a {
-    white-space: normal;
 }
 </style>

@@ -70,7 +70,7 @@
  * @remarks Also handles the common replayer events for compilations
  * @remarks Also supports shuffling of tracks
  */
-import { computed, watch, nextTick, onMounted, onUnmounted } from 'vue';
+import { watch, nextTick, onMounted, onUnmounted } from 'vue';
 import VueScrollTo from 'vue-scrollto';
 import MediaTrack from '@/components/track/MediaTrack.vue';
 import MasterTrack from '@/components/track/MasterTrack.vue';
