@@ -351,16 +351,6 @@
                     ></LabeledCheckbox>
                 </div>
             </div>
-
-            <div class="field">
-                <div class="control">
-                    <LabeledCheckbox
-                        v-model="experimentalAllowTrackSharingByLink"
-                        label="Show menu action to share a track by link"
-                        hint="Uses the track API"
-                    ></LabeledCheckbox>
-                </div>
-            </div>
             <div class="field">
                 <div class="control">
                     <LabeledCheckbox
@@ -455,7 +445,6 @@ const {
     youTubeConsent,
     extraVideoControls,
     experimentalShowEverythingEverywhereAllAtOnce,
-    experimentalAllowTrackSharingByLink,
     experimentalMultitrack,
     experimentalRehearse,
     experimentalPitchShift,

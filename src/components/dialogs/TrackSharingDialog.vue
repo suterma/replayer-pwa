@@ -1,21 +1,20 @@
 <template>
-    <ModalDialog informational cancel-button-text="Dismiss" wide>
-        <template #title
-            >Sharing track '{{ TrackApi.Descriptor(props.track) }}'</template
-        >
+    <ModalDialog informational cancel-button-text="Dismiss">
+        <template #title>Sharing track...</template>
         <template #body>
+            <!-- Informationally, provide the filename, with word wrap to make sure it's displayed fully -->
+            <div class="block">
+                <p>
+                    {{ TrackApi.Descriptor(props.track) }}
+                </p>
+            </div>
+
             <div class="block">
                 <div class="level">
                     <div class="level-item has-text-centered">
                         <div>
-                            <p
-                                class="control"
-                                title="Copy the Replayer link into the clipboard"
-                            >
-                                <button
-                                    class="button is-clickable is-success"
-                                    @click="copyLink()"
-                                >
+                            <p class="control" title="Copy the Replayer link into the clipboard">
+                                <button class="button is-clickable is-success" @click="copyLink()">
                                     <BaseIcon v-once :path="mdiLink" />
                                 </button>
                             </p>
@@ -24,14 +23,8 @@
                     </div>
                     <div class="level-item has-text-centered">
                         <div>
-                            <p
-                                class="control"
-                                title="Open the Replayer link in your email software"
-                            >
-                                <button
-                                    class="button is-clickable is-success"
-                                    @click="emailLink()"
-                                >
+                            <p class="control" title="Open the Replayer link in your email software">
+                                <button class="button is-clickable is-success" @click="emailLink()">
                                     <BaseIcon v-once :path="mdiEmailOutline" />
                                 </button>
                             </p>
@@ -42,8 +35,10 @@
             </div>
             <div class="block">
                 <p>
-                    You are sharing the track metadata and the URL, not the
-                    media file itself.
+                    <span class="has-opacity-half is-size-7">
+                        You are sharing the track metadata and the URL, not the
+                        media file itself.
+                    </span>
                 </p>
             </div>
         </template>
@@ -104,7 +99,7 @@ function copyLink(): void {
 function getMailtoLink(title: string, trackApiUrl: string): string {
     const encodedTitle = encodeURIComponent(title);
     const encodedUrl = encodeURIComponent(trackApiUrl);
-    return `mailto:?subject=Replayer link to: ${encodedTitle}&body=${encodedUrl}`;
+    return `mailto:?subject=Replayer link to: ${encodedTitle}&body=${encodedTitle}%0D%0A%0D%0A${encodedUrl}`;
 }
 
 /** Emails the Replayer link via a registered mail client

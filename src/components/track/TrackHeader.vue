@@ -232,9 +232,7 @@
                 <!-- Slot for additional level display items -->
                 <slot name="right-start"></slot>
                 <NavButton
-                    v-if="experimentalAllowTrackSharingByLink"
-                    v-experiment="experimentalAllowTrackSharingByLink"
-                    title="Share..."
+                     v-tooltip.left="'Share with link...'"
                     :icon-path="mdiShareVariant"
                     data-cy="button-track-share"
                     @click="TrackApi.startSharingTrack(props.track)"
@@ -325,7 +323,7 @@ const app = useAppStore();
 const { isTrackEditable } = storeToRefs(app);
 
 const settings = useSettingsStore();
-const { experimentalUseMeter, experimentalAllowTrackSharingByLink } =
+const { experimentalUseMeter } =
     storeToRefs(settings);
 
 const useMeasureNumbers = inject(useMeasureNumbersInjectionKey);
