@@ -74,11 +74,10 @@ import MediaList from '@/components/MediaList.vue';
 import CompilationKeyboardHandler from '@/components/CompilationKeyboardHandler.vue';
 import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
-import type { ICompilation } from '@/store/ICompilation';
 import { watch } from 'vue';
 
 const app = useAppStore();
-const { isTrackEditable, compilation, hasCompilation, hasAnyAvailableMedia } =
+const { isTrackEditable, hasCompilation, hasAnyAvailableMedia } =
     storeToRefs(app);
 
 // --- document title (for the compilation)
