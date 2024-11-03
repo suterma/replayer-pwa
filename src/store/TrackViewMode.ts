@@ -24,6 +24,8 @@
  */
 
 export enum TrackViewMode {
+    /** The track is shown with controls for rehearsal */
+    Rehearse = 'REHEARSE',
     /** The track is shown with editable inputs for the contained data */
     Edit = 'EDIT',
     /** The track is shown optimized for multi-track/mixer playback */

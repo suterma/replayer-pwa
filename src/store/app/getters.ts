@@ -230,6 +230,8 @@ export const getters = {
     trackViewMode: computed(() => {
         const routeName = router.currentRoute.value.name;
         switch (routeName) {
+            case Route.Rehearse:
+                return TrackViewMode.Rehearse;
             case Route.Edit:
                 return TrackViewMode.Edit;
             case Route.Play:
@@ -241,10 +243,16 @@ export const getters = {
         }
     }),
 
+    /** Whether the track is shown with controls for rehearsal */
+    isTrackRehearse: computed((): boolean => {
+        return getters.trackViewMode.value == TrackViewMode.Rehearse;
+    }),
+
     /** Whether the track is shown with editable inputs for the contained data */
     isTrackEditable: computed((): boolean => {
         return getters.trackViewMode.value == TrackViewMode.Edit;
     }),
+
 
     /** Whether the track is shown optimized for playback */
     isTrackPlayable: computed((): boolean => {

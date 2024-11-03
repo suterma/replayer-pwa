@@ -49,6 +49,14 @@ const routes: Array<RouteRecordRaw> = [
         redirect: { name: Route.Play },
     },
     {
+        /** The route to the rehearse view
+         * @remarks This represents the expectedly most used feature, playback of a file or compilation.
+         */
+        path: '/rehearse',
+        name: Route.Rehearse,
+        component: MainView,
+    },
+    {
         /** The route to the playback
          * @remarks This represents the expectedly most used feature, playback of a file or compilation.
          */

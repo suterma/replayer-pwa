@@ -10,12 +10,6 @@
          To prevent audio playback shutdown during switches of these
          contained views, v-show is used instead of v-if -->
     <div @click="resumeAudioContext()">
-        <RehearseView
-            v-show="
-                routedToRehearse ||
-                experimentalShowEverythingEverywhereAllAtOnce
-            "
-        ></RehearseView>
         <hr v-if="experimentalShowEverythingEverywhereAllAtOnce" />
         <PlaybackView
             v-show="
@@ -48,7 +42,6 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 import PlaybackView from '@/views/main/PlaybackView.vue';
-import RehearseView from '@/views/main/RehearseView.vue';
 import SetlistView from '@/views/main/SetlistView.vue';
 import SettingsView from '@/views/main/SettingsView.vue';
 import AboutView from '@/views/main/AboutView.vue';
