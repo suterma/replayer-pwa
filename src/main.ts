@@ -26,6 +26,8 @@ import { TooltipDirective } from './directives/TooltipDirective';
 import { useAppStore } from './store/app';
 import { useAudioStore } from './store/audio';
 import useLog from '@/composables/LogComposable';
+import { useSettingsStore } from './store/settings';
+import { useMultitrackStore } from './store/multitrack';
 
 const { log } = useLog();
 log.info(`Replayer app version: ${import.meta.env.VITE_APP_VERSION}`);
@@ -73,10 +75,26 @@ window.addEventListener(
 window.onbeforeunload = app.unmount;
 
 app.onUnmount(() => {
-    log.info('cleanUp...');
-    useAppStore().revokeAllMediaUrls();
-    useAudioStore().closeContext();
-    log.info('cleanUp done.');
+    log.debug('Replayer app cleanUp...');
+
+    const app = useAppStore();
+    app.revokeAllMediaUrls();
+    app.$dispose();
+
+    const audio = useAudioStore();
+    audio.closeContext();
+    audio.$dispose();
+
+    const settings = useSettingsStore();
+    settings.$dispose();
+
+    const message = useMessageStore();
+    message.$dispose();
+
+    const multitrack = useMultitrackStore();
+    multitrack.$dispose();
+
+    log.info('Replayer app cleanUp done.');
 });
 
 app.mount('#app');
