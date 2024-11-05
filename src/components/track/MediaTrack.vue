@@ -726,6 +726,7 @@ import {
     watch,
     watchEffect,
     onBeforeUnmount,
+    onUnmounted,
 } from 'vue';
 import OnYouTubeConsent from '@/components/dialogs/OnYouTubeConsent.vue';
 import CueLevelEditors from '@/components/CueLevelEditors.vue';
@@ -783,6 +784,7 @@ import { useAudioStore } from '@/store/audio';
 import { Subscription } from 'sub-events';
 import { PlaybackState } from '@/code/media/PlaybackState';
 import useLog from '@/composables/LogComposable';
+import { createTrackStore } from '@/store/track/index';
 
 const { log } = useLog();
 const emit = defineEmits([
@@ -835,17 +837,26 @@ const {
     isPreRollEnabled,
 } = storeToRefs(app);
 
+// --- tracking the associated ITrack
+
+/** The dynamic track store for this component.
+ * @remarks Code inside the setup script runs once per component instance,
+ * thus the track store will be destroyed after component unload.
+ */
+const trackStore = createTrackStore(props.track.Id);
+const { isActiveTrack, useMeasureNumbers, meter } = storeToRefs(trackStore);
+
+onUnmounted(() => {
+    trackStore.$dispose();
+});
+
 // --- metering ---
 
 /** Whether to use measure numbers for the track's cue position handling
- * @remarks Must only be true, whan a valid meter is also provided
  * @devdoc This value is provided to descendant components using the provide/inject pattern.
  * @devdoc Here, a ComputedRef must be used, not a ref, because the ref of the dereferenced meter
  * would not be reactive.
  */
-const useMeasureNumbers = computed(
-    () => props.track.UseMeasureNumbers === true,
-);
 provide(useMeasureNumbersInjectionKey, readonly(useMeasureNumbers));
 
 /** The track's musical meter
@@ -853,7 +864,6 @@ provide(useMeasureNumbersInjectionKey, readonly(useMeasureNumbers));
  * @devdoc Here, a ComputedRef must be used, not a ref, because the ref of the dereferenced meter
  * would not be reactive.
  */
-const meter = computed(() => props.track.Meter);
 provide(meterInjectionKey, readonly(meter));
 
 // --- playback handling
@@ -1557,9 +1567,6 @@ const cues = computed(() => {
 // ---  Track/cue selection ---
 
 const { hasSingleMediaTrack } = storeToRefs(app);
-
-/** Whether this track is the active track in the set of tracks */
-const isActiveTrack = computed(() => activeTrackId.value === props.track.Id);
 
 /** Handles changes in whether this is the active track.
  * @remarks When this ceases to be the active track, pause playback.

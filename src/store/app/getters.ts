@@ -47,6 +47,8 @@ export const getters = {
     }),
 
     /** Gets the matching track, if any, in the compilation, by it's Id.
+     * @remarks This does not observe any track filtering
+     * like e.g. by "allTracks";
      * @param trackId - The Id of the track to find
      * */
     getTrackById(trackId: string): ITrack | undefined {
@@ -252,7 +254,6 @@ export const getters = {
     isTrackEditable: computed((): boolean => {
         return getters.trackViewMode.value == TrackViewMode.Edit;
     }),
-
 
     /** Whether the track is shown optimized for playback */
     isTrackPlayable: computed((): boolean => {
