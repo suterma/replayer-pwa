@@ -12,10 +12,11 @@
  */
 
 import { defineStore } from 'pinia';
-import { computed, ref } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
 import { useAppStore } from '../app';
 import { storeToRefs } from 'pinia';
 import { useAudioStore } from '../audio';
+import CompilationHandler from '../compilation-handler';
 
 // export factory function
 export function createTrackStore(trackId: string) {
@@ -30,13 +31,7 @@ export function createTrackStore(trackId: string) {
             return trackId === selectedTrackId.value;
         });
 
-        const thisTrack = app.getTrackById(trackId);
-
-        if (!thisTrack) {
-            throw new Error(
-                `The track with trackId '${trackId}' does not exist in the current set of tracks.`,
-            );
-        }
+        const thisTrack = app.getTrackById(trackId) ?? (() => { throw new Error(`The track with trackId '${trackId}' does not exist in the current set of tracks.`) })();
 
         /** The track's musical meter */
         const meter = computed(() => thisTrack.Meter);
@@ -48,9 +43,7 @@ export function createTrackStore(trackId: string) {
             return thisTrack.UseMeasureNumbers === true;
         });
 
-        function test(test: string) {
-            console.log(test);
-        }
+
 
         /** A reference to the appropriate media handler
          * @remarks This handler is available only after the respective track media component added it's handler to the audio store.
@@ -66,6 +59,41 @@ export function createTrackStore(trackId: string) {
          * @devdoc Start with the initial playhead position, which might be non-zero already
          */
         const currentPosition = ref(thisTrack.PlayheadPosition ?? 0);
+
+        /** Sets the track duration. Using the track duration and the existing cues,
+        * calculates the durations of all cues, including the last one.
+        * @remarks No ordering is done with this operation
+        * The calculated durations are only valid as long as the cues, their times, and the track does not change
+        * @param {number} trackDuration - the track duratin in [seconds]. Could be NaN or infinity, depending on the source.
+        */
+        function updateDurations(trackDuration: number): void {
+            thisTrack.Duration = trackDuration;
+            CompilationHandler.updateCueDurations(thisTrack.Cues, trackDuration);
+        }
+
+
+        // --- audio state ---
+
+        const volume = computed({
+            get: () => thisTrack.Volume,
+            set: (val) => {
+                thisTrack.Volume = val
+            }
+        })
+
+        const playbackRate = computed({
+            get: () => thisTrack.PlaybackRate,
+            set: (val) => {
+                thisTrack.PlaybackRate = val
+            }
+        })
+
+        const pitchShift = computed({
+            get: () => thisTrack.PitchShift,
+            set: (val) => {
+                thisTrack.PitchShift = val
+            }
+        })
 
         return {
             /** The track's musical meter */
@@ -88,7 +116,20 @@ export function createTrackStore(trackId: string) {
 
             /** Whether this track is the active track in the set of tracks */
             isActiveTrack,
-            test,
+
+            volume,
+            playbackRate,
+            pitchShift,
+
+            /** Sets the track duration. Using the track duration and the existing cues,
+            * calculates the durations of all cues, including the last one.
+            * @remarks No ordering is done with this operation
+            * The calculated durations are only valid as long as the cues, their times, and the track does not change
+            * @param {number} trackDuration - the track duratin in [seconds]. Could be NaN or infinity, depending on the source.
+            */
+            updateDurations
+
+
         };
     })();
 }

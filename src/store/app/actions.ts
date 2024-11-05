@@ -149,27 +149,6 @@ export const actions = {
         }
     },
 
-    /** Updates the track playback rate
-     * @remarks Also updates the persistent store of the compilation
-     */
-    updateTrackPlaybackRate(trackId: string, playbackRate: number): void {
-        const track = getters.getTrackById(trackId);
-        if (track) {
-            track.PlaybackRate = playbackRate;
-            log.debug('app::updateTrackPlaybackRate:', playbackRate);
-        }
-    },
-
-    /** Updates the track pitch shift
-     * @remarks Also updates the persistent store of the compilation
-     */
-    updateTrackPitchShift(trackId: string, pitchShift: number): void {
-        const track = getters.getTrackById(trackId);
-        if (track) {
-            track.PitchShift = pitchShift;
-            log.debug('app::updateTrackPitchShift:', pitchShift);
-        }
-    },
 
     /** Adds a new cue with the given time
      * @remarks Adds (inserts) the new cue for the given track to the compilation, by inserting it by the order in time.
@@ -250,21 +229,6 @@ export const actions = {
         if (matchingTrack) {
             log.debug('actions::removeTag:matchingTrack', matchingTrack);
             matchingTrack.Tags.delete(tag);
-        }
-    },
-
-    /** Sets the track duration. Using the track duration and the existing cues,
-     * calculates the durations of all cues, including the last one.
-     * @remarks No ordering is done with this operation
-     * The calculated durations are only valid as long as the cues, their times, and the track does not change
-     * @param {number} trackDuration - the track duratin in [seconds]. Could be NaN or infinity, depending on the source.
-     */
-    updateDurations(trackId: string, trackDuration: number): void {
-        const track = getters.getTrackById(trackId);
-
-        if (track) {
-            track.Duration = trackDuration;
-            CompilationHandler.updateCueDurations(track.Cues, trackDuration);
         }
     },
 
@@ -482,8 +446,7 @@ export const actions = {
         const matchingFile = state.mediaUrls.value.get(mediaUrl.resourceName);
         if (matchingFile) {
             log.debug(
-                `actions::addMediaUrl:removing matching item for key:${
-                    mediaUrl.resourceName
+                `actions::addMediaUrl:removing matching item for key:${mediaUrl.resourceName
                 }, normalized: ${mediaUrl.resourceName.normalize()}`,
             );
             ObjectUrlHandler.revokeObjectURL(matchingFile.url);
@@ -674,9 +637,8 @@ export const actions = {
         const message = useMessageStore();
 
         return new Promise((resolve, reject) => {
-            const loadingFileMessage = `Loading file '${file.name}' ${
-                file.type
-            } (${FileHandler.AsMegabytes(file.size)}MB)`;
+            const loadingFileMessage = `Loading file '${file.name}' ${file.type
+                } (${FileHandler.AsMegabytes(file.size)}MB)`;
             message.pushProgress(loadingFileMessage);
             if (FileHandler.isSupportedPackageFile(file)) {
                 log.debug(
@@ -866,8 +828,7 @@ export const actions = {
         const matchingFile = state.mediaUrls.value.get(mediaUrl.resourceName);
         if (matchingFile) {
             log.debug(
-                `actions::DISCARD_MEDIA_URL:removing matching item for key:${
-                    mediaUrl.resourceName
+                `actions::DISCARD_MEDIA_URL:removing matching item for key:${mediaUrl.resourceName
                 }, normalized: ${mediaUrl.resourceName.normalize()}`,
             );
             ObjectUrlHandler.revokeObjectURL(matchingFile.url);
