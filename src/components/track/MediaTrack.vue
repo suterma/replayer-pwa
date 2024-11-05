@@ -844,7 +844,13 @@ const {
  * thus the track store will be destroyed after component unload.
  */
 const trackStore = createTrackStore(props.track.Id);
-const { isActiveTrack, useMeasureNumbers, meter } = storeToRefs(trackStore);
+const {
+    isActiveTrack,
+    mediaHandler,
+    useMeasureNumbers,
+    meter,
+    currentPosition,
+} = storeToRefs(trackStore);
 
 onUnmounted(() => {
     trackStore.$dispose();
@@ -867,15 +873,6 @@ provide(useMeasureNumbersInjectionKey, readonly(useMeasureNumbers));
 provide(meterInjectionKey, readonly(meter));
 
 // --- playback handling
-
-const audio = useAudioStore();
-
-/** A reference to the appropriate media handler
- * @remarks This handler is available only after the respective track media component added it's handler to the audio store.
- */
-const mediaHandler = computed(() =>
-    audio.getMediaHandlerByTrackId(props.track.Id),
-);
 
 /** A reference to the cue scheduler
  */
@@ -1052,11 +1049,6 @@ watch(
 
 // --- Transport ---
 
-/** The (precise) playback progress in the current track, in [seconds]
- * @remarks This is used for cue event handling within the set of cues, like creating a new cue at the current position
- * @devdoc Start with the initial playhead position, which might be non-zero already
- */
-const currentPosition = ref(props.track.PlayheadPosition ?? 0);
 provide(currentPositionInjectionKey, readonly(currentPosition));
 
 /** The playback progress in the current track, as a readonly, formatted, displayable text
