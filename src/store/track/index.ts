@@ -100,6 +100,14 @@ export function createTrackStore(trackId: string) {
             }
         }
 
+        /** Handles the request for a new cue by creating one for the current time */
+        function createNewCue(): void {
+            if (currentPosition.value != null) {
+                app.addCueAtTime(trackId, currentPosition.value);
+            } else
+                throw new Error('currentPosition must be available for adding a cue');
+        }
+
         // --- audio state ---
 
         const volume = computed({
@@ -144,6 +152,9 @@ export function createTrackStore(trackId: string) {
 
             /** Whether this track is the active track in the set of tracks */
             isActiveTrack,
+
+            /** Handles the request for a new cue by creating one for the current time */
+            createNewCue,
 
             volume,
 
