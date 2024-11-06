@@ -24,14 +24,13 @@ export function createTrackStore(trackId: string) {
         const app = useAppStore();
         const audio = useAudioStore();
 
-        const { selectedTrackId } = storeToRefs(app);
-
-        /** Whether this track is the active track in the set of tracks */
-        const isActiveTrack = computed(() => {
-            return trackId === selectedTrackId.value;
-        });
-
-        const thisTrack = app.getTrackById(trackId) ?? (() => { throw new Error(`The track with trackId '${trackId}' does not exist in the current set of tracks.`) })();
+        const thisTrack =
+            app.getTrackById(trackId) ??
+            (() => {
+                throw new Error(
+                    `The track with trackId '${trackId}' does not exist in the current set of tracks.`,
+                );
+            })();
 
         /** The track's musical meter */
         const meter = computed(() => thisTrack.Meter);
@@ -42,8 +41,6 @@ export function createTrackStore(trackId: string) {
         const useMeasureNumbers = computed(() => {
             return thisTrack.UseMeasureNumbers === true;
         });
-
-
 
         /** A reference to the appropriate media handler
          * @remarks This handler is available only after the respective track media component added it's handler to the audio store.
@@ -61,39 +58,70 @@ export function createTrackStore(trackId: string) {
         const currentPosition = ref(thisTrack.PlayheadPosition ?? 0);
 
         /** Sets the track duration. Using the track duration and the existing cues,
-        * calculates the durations of all cues, including the last one.
-        * @remarks No ordering is done with this operation
-        * The calculated durations are only valid as long as the cues, their times, and the track does not change
-        * @param {number} trackDuration - the track duratin in [seconds]. Could be NaN or infinity, depending on the source.
-        */
+         * calculates the durations of all cues, including the last one.
+         * @remarks No ordering is done with this operation
+         * The calculated durations are only valid as long as the cues, their times, and the track does not change
+         * @param {number} trackDuration - the track duratin in [seconds]. Could be NaN or infinity, depending on the source.
+         */
         function updateDurations(trackDuration: number): void {
             thisTrack.Duration = trackDuration;
-            CompilationHandler.updateCueDurations(thisTrack.Cues, trackDuration);
+            CompilationHandler.updateCueDurations(
+                thisTrack.Cues,
+                trackDuration,
+            );
         }
 
+        // --- Track metadata ---
+
+        /** The name of the track */
+        const name = computed({
+            get: () => thisTrack.Name,
+            set: (val) => {
+                thisTrack.Name = val;
+            },
+        });
+
+        // --- Track state ---
+
+        const { selectedTrackId } = storeToRefs(app);
+
+        /** Whether this track is the active track in the set of tracks */
+        const isActiveTrack = computed(() => {
+            return trackId === selectedTrackId.value;
+        });
+
+        /** Sets this track as the active track
+         * @remarks If the track is not yet the active track,
+         * this track is selected as the active track.
+         */
+        function setActiveTrack(): void {
+            if (!isActiveTrack.value) {
+                app.updateSelectedTrackId(trackId);
+            }
+        }
 
         // --- audio state ---
 
         const volume = computed({
             get: () => thisTrack.Volume,
             set: (val) => {
-                thisTrack.Volume = val
-            }
-        })
+                thisTrack.Volume = val;
+            },
+        });
 
         const playbackRate = computed({
             get: () => thisTrack.PlaybackRate,
             set: (val) => {
-                thisTrack.PlaybackRate = val
-            }
-        })
+                thisTrack.PlaybackRate = val;
+            },
+        });
 
         const pitchShift = computed({
             get: () => thisTrack.PitchShift,
             set: (val) => {
-                thisTrack.PitchShift = val
-            }
-        })
+                thisTrack.PitchShift = val;
+            },
+        });
 
         return {
             /** The track's musical meter */
@@ -118,18 +146,21 @@ export function createTrackStore(trackId: string) {
             isActiveTrack,
 
             volume,
+
+            /** The name of the track */
+            name,
             playbackRate,
             pitchShift,
 
+            setActiveTrack,
+
             /** Sets the track duration. Using the track duration and the existing cues,
-            * calculates the durations of all cues, including the last one.
-            * @remarks No ordering is done with this operation
-            * The calculated durations are only valid as long as the cues, their times, and the track does not change
-            * @param {number} trackDuration - the track duratin in [seconds]. Could be NaN or infinity, depending on the source.
-            */
-            updateDurations
-
-
+             * calculates the durations of all cues, including the last one.
+             * @remarks No ordering is done with this operation
+             * The calculated durations are only valid as long as the cues, their times, and the track does not change
+             * @param {number} trackDuration - the track duratin in [seconds]. Could be NaN or infinity, depending on the source.
+             */
+            updateDurations,
         };
     })();
 }

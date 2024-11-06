@@ -138,18 +138,6 @@ export const actions = {
         }
     },
 
-    /** Updates the track volume
-     * @remarks Also updates the persistent store of the compilation
-     */
-    updateTrackVolume(trackId: string, volume: number): void {
-        const track = getters.getTrackById(trackId);
-        if (track) {
-            track.Volume = volume;
-            log.debug('app::updateTrackVolume:', volume);
-        }
-    },
-
-
     /** Adds a new cue with the given time
      * @remarks Adds (inserts) the new cue for the given track to the compilation, by inserting it by the order in time.
      * @return The id of the new cue
@@ -446,7 +434,8 @@ export const actions = {
         const matchingFile = state.mediaUrls.value.get(mediaUrl.resourceName);
         if (matchingFile) {
             log.debug(
-                `actions::addMediaUrl:removing matching item for key:${mediaUrl.resourceName
+                `actions::addMediaUrl:removing matching item for key:${
+                    mediaUrl.resourceName
                 }, normalized: ${mediaUrl.resourceName.normalize()}`,
             );
             ObjectUrlHandler.revokeObjectURL(matchingFile.url);
@@ -637,8 +626,9 @@ export const actions = {
         const message = useMessageStore();
 
         return new Promise((resolve, reject) => {
-            const loadingFileMessage = `Loading file '${file.name}' ${file.type
-                } (${FileHandler.AsMegabytes(file.size)}MB)`;
+            const loadingFileMessage = `Loading file '${file.name}' ${
+                file.type
+            } (${FileHandler.AsMegabytes(file.size)}MB)`;
             message.pushProgress(loadingFileMessage);
             if (FileHandler.isSupportedPackageFile(file)) {
                 log.debug(
@@ -828,7 +818,8 @@ export const actions = {
         const matchingFile = state.mediaUrls.value.get(mediaUrl.resourceName);
         if (matchingFile) {
             log.debug(
-                `actions::DISCARD_MEDIA_URL:removing matching item for key:${mediaUrl.resourceName
+                `actions::DISCARD_MEDIA_URL:removing matching item for key:${
+                    mediaUrl.resourceName
                 }, normalized: ${mediaUrl.resourceName.normalize()}`,
             );
             ObjectUrlHandler.revokeObjectURL(matchingFile.url);
