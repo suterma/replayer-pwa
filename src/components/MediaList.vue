@@ -1,33 +1,21 @@
 <template>
-    <div
-        v-for="[fileName, mediaUrl] in mediaUrls"
-        :key="fileName"
-        class="field has-addons is-justify-content-center"
-    >
+    <div v-for="[fileName, mediaUrl] in mediaUrls" :key="fileName" class="field has-addons is-justify-content-center">
         <p class="control">
-            <button
-                class="button"
-                :title="'Add track for ' + mediaUrl.url"
-                @click="addTrack(mediaUrl)"
-            >
-                <!-- <BaseIcon v-once :path="mdiMusicNotePlus" /> -->
+            <button class="button" :title="'Add track for ' + mediaUrl.url" @click="addTrack(mediaUrl)">
                 <span>Use</span>
-                <MediaSourceIndicator
-                    :media-url="mediaUrl"
-                    :source="fileName"
-                    show-size
-                    show-type
-                >
+                <MediaSourceIndicator :media-url="mediaUrl" :source="fileName" show-size show-type>
                 </MediaSourceIndicator>
             </button>
         </p>
         <p class="control">
-            <button
-                class="button"
-                title="Discard this media source"
-                @click="discard(mediaUrl)"
-            >
+            <button class="button" title="Discard this media source" @click="discard(mediaUrl)">
                 <BaseIcon v-once :path="mdiTrashCanOutline" />
+            </button>
+        </p>
+        <p class="control">
+            <button class="button" :class="{ 'has-text-warning': trackUsage(fileName) == 0 }" disabled
+                title="Track usage of this media file">
+                Used in {{ trackUsage(fileName) }} track(s).
             </button>
         </p>
     </div>
@@ -56,4 +44,13 @@ function addTrack(mediaUrl: MediaUrl): void {
 function discard(mediaUrl: MediaUrl): void {
     app.discardMediaUrl(mediaUrl);
 }
+
+
+function trackUsage(fileName: string): number {
+    const usingTracks = app.compilation.Tracks.filter(
+        (e) => (e.Url == fileName),
+    );
+    return usingTracks.length;
+}
+
 </script>
