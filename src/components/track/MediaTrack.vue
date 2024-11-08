@@ -81,7 +81,7 @@
                             }"
                             :is-loading="fadingMode !== FadingMode.None"
                             data-cy="toggle-playback"
-                            @click="app.skipToPlayPause(props.track)"
+                            @click="app.skipToPlayPause(trackId)"
                         />
                         <!-- Cue count (no expander in non-play mode) -->
                         <span
@@ -91,7 +91,7 @@
                             }"
                             class="ml-3 tag is-warning is-rounded is-hidden-mobile is-unselectable"
                         >{{
-                            cues.Cues.length }}</span>
+                            cues.length }}</span>
 
                         <!-- Title -->
                         <TrackTitle
@@ -116,7 +116,7 @@
                                 'is-clickable': canPlay,
                                 'has-cursor-not-allowed': !canPlay,
                             }"
-                            @click="app.skipToPlayPause(props.track)"
+                            @click="app.skipToPlayPause(trackId)"
                         >
                             <span :id="`track-${track.Id}-HeaderLevelPlaceholder`"></span>
                         </div>
@@ -548,7 +548,7 @@
                                             @update:volume="updateVolume"
                                             @seek="(seconds) => seek(seconds)"
                                             @toggle-playing="
-                                                app.skipToPlayPause(props.track)
+                                                app.skipToPlayPause(trackId)
                                                 "
                                         >
                                             <template #start>
@@ -814,6 +814,7 @@ const {
     volume,
     name,
     cues,
+    track,
     playingCueDescription,
     playingCueRemarks,
     playingCueIsSelected,
@@ -823,7 +824,12 @@ const {
     mediaUrl,
     pitchShift,
     playbackRate,
-    preRollDuration
+    preRollDuration,
+    isFirstMediaTrack,
+    isLastMediaTrack,
+    isAudioTrack,
+    isVideoTrack,
+    isYoutubeVideoTrack,
 } = storeToRefs(trackStore);
 
 onUnmounted(() => {
@@ -1042,22 +1048,6 @@ const currentPositionCoarse = computed(
 );
 
 // --- Track state ---
-
-/** Whether this is the first track in the set of media tracks */
-const isFirstMediaTrack = computed(() => app.isFirstMediaTrack(props.track));
-
-/** Whether this is the last track in the set of media tracks */
-const isLastMediaTrack = computed(() => app.isLastMediaTrack(props.track));
-
-const isAudioTrack = computed(() =>
-    CompilationHandler.isAudioTrack(props.track),
-);
-const isVideoTrack = computed(() =>
-    CompilationHandler.isVideoTrack(props.track),
-);
-const isYoutubeVideoTrack = computed(() =>
-    CompilationHandler.isYoutubeVideoTrack(props.track),
-);
 
 /** Whether the current track can accept playback operations.
  * (Here, this means that the media is loaded to the extent that it's ready to play,
@@ -1413,7 +1403,7 @@ const { hasSingleMediaTrack } = storeToRefs(app);
  This avoids having multiple tracks playing at the same time.
 */
 watch(isActiveTrack, (isActive, wasActive) => {
-    log.debug(`MediaTrack(${props.track.Name})::isActiveTrack:val:`, isActive);
+    log.debug(`MediaTrack(${name})::isActiveTrack:val:`, isActive);
 
     // Pause and reset this track, when it's no more the active track
     if (wasActive === true && isActive === false) {

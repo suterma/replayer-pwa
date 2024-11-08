@@ -67,13 +67,12 @@
                         <StyledInput
                             class="input"
                             :class="{ 'has-text-success': isActive }"
-                            :model-value="name"
+                            v-model="name"
                             type="text"
                             placeholder="Track name"
                             title="Track name"
                             data-cy="track-name-input"
                             :focus-on-mounted="isActive"
-                            @change="updateName($event.target.value)"
                         />
                     </LabeledInput>
                 </div>
@@ -91,16 +90,12 @@
                             <LabeledInput label="by">
                                 <StyledInput
                                     class="input is-italic"
-                                    :model-value="artist"
+                                    v-model="artist"
                                     type="text"
                                     placeholder="Artist"
                                     title="Artist"
                                     data-cy="track-artist"
                                     focus-on-mounted
-                                    @update:model-value="(value) => {
-                                        updateArtist(value);
-                                    }
-                                        "
                                 >
                                 </StyledInput>
                             </LabeledInput>
@@ -119,16 +114,12 @@
                             <LabeledInput label="on">
                                 <StyledInput
                                     class="input is-italic"
-                                    :model-value="album"
+                                    v-model="album"
                                     type="text"
                                     placeholder="Album"
                                     title="Album"
                                     data-cy="track-album"
                                     focus-on-mounted
-                                    @update:model-value="(value) => {
-                                        updateAlbum(value);
-                                    }
-                                        "
                                 >
                                 </StyledInput>
                             </LabeledInput>
@@ -222,20 +213,18 @@
             <div class="level-item">
                 <!-- Slot for additional level display items -->
                 <slot name="right-start"></slot>
-                //TODO do sharing...
-                <!-- <NavButton
+                <NavButton
                     v-tooltip.left="'Share with link...'"
                     :icon-path="mdiShareVariant"
                     data-cy="button-track-share"
-                    @click="TrackApi.startSharingTrack(props.track)"
-                /> -->
+                    @click="TrackApi.startSharingTrack(track)"
+                />
                 <!-- Slot for additional level action items -->
                 <slot name="right-action-items"></slot>
-                //TODO add mneu
-                <!-- <TrackContextMenu
+                <TrackContextMenu
                     v-if="isTrackEditable"
                     :track="track"
-                ></TrackContextMenu> -->
+                ></TrackContextMenu>
             </div>
             <!-- Slot for additional level items -->
             <slot name="right"></slot>
@@ -333,6 +322,7 @@ const {
     hasMeter,
     currentPosition,
     volume,
+    track,
     name,
     artist,
     album,
@@ -384,35 +374,11 @@ watchEffect(() => {
     }
 });
 
-/** Updates the track name */
-function updateName(name: string) {
-    const trackId = props.track.Id;
-    const artist = props.track.Artist;
-    const album = props.track.Album;
 
-    app.updateTrackData(trackId, name, artist, album);
-}
-
-/** Updates the track artist */
-function updateArtist(artist: string) {
-    const trackId = props.track.Id;
-    const name = props.track.Name;
-    const album = props.track.Album;
-    app.updateTrackData(trackId, name, artist, album);
-}
-
-/** Updates the track album */
-function updateAlbum(album: string) {
-    const trackId = props.track.Id;
-    const name = props.track.Name;
-    const artist = props.track.Artist;
-    app.updateTrackData(trackId, name, artist, album);
-}
 
 /** Updates the track pre-roll */
 function updatePreRoll(preRoll: number | null) {
-    const trackId = props.track.Id;
-    app.updateTrackPreRoll(trackId, preRoll);
+    app.updateTrackPreRoll(props.trackId, preRoll);
 }
 
 /** Indicates this track's playback state
@@ -424,17 +390,17 @@ const playbackState = inject(playbackStateInjectionKey);
 
 /** Adds the text from the tag input as new tag and clears the input */
 function addNewTag(tag: string) {
-    const trackId = props.track.Id;
+    const trackId = props.trackId;
     app.addTag(trackId, tag);
 }
 
 function removeTag(tag: string) {
-    const trackId = props.track.Id;
+    const trackId = props.trackId;
     app.removeTag(trackId, tag);
 }
 
 const trackHasTags = computed(() => {
-    return props.track.Tags.size > 0;
+    return tags.value.size > 0;
 });
 
 // --- drop zone handling ---

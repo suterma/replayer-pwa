@@ -30,7 +30,7 @@ export function createTrackStore(trackId: string) {
 
         const { defaultPreRollDuration } = storeToRefs(settings);
 
-        const thisTrack =
+        const track =
             app.getTrackById(trackId) ??
             (() => {
                 throw new Error(
@@ -39,13 +39,13 @@ export function createTrackStore(trackId: string) {
             })();
 
         /** The track's musical meter */
-        const meter = computed(() => thisTrack.Meter);
+        const meter = computed(() => track.Meter);
 
         /** Whether to use measure numbers for the track's cue position handling
          * @remarks Must only be true, whan a valid meter is also provided
          */
         const useMeasureNumbers = computed(() => {
-            return thisTrack.UseMeasureNumbers === true;
+            return track.UseMeasureNumbers === true;
         });
 
         /** A reference to the appropriate media handler
@@ -61,7 +61,7 @@ export function createTrackStore(trackId: string) {
          * @remarks This is used for cue event handling within the set of cues, like creating a new cue at the current position
          * @devdoc Start with the initial playhead position, which might be non-zero already
          */
-        const currentPosition = ref(thisTrack.PlayheadPosition ?? 0);
+        const currentPosition = ref(track.PlayheadPosition ?? 0);
 
         /** Sets the track duration. Using the track duration and the existing cues,
          * calculates the durations of all cues, including the last one.
@@ -70,9 +70,9 @@ export function createTrackStore(trackId: string) {
          * @param {number} trackDuration - the track duratin in [seconds]. Could be NaN or infinity, depending on the source.
          */
         function updateDurations(trackDuration: number): void {
-            thisTrack.Duration = trackDuration;
+            track.Duration = trackDuration;
             CompilationHandler.updateCueDurations(
-                thisTrack.Cues,
+                track.Cues,
                 trackDuration,
             );
         }
@@ -81,40 +81,40 @@ export function createTrackStore(trackId: string) {
 
         /** The name of the track */
         const name = computed({
-            get: () => thisTrack.Name,
+            get: () => track.Name,
             set: (val) => {
-                thisTrack.Name = val;
+                track.Name = val;
             },
         });
 
         /** The album of the track */
         const album = computed({
-            get: () => thisTrack.Album,
+            get: () => track.Album,
             set: (val) => {
-                thisTrack.Album = val;
+                track.Album = val;
             },
         });
 
         /** The artist of the track */
         const artist = computed({
-            get: () => thisTrack.Artist,
+            get: () => track.Artist,
             set: (val) => {
-                thisTrack.Artist = val;
+                track.Artist = val;
             },
         });
 
         /** The tags of the track */
         const tags = computed({
-            get: () => thisTrack.Tags,
+            get: () => track.Tags,
             set: (val) => {
-                thisTrack.Tags = val;
+                track.Tags = val;
             },
         });
 
 
         /** Returns all cues of this track */
         const cues = computed(() => {
-            return thisTrack.Cues;
+            return track.Cues;
         });
 
         /** Gets the effective media source URL for this track
@@ -122,13 +122,13 @@ export function createTrackStore(trackId: string) {
          * previously stored binary blobs
          */
         const mediaUrl = computed(() => {
-            if (FileHandler.isValidHttpUrl(thisTrack.Url)) {
-                return thisTrack.Url;
+            if (FileHandler.isValidHttpUrl(track.Url)) {
+                return track.Url;
             }
 
             // Get the corresponding object url from the stored blobs
             const url = CompilationHandler.getMatchingPackageMediaUrl(
-                thisTrack.Url,
+                track.Url,
                 app.mediaUrls,
             )?.url;
             return url;
@@ -136,7 +136,7 @@ export function createTrackStore(trackId: string) {
 
         /** Whether all required values for the use of the measure number as 
          * position are available. */
-        const hasMeter = computed(() => Meter.isValid(thisTrack.Meter));
+        const hasMeter = computed(() => Meter.isValid(track.Meter));
 
         /** The pre-roll duration [in secods] to use for this track. 
          * Zero for no pre-roll.
@@ -144,8 +144,8 @@ export function createTrackStore(trackId: string) {
          * defined track-specific pre-roll duration.
          */
         const preRollDuration = computed(() => {
-            if (thisTrack.PreRoll != null) {
-                return thisTrack.PreRoll;
+            if (track.PreRoll != null) {
+                return track.PreRoll;
             }
             return defaultPreRollDuration.value;
         });
@@ -252,6 +252,22 @@ export function createTrackStore(trackId: string) {
             );
         });
 
+        /** Whether this is the first track in the set of media tracks */
+        const isFirstMediaTrack = computed(() => app.isFirstMediaTrack(track));
+
+        /** Whether this is the last track in the set of media tracks */
+        const isLastMediaTrack = computed(() => app.isLastMediaTrack(track));
+
+        const isAudioTrack = computed(() =>
+            CompilationHandler.isAudioTrack(track),
+        );
+        const isVideoTrack = computed(() =>
+            CompilationHandler.isVideoTrack(track),
+        );
+        const isYoutubeVideoTrack = computed(() =>
+            CompilationHandler.isYoutubeVideoTrack(track),
+        );
+
         // --- track manipulation ---
 
         /** Handles the request for a new cue by creating one for the current time */
@@ -269,29 +285,29 @@ export function createTrackStore(trackId: string) {
          * @remarks Implements #132
              */
         function persistPlayheadPosition() {
-            thisTrack.PlayheadPosition = currentPosition.value;
+            track.PlayheadPosition = currentPosition.value;
         }
 
         // --- audio state ---
 
         const volume = computed({
-            get: () => thisTrack.Volume,
+            get: () => track.Volume,
             set: (val) => {
-                thisTrack.Volume = val;
+                track.Volume = val;
             },
         });
 
         const playbackRate = computed({
-            get: () => thisTrack.PlaybackRate,
+            get: () => track.PlaybackRate,
             set: (val) => {
-                thisTrack.PlaybackRate = val;
+                track.PlaybackRate = val;
             },
         });
 
         const pitchShift = computed({
-            get: () => thisTrack.PitchShift,
+            get: () => track.PitchShift,
             set: (val) => {
-                thisTrack.PitchShift = val;
+                track.PitchShift = val;
             },
         });
 
@@ -367,6 +383,21 @@ export function createTrackStore(trackId: string) {
              * defined track-specific pre-roll duration.
              */
             preRollDuration,
+
+            /** The track
+             * @remarks It is recommended to not use the track as a whole, 
+             * but to use the specific track properties as destructured refs
+            */
+            track,
+
+            /** Whether this is the first track in the set of media tracks */
+            isFirstMediaTrack,
+            /** Whether this is the last track in the set of media tracks */
+            isLastMediaTrack,
+
+            isAudioTrack,
+            isVideoTrack,
+            isYoutubeVideoTrack,
 
             /** The name of the track */
             name,
