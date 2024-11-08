@@ -165,14 +165,6 @@ export const actions = {
         return cueId;
     },
 
-    /** Update current playhead position for the given track
-     *  @remarks Updates the persistently stored playback position.
-     *  Implements #132
-     */
-    updatePersistedPlayheadPosition(track: ITrack, time: number): void {
-        track.PlayheadPosition = time;
-    },
-
     /** Adds (inserts) the new cue for the given track to the compilation, by inserting it by the order in time.
      */
     addCue(trackId: string, cue: ICue): void {
@@ -434,8 +426,7 @@ export const actions = {
         const matchingFile = state.mediaUrls.value.get(mediaUrl.resourceName);
         if (matchingFile) {
             log.debug(
-                `actions::addMediaUrl:removing matching item for key:${
-                    mediaUrl.resourceName
+                `actions::addMediaUrl:removing matching item for key:${mediaUrl.resourceName
                 }, normalized: ${mediaUrl.resourceName.normalize()}`,
             );
             ObjectUrlHandler.revokeObjectURL(matchingFile.url);
@@ -626,9 +617,8 @@ export const actions = {
         const message = useMessageStore();
 
         return new Promise((resolve, reject) => {
-            const loadingFileMessage = `Loading file '${file.name}' ${
-                file.type
-            } (${FileHandler.AsMegabytes(file.size)}MB)`;
+            const loadingFileMessage = `Loading file '${file.name}' ${file.type
+                } (${FileHandler.AsMegabytes(file.size)}MB)`;
             message.pushProgress(loadingFileMessage);
             if (FileHandler.isSupportedPackageFile(file)) {
                 log.debug(
@@ -818,8 +808,7 @@ export const actions = {
         const matchingFile = state.mediaUrls.value.get(mediaUrl.resourceName);
         if (matchingFile) {
             log.debug(
-                `actions::DISCARD_MEDIA_URL:removing matching item for key:${
-                    mediaUrl.resourceName
+                `actions::DISCARD_MEDIA_URL:removing matching item for key:${mediaUrl.resourceName
                 }, normalized: ${mediaUrl.resourceName.normalize()}`,
             );
             ObjectUrlHandler.revokeObjectURL(matchingFile.url);

@@ -18,12 +18,17 @@ import { storeToRefs } from 'pinia';
 import { useAudioStore } from '../audio';
 import CompilationHandler from '../compilation-handler';
 import FileHandler from '../filehandler';
+import { Meter } from '@/code/music/Meter';
+import { useSettingsStore } from '../settings';
 
 // export factory function
 export function createTrackStore(trackId: string) {
     return defineStore(`tracks/${trackId}`, () => {
         const app = useAppStore();
+        const settings = useSettingsStore();
         const audio = useAudioStore();
+
+        const { defaultPreRollDuration } = storeToRefs(settings);
 
         const thisTrack =
             app.getTrackById(trackId) ??
@@ -88,7 +93,8 @@ export function createTrackStore(trackId: string) {
         });
 
         /** Gets the effective media source URL for this track
-         * @remarks For non-online URL's, a match is sought from previously stored binary blobs
+         * @remarks For non-online URL's, a match is sought from 
+         * previously stored binary blobs
          */
         const mediaUrl = computed(() => {
             if (FileHandler.isValidHttpUrl(thisTrack.Url)) {
@@ -101,6 +107,22 @@ export function createTrackStore(trackId: string) {
                 app.mediaUrls,
             )?.url;
             return url;
+        });
+
+        /** Whether all required values for the use of the measure number as 
+         * position are available. */
+        const hasMeter = computed(() => Meter.isValid(thisTrack.Meter));
+
+        /** The pre-roll duration [in secods] to use for this track. 
+         * Zero for no pre-roll.
+         * @remarks This considers the default pre-roll setting and the possibly
+         * defined track-specific pre-roll duration.
+         */
+        const preRollDuration = computed(() => {
+            if (thisTrack.PreRoll != null) {
+                return thisTrack.PreRoll;
+            }
+            return defaultPreRollDuration.value;
         });
 
         // --- Track state ---
@@ -217,6 +239,14 @@ export function createTrackStore(trackId: string) {
                 );
         }
 
+
+        /** Persists the running playhead position
+         * @remarks Implements #132
+             */
+        function persistPlayheadPosition() {
+            thisTrack.PlayheadPosition = currentPosition.value;
+        }
+
         // --- audio state ---
 
         const volume = computed({
@@ -243,6 +273,10 @@ export function createTrackStore(trackId: string) {
         return {
             /** The track's musical meter */
             meter,
+
+            /** Whether all required values for the use of the measure number as 
+             * position are available. */
+            hasMeter,
 
             /** Whether to use measure numbers for the track's cue position handling
              * @remarks Must only be true, whan a valid meter is also provided
@@ -302,10 +336,19 @@ export function createTrackStore(trackId: string) {
              */
             mediaUrl,
 
+            /** The pre-roll duration [in secods] to use for this track. 
+             * Zero for no pre-roll.
+             * @remarks This considers the default pre-roll setting and the possibly
+             * defined track-specific pre-roll duration.
+             */
+            preRollDuration,
+
             /** The name of the track */
             name,
             playbackRate,
             pitchShift,
+
+            persistPlayheadPosition,
 
             setActiveTrack,
 
@@ -319,3 +362,7 @@ export function createTrackStore(trackId: string) {
         };
     })();
 }
+function useSettingStore() {
+    throw new Error('Function not implemented.');
+}
+
