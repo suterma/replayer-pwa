@@ -87,6 +87,31 @@ export function createTrackStore(trackId: string) {
             },
         });
 
+        /** The album of the track */
+        const album = computed({
+            get: () => thisTrack.Album,
+            set: (val) => {
+                thisTrack.Album = val;
+            },
+        });
+
+        /** The artist of the track */
+        const artist = computed({
+            get: () => thisTrack.Artist,
+            set: (val) => {
+                thisTrack.Artist = val;
+            },
+        });
+
+        /** The tags of the track */
+        const tags = computed({
+            get: () => thisTrack.Tags,
+            set: (val) => {
+                thisTrack.Tags = val;
+            },
+        });
+
+
         /** Returns all cues of this track */
         const cues = computed(() => {
             return thisTrack.Cues;
@@ -345,6 +370,13 @@ export function createTrackStore(trackId: string) {
 
             /** The name of the track */
             name,
+            /** The album of the track */
+            album,
+            /** The artist of the track */
+            artist,
+            /** The tags of the track */
+            tags,
+
             playbackRate,
             pitchShift,
 
