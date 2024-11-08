@@ -21,15 +21,13 @@
                     collapsed-text="Click to expand / edit cues"
                     expanded-text="Click to collapse"
                     @update:model-value="toggleExpanded"
-                    ><span
+                ><span
                         :class="{
                             'is-invisible':
-                                isExpanded || track.Cues.length == 0,
+                                isExpanded || cues.length == 0,
                         }"
                         class="tag is-warning is-rounded"
-                        >{{ track.Cues.length }}</span
-                    ></CollapsibleButton
-                >
+                    >{{ cues.length }}</span></CollapsibleButton>
             </div>
 
             <!-- The edit part -->
@@ -40,10 +38,9 @@
                 >
                     <template #caption>
                         <MediaSourceIndicator
-                            :source="track?.Url"
-                            :unavailable="
-                                playbackState === PlaybackState.Unavailable
-                            "
+                            :source="mediaUrl"
+                            :unavailable="playbackState === PlaybackState.Unavailable
+                                "
                             show-size
                             :show-source-icon="false"
                         >
@@ -51,8 +48,8 @@
                     </template>
                     <MediaDropZone
                         ref="mediaDropZone"
-                        :replace-url="track.Url"
-                        :track-id="track.Id"
+                        :replace-url="mediaUrl"
+                        :track-id="trackId"
                         @accepted="acceptedMedia()"
                     >
                     </MediaDropZone>
@@ -70,7 +67,7 @@
                         <StyledInput
                             class="input"
                             :class="{ 'has-text-success': isActive }"
-                            :model-value="track?.Name"
+                            :model-value="name"
                             type="text"
                             placeholder="Track name"
                             title="Track name"
@@ -81,7 +78,7 @@
                     </LabeledInput>
                 </div>
                 <CoveredPanel
-                    :reveal-for="[track.Artist]"
+                    :reveal-for="[artist]"
                     title="Artist name for this track"
                     class="level-item"
                 >
@@ -94,17 +91,16 @@
                             <LabeledInput label="by">
                                 <StyledInput
                                     class="input is-italic"
-                                    :model-value="track.Artist"
+                                    :model-value="artist"
                                     type="text"
                                     placeholder="Artist"
                                     title="Artist"
                                     data-cy="track-artist"
                                     focus-on-mounted
-                                    @update:model-value="
-                                        (value) => {
-                                            updateArtist(value);
-                                        }
-                                    "
+                                    @update:model-value="(value) => {
+                                        updateArtist(value);
+                                    }
+                                        "
                                 >
                                 </StyledInput>
                             </LabeledInput>
@@ -112,7 +108,7 @@
                     </div>
                 </CoveredPanel>
                 <CoveredPanel
-                    :reveal-for="[track.Album]"
+                    :reveal-for="[album]"
                     title="Album name for this track"
                     class="level-item"
                 >
@@ -123,17 +119,16 @@
                             <LabeledInput label="on">
                                 <StyledInput
                                     class="input is-italic"
-                                    :model-value="track.Album"
+                                    :model-value="album"
                                     type="text"
                                     placeholder="Album"
                                     title="Album"
                                     data-cy="track-album"
                                     focus-on-mounted
-                                    @update:model-value="
-                                        (value) => {
-                                            updateAlbum(value);
-                                        }
-                                    "
+                                    @update:model-value="(value) => {
+                                        updateAlbum(value);
+                                    }
+                                        "
                                 >
                                 </StyledInput>
                             </LabeledInput>
@@ -143,26 +138,23 @@
 
                 <!-- Pre-Roll (in time) (hide initially, as long as no cues are set) -->
                 <CoveredPanel
-                    v-if="hasCues || track?.PreRoll"
-                    :reveal-for="[track.PreRoll != null]"
+                    v-if="hasCues || preRollDuration"
+                    :reveal-for="[preRollDuration != null]"
                     title="The custom pre-roll duration for in track in [seconds]"
                     class="level-item"
                 >
-                    <template #caption
-                        ><span class="label">Pre-roll</span></template
-                    >
+                    <template #caption><span class="label">Pre-roll</span></template>
                     <LabeledInput label="Pre-roll">
                         <TimeInput
                             class="has-text-right"
-                            :model-value="track.PreRoll"
+                            :model-value="preRollDuration"
                             size="9"
-                            @update:model-value="
-                                (value: number | null) => updatePreRoll(value)
-                            "
+                            @update:model-value="(value: number | null) => updatePreRoll(value)
+                                "
                         />
                         <template #addon>
                             <div
-                                v-show="track.PreRoll"
+                                v-show="preRollDuration"
                                 class="control"
                                 title="Reset pre-roll for this track"
                             >
@@ -184,43 +176,42 @@
                     v-if="
                         experimentalUseMeter &&
                         useMeasureNumbers &&
-                        (hasCues || track.PreRoll)
+                        (hasCues || preRollDuration)
                     "
-                    :reveal-for="[track.PreRoll]"
+                    :reveal-for="[preRollDuration]"
                     title="The custom pre-roll duration in this track in [measures]"
                     class="level-item"
                 >
-                    <template #caption
-                        ><span v-experiment="true" class="label"
-                            >Pre-roll (measures)</span
-                        ></template
-                    >
+                    <template #caption><span
+                            v-experiment="true"
+                            class="label"
+                        >Pre-roll (measures)</span></template>
                     <LabeledInput
                         v-experiment="true"
                         label="Pre-roll (measures)"
                     >
                         <MetricalEditor
                             differential
-                            :model-value="track.PreRoll"
-                            @update:model-value="
-                                (value: number | null) => updatePreRoll(value)
-                            "
+                            :model-value="preRollDuration"
+                            @update:model-value="(value: number | null) => updatePreRoll(value)
+                                "
                         >
                         </MetricalEditor>
                     </LabeledInput>
                 </CoveredPanel>
 
                 <!-- Tags -->
-                <CoveredPanel title="Tag" class="level-item">
-                    <template #caption
-                        ><span class="label">Tags</span></template
-                    >
+                <CoveredPanel
+                    title="Tag"
+                    class="level-item"
+                >
+                    <template #caption><span class="label">Tags</span></template>
                     <TagInput @new-tag="addNewTag"></TagInput>
                 </CoveredPanel>
                 <TagsDisplay
                     v-if="trackHasTags"
                     class="level-item"
-                    :tags="props.track.Tags"
+                    :tags="tags"
                     @remove="removeTag"
                 ></TagsDisplay>
             </template>
@@ -231,18 +222,20 @@
             <div class="level-item">
                 <!-- Slot for additional level display items -->
                 <slot name="right-start"></slot>
-                <NavButton
-                     v-tooltip.left="'Share with link...'"
+                //TODO do sharing...
+                <!-- <NavButton
+                    v-tooltip.left="'Share with link...'"
                     :icon-path="mdiShareVariant"
                     data-cy="button-track-share"
                     @click="TrackApi.startSharingTrack(props.track)"
-                />
+                /> -->
                 <!-- Slot for additional level action items -->
                 <slot name="right-action-items"></slot>
-                <TrackContextMenu
+                //TODO add mneu
+                <!-- <TrackContextMenu
                     v-if="isTrackEditable"
                     :track="track"
-                ></TrackContextMenu>
+                ></TrackContextMenu> -->
             </div>
             <!-- Slot for additional level items -->
             <slot name="right"></slot>
@@ -250,7 +243,10 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script
+    setup
+    lang="ts"
+>
 /** A header for editing "beats per minute" track metadata
  */
 import {
@@ -258,6 +254,7 @@ import {
     type Ref,
     computed,
     inject,
+    onUnmounted,
     ref,
     watchEffect,
 } from 'vue';
@@ -285,12 +282,15 @@ import { useSettingsStore } from '@/store/settings';
 import { storeToRefs } from 'pinia';
 import type { ITrack } from '@/store/ITrack';
 import { PlaybackState } from '@/code/media/PlaybackState';
+import { createTrackStore } from '@/store/track';
 
 const emit = defineEmits(['update:isExpanded']);
 
 const props = defineProps({
-    track: {
-        type: Object as PropType<ITrack>,
+    /** The id of the track to handle
+     */
+    trackId: {
+        type: String,
         required: true,
     },
 
@@ -318,6 +318,42 @@ const props = defineProps({
     },
 });
 
+// --- tracking the associated ITrack
+
+/** The dynamic track store for this component.
+ * @remarks Code inside the setup script runs once per component instance,
+ * thus the track store must be destroyed after component unload.
+ */
+const trackStore = createTrackStore(props.trackId);
+const {
+    isActiveTrack,
+    mediaHandler,
+    useMeasureNumbers,
+    meter,
+    hasMeter,
+    currentPosition,
+    volume,
+    name,
+    artist,
+    album,
+    tags,
+    cues,
+    playingCueDescription,
+    playingCueRemarks,
+    playingCueIsSelected,
+    hasPreviousCue,
+    hasNextCue,
+    hasCues,
+    mediaUrl,
+    pitchShift,
+    playbackRate,
+    preRollDuration
+} = storeToRefs(trackStore);
+
+onUnmounted(() => {
+    trackStore.$dispose();
+});
+
 const app = useAppStore();
 
 const { isTrackEditable } = storeToRefs(app);
@@ -325,8 +361,6 @@ const { isTrackEditable } = storeToRefs(app);
 const settings = useSettingsStore();
 const { experimentalUseMeter } =
     storeToRefs(settings);
-
-const useMeasureNumbers = inject(useMeasureNumbersInjectionKey);
 
 /** Toggles the expansion state
  */
@@ -381,11 +415,6 @@ function updatePreRoll(preRoll: number | null) {
     app.updateTrackPreRoll(trackId, preRoll);
 }
 
-/** Whether this track has any cues */
-const hasCues = computed(() => {
-    return props.track.Cues.length > 0;
-});
-
 /** Indicates this track's playback state
  * @remarks This is used to depict the expected action on button press. While playing, this is pause, and vice versa.
  */
@@ -420,11 +449,15 @@ function acceptedMedia() {
 <style lang="scss">
 /** Tie the label texts more to the respective editor fields */
 .track.is-editable .field.is-horizontal .field-label {
-    margin-right: 0.75em; /* similar to the in-field margin */
+    margin-right: 0.75em;
+    /* similar to the in-field margin */
 }
 </style>
 
-<style lang="scss" scoped>
+<style
+    lang="scss"
+    scoped
+>
 /** Custom modification for the level in the context of a track.
 * @remarks Allow the title text (on the left) to break between words, 
 * and keep the context items (on the right) as close as reasonably possible */

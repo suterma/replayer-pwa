@@ -121,18 +121,16 @@ export const mediaActions = {
      * If it's the active track, just toggles play/pause
      * @devdoc Conditional event registration inside the template did not work.
      */
-    skipToPlayPause(track: ITrack): void {
-        const handler = useAudioStore().getMediaHandlerByTrackId(track.Id);
+    skipToPlayPause(trackId: string): void {
+        const handler = useAudioStore().getMediaHandlerByTrackId(trackId);
 
         if (handler) {
             const canPlay = handler.canPlay;
-            log.debug(
-                `mediaActions::skipToPlayPause:track=${track.Url};canPlay=${canPlay}`,
-            );
+
             if (canPlay) {
                 getters.activeTrackId;
-                if (!(getters.activeTrackId.value === track.Id)) {
-                    actions.updateSelectedTrackId(track.Id);
+                if (!(getters.activeTrackId.value === trackId)) {
+                    actions.updateSelectedTrackId(trackId);
 
                     // track.MediaHandler.play();
                     // return;
@@ -157,7 +155,7 @@ export const mediaActions = {
             }
         } else {
             log.warn(
-                `mediaActions::skipToPlayPause:track=${track.Url};MediaHandler not available`,
+                `mediaActions::skipToPlayPause:track=${trackId};MediaHandler not available`,
             );
         }
     },

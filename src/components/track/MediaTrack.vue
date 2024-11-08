@@ -36,7 +36,7 @@
             <TrackHeader
                 v-model:is-expanded="isExpanded"
                 :can-collapse="!hasSingleMediaTrack"
-                :track="track"
+                :trackId="trackId"
                 :is-active="isActiveTrack"
             >
                 <template #left-start>
@@ -54,10 +54,10 @@
                                 @click="setActiveTrack()"
                             ><span
                                     :class="{
-                                        'is-invisible': track.Cues.length == 0,
+                                        'is-invisible': cues.length == 0,
                                     }"
                                     class="has-text-warning"
-                                >{{ track.Cues.length }}</span></SelectButton>
+                                >{{ cues.length }}</span></SelectButton>
                             <SoloButton
                                 :disabled="!canPlay"
                                 :is-soloed="isSoloed"
@@ -87,11 +87,11 @@
                         <span
                             v-if="!hasSingleMediaTrack && !isTrackEditable"
                             :class="{
-                                'is-hidden': track.Cues.length == 0,
+                                'is-hidden': cues.length == 0,
                             }"
                             class="ml-3 tag is-warning is-rounded is-hidden-mobile is-unselectable"
                         >{{
-                            track.Cues.length }}</span>
+                            cues.Cues.length }}</span>
 
                         <!-- Title -->
                         <TrackTitle
@@ -769,10 +769,10 @@ const emit = defineEmits([
 ]);
 
 const props = defineProps({
-    /** The track to handle
+    /** The id of the track to handle
      */
-    track: {
-        type: Object as PropType<ITrack>,
+    trackId: {
+        type: String,
         required: true,
     },
 
@@ -803,7 +803,7 @@ const {
  * @remarks Code inside the setup script runs once per component instance,
  * thus the track store must be destroyed after component unload.
  */
-const trackStore = createTrackStore(props.track.Id);
+const trackStore = createTrackStore(props.trackId);
 const {
     isActiveTrack,
     mediaHandler,

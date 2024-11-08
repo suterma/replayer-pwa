@@ -1,6 +1,9 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-    <div class="compilation" data-cy="compilation">
+    <div
+        class="compilation"
+        data-cy="compilation"
+    >
         <!-- Handle all relevant Replayer events for the compilation level -->
         <ReplayerEventHandler
             @tonextcue="app.toNextCue()"
@@ -24,12 +27,15 @@
         ></TagsSelector>
 
         <div class="tracks">
-            <template v-for="track in allTracks" :key="track.Id">
+            <template
+                v-for="track in allTracks"
+                :key="track.Id"
+            >
                 <MediaTrack
                     v-if="CompilationHandler.isMediaTrack(track)"
                     :id="'track-' + track.Id"
                     class="block"
-                    :track="track"
+                    :trackId="track.Id"
                     data-cy="track"
                     @previous-track="app.playPreviousTrack()"
                     @next-track="app.playNextTrack()"
@@ -65,7 +71,10 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script
+    setup
+    lang="ts"
+>
 /** Displays the contained set of tracks according to the required mode.
  * @remarks Also handles the common replayer events for compilations
  * @remarks Also supports shuffling of tracks
