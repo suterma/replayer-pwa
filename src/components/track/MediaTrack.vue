@@ -780,9 +780,7 @@ import { CueScheduler } from '@/code/media/CueScheduler';
 import type { ICue } from '@/store/ICue';
 import { PlaybackMode } from '@/store/PlaybackMode';
 import type { ITrack } from '@/store/ITrack';
-import router, { Route } from '@/router';
 import MessageOverlay from '@/components/MessageOverlay.vue';
-import type { ICompilation } from '@/store/ICompilation';
 import { Subscription } from 'sub-events';
 import { PlaybackState } from '@/code/media/PlaybackState';
 import useLog from '@/composables/LogComposable';
@@ -837,13 +835,14 @@ const {
     playbackMode,
     isLoopingPlaybackMode,
     isPreRollEnabled,
+    allTracks,
 } = storeToRefs(app);
 
 // --- tracking the associated ITrack
 
 /** The dynamic track store for this component.
  * @remarks Code inside the setup script runs once per component instance,
- * thus the track store will be destroyed after component unload.
+ * thus the track store must be destroyed after component unload.
  */
 const trackStore = createTrackStore(props.track.Id);
 const {
@@ -854,6 +853,14 @@ const {
     currentPosition,
     volume,
     name,
+    cues,
+    playingCueDescription,
+    playingCueRemarks,
+    playingCueIsSelected,
+    hasPreviousCue,
+    hasNextCue,
+    hasCues,
+    mediaUrl,
     pitchShift,
     playbackRate,
 } = storeToRefs(trackStore);
@@ -1135,7 +1142,6 @@ const {
 const {
     selectedCueId,
     scheduledCueId,
-    compilation,
     /**
      * @remarks A selected cue's data is used for looping on a cue's boundaries
      */
@@ -1462,92 +1468,6 @@ provide(trackPreRollDurationInjectionKey, readonly(preRollDuration));
  */
 provide(trackFadeInDurationInjectionKey, readonly(fadeInDuration));
 
-/** The description of the currently playing cue
- */
-const playingCueDescription = computed(() => {
-    return playingCue.value?.Description;
-});
-
-/** The remarks of the currently playing cue
- */
-const playingCueRemarks = computed(() => {
-    return playingCue.value?.Remarks;
-});
-
-/** Whether the currently playing cue is the selected cue
- * @remarks used for the playhead slider visualization
- */
-const playingCueIsSelected = computed(() => {
-    if (!selectedCueId.value) {
-        // premature exit, if none selected none can match
-        return false;
-    }
-
-    const playingCueId = playingCue.value?.Id;
-
-    if (playingCueId != undefined && selectedCueId.value === playingCueId) {
-        return true;
-    }
-    return false;
-});
-
-/** Whether the playing cue has a previous cue
- */
-const hasPreviousCue = computed(() => {
-    return selectedCueId !== null && allCueIds.value[0] !== selectedCueId.value;
-});
-
-/** Whether the playing cue has a next cue
- */
-const hasNextCue = computed(() => {
-    return (
-        //to be implemented: maybe the also a possible scheduled cue should be considered?
-        selectedCueId !== null &&
-        allCueIds.value.slice(-1)[0] !== selectedCueId.value
-    );
-});
-
-const allCueIds = computed(() => {
-    return cues.value?.map((cue) => cue.Id) ?? [];
-});
-
-/** Whether this track has any cue at all */
-const hasCues = computed(() => {
-    return cues.value.length !== undefined && cues.value.length > 0;
-});
-
-/** Gets the currently playing cue, regardless whether it is selected, if available
- */
-const playingCue = computed(() => {
-    const time = currentPosition.value;
-    if (time == null) {
-        return null;
-    }
-
-    return (
-        props.track?.Cues?.find(
-            (cue) =>
-                cue.Time !== null &&
-                Number.isFinite(cue.Time) &&
-                cue.Duration !== null &&
-                Number.isFinite(cue.Duration) &&
-                time >= cue.Time &&
-                time < cue.Time + (cue.Duration ?? 0),
-        ) ?? null
-    );
-});
-
-/** Gets the effective media source URL for this track
- */
-const mediaUrl = computed(() => {
-    return app.getMediaUrlByTrack(props.track);
-});
-
-/** Returns all cues of this track */
-const cues = computed(() => {
-    return props.track.Cues;
-});
-
 // ---  Track/cue selection ---
 
 const { hasSingleMediaTrack } = storeToRefs(app);
@@ -1568,7 +1488,7 @@ watch(isActiveTrack, (isActive, wasActive) => {
 });
 
 /** Handles active track id changes.
- * @remarks Used to determine the requested player widget transition.
+ * @remarks Used to determine the requested player widget transition effect.
  * In edit mode, keep the default transition, as no horizontal slides are used
  * In other modes, slide according to the track index
  */
@@ -1584,14 +1504,14 @@ watch(
         if (newIsEditable) {
             skipTransitionName.value = 'item-expand';
         } else if (activeTrackId != null && previousTrackId != null) {
+            // Get track indexes (using the filtered and shuffled variant,
+            // since the transition effect should reflect the displayed order)
             const indexOfActive = CompilationHandler.getIndexOfTrackById(
-                //Because of the possible shuffling, the tracks computed property is not used
-                (compilation.value as ICompilation).Tracks,
+                allTracks.value,
                 activeTrackId,
             );
-
             const indexOfPrevious = CompilationHandler.getIndexOfTrackById(
-                (compilation.value as ICompilation).Tracks,
+                allTracks.value,
                 previousTrackId,
             );
 

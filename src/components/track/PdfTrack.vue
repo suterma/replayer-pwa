@@ -190,7 +190,15 @@
 
 <script setup lang="ts">
 /** A track variant that displays a PDF document, either as link or as an expandable inline viewer */
-import { type PropType, computed, type Ref, ref, provide, readonly } from 'vue';
+import {
+    type PropType,
+    computed,
+    type Ref,
+    ref,
+    provide,
+    readonly,
+    onUnmounted,
+} from 'vue';
 import { useAppStore } from '@/store/app';
 import type { ITrack } from '@/store/ITrack';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
@@ -212,6 +220,7 @@ import { confirm } from '@/code/ui/dialogs';
 import TagInput from '@/components/editor/TagInput.vue';
 import TagsDisplay from '@/components/displays/TagsDisplay.vue';
 import { PlaybackState } from '@/code/media/PlaybackState';
+import { createTrackStore } from '@/store/track/index';
 
 const props = defineProps({
     /** The track to display
@@ -228,14 +237,21 @@ const { isTrackEditable } = storeToRefs(app);
 const settings = useSettingsStore();
 const { showPdfInline } = storeToRefs(settings);
 
+// --- tracking the associated ITrack
+
+/** The dynamic track store for this component.
+ * @remarks Code inside the setup script runs once per component instance,
+ * thus the track store must be destroyed after component unload.
+ */
+const trackStore = createTrackStore(props.track.Id);
+const { mediaUrl } = storeToRefs(trackStore);
+
+onUnmounted(() => {
+    trackStore.$dispose();
+});
+
 /** Whether the pdf is currently expanded */
 const isExpanded = ref(false);
-
-/** Gets the effective media source URL for this track
- */
-const mediaUrl = computed(() => {
-    return app.getMediaUrlByTrack(props.track);
-});
 
 /** Indicates this track's playback state
  * @devdoc This is just provided to avoid a console warning;

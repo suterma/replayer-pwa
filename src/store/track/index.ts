@@ -17,6 +17,7 @@ import { useAppStore } from '../app';
 import { storeToRefs } from 'pinia';
 import { useAudioStore } from '../audio';
 import CompilationHandler from '../compilation-handler';
+import FileHandler from '../filehandler';
 
 // export factory function
 export function createTrackStore(trackId: string) {
@@ -81,9 +82,30 @@ export function createTrackStore(trackId: string) {
             },
         });
 
+        /** Returns all cues of this track */
+        const cues = computed(() => {
+            return thisTrack.Cues;
+        });
+
+        /** Gets the effective media source URL for this track
+         * @remarks For non-online URL's, a match is sought from previously stored binary blobs
+         */
+        const mediaUrl = computed(() => {
+            if (FileHandler.isValidHttpUrl(thisTrack.Url)) {
+                return thisTrack.Url;
+            }
+
+            // Get the corresponding object url from the stored blobs
+            const url = CompilationHandler.getMatchingPackageMediaUrl(
+                thisTrack.Url,
+                app.mediaUrls,
+            )?.url;
+            return url;
+        });
+
         // --- Track state ---
 
-        const { selectedTrackId } = storeToRefs(app);
+        const { selectedTrackId, selectedCueId } = storeToRefs(app);
 
         /** Whether this track is the active track in the set of tracks */
         const isActiveTrack = computed(() => {
@@ -100,12 +122,99 @@ export function createTrackStore(trackId: string) {
             }
         }
 
+        /** The description of the current cue (by position)
+         */
+        const playingCueDescription = computed(() => {
+            return playingCue.value?.Description;
+        });
+
+        /** The remarks of the current cue (by position)
+         */
+        const playingCueRemarks = computed(() => {
+            return playingCue.value?.Remarks;
+        });
+
+        /** Whether the current cue (by position) is the selected cue
+         * @remarks can be used for the playhead slider visualization
+         */
+        const playingCueIsSelected = computed(() => {
+            if (!selectedCueId.value) {
+                // premature exit, if none selected none can match
+                return false;
+            }
+
+            const playingCueId = playingCue.value?.Id;
+
+            if (
+                playingCueId != undefined &&
+                selectedCueId.value === playingCueId
+            ) {
+                return true;
+            }
+            return false;
+        });
+
+        /** Whether the current cue (by position) has a previous cue
+         */
+        const hasPreviousCue = computed(() => {
+            return (
+                selectedCueId !== null &&
+                allCueIds.value[0] !== selectedCueId.value
+            );
+        });
+
+        /** Whether the current cue (by position) has a next cue
+         */
+        const hasNextCue = computed(() => {
+            return (
+                //to be implemented: maybe the also a possible scheduled cue should be considered?
+                selectedCueId !== null &&
+                allCueIds.value.slice(-1)[0] !== selectedCueId.value
+            );
+        });
+
+        /** The Ids of all cue in this track
+         */
+        const allCueIds = computed(() => {
+            return cues.value?.map((cue) => cue.Id) ?? [];
+        });
+
+        /** Whether this track has any cue at all */
+        const hasCues = computed(() => {
+            return cues.value.length !== undefined && cues.value.length > 0;
+        });
+
+        /** Gets the current cue (by position), if any, regardless whether it is selected
+         */
+        const playingCue = computed(() => {
+            const time = currentPosition.value;
+            if (time == null) {
+                return null;
+            }
+
+            return (
+                cues.value.find(
+                    (cue) =>
+                        cue.Time !== null &&
+                        Number.isFinite(cue.Time) &&
+                        cue.Duration !== null &&
+                        Number.isFinite(cue.Duration) &&
+                        time >= cue.Time &&
+                        time < cue.Time + (cue.Duration ?? 0),
+                ) ?? null
+            );
+        });
+
+        // --- track manipulation ---
+
         /** Handles the request for a new cue by creating one for the current time */
         function createNewCue(): void {
             if (currentPosition.value != null) {
                 app.addCueAtTime(trackId, currentPosition.value);
             } else
-                throw new Error('currentPosition must be available for adding a cue');
+                throw new Error(
+                    'currentPosition must be available for adding a cue',
+                );
         }
 
         // --- audio state ---
@@ -158,6 +267,41 @@ export function createTrackStore(trackId: string) {
 
             volume,
 
+            /** Returns all cues of this track (readonly)*/
+            cues,
+
+            /** The description of the current cue (by position) */
+            playingCueDescription,
+
+            /** The remarks of the current cue (by position) */
+            playingCueRemarks,
+
+            /** Whether the current cue (by position) is the selected cue
+             * @remarks can be used for the playhead slider visualization
+             */
+            playingCueIsSelected,
+
+            /** Whether the current cue (by position) has a previous cue */
+            hasPreviousCue,
+
+            /** Whether the current cue (by position) has a next cue */
+            hasNextCue,
+
+            /** The Ids of all cue in this track
+             */
+            allCueIds,
+
+            /** Whether this track has any cue at all */
+            hasCues,
+
+            /** Gets the current cue (by position), if any, regardless whether it is selected */
+            playingCue,
+
+            /** Gets the effective media source URL for this track
+             * @remarks For non-online URL's, a match is sought from previously stored binary blobs
+             */
+            mediaUrl,
+
             /** The name of the track */
             name,
             playbackRate,
@@ -175,65 +319,3 @@ export function createTrackStore(trackId: string) {
         };
     })();
 }
-
-// /** A dynamic store (without persistence) for an individual track.
-//  * It acts as an intermediary between an instance of a
-//  * track visualization/handling component
-//  * and the persisted app store. The track id acts as the store's id*/
-// export const useTrackStore = defineStore(`tracks/trackId`, () => {
-//     const app = useAppStore();
-//     const { selectedTrackId } = storeToRefs(app);
-
-//     //const thisTrackId = ref(trackId);
-
-//     /** Whether this track is the active track in the set of tracks */
-//     const isActiveTrack = computed(() => {
-//         return false; // return trackId === selectedTrackId.value;
-//     });
-
-//     // /** Returns the settings to their default value */
-//     // function $reset() {
-//     // }
-
-//     function test(test: string) {
-//         console.log(test);
-//     }
-
-//     return {
-//         isActiveTrack,
-//         test,
-//         //            $reset,
-//     };
-// });
-
-// /** A dynamic store (without persistence) for an individual track.
-//  * It acts as an intermediary between an instance of a
-//  * track visualization/handling component
-//  * and the persisted app store. The track id acts as the store's id*/
-// export const useTrackStore = (trackId: string) => {
-//     return defineStore(`tracks/${trackId}`, () => {
-//         const app = useAppStore();
-//         const { selectedTrackId } = storeToRefs(app);
-
-//         //const thisTrackId = ref(trackId);
-
-//         /** Whether this track is the active track in the set of tracks */
-//         const isActiveTrack = computed(() => {
-//             return trackId === selectedTrackId.value;
-//         });
-
-//         // /** Returns the settings to their default value */
-//         // function $reset() {
-//         // }
-
-//         function test(test: string) {
-//             console.log(test);
-//         }
-
-//         return {
-//             isActiveTrack,
-//             test,
-//             //            $reset,
-//         };
-//     });
-// };

@@ -18,11 +18,12 @@
 
 <script setup lang="ts">
 /** A track variant that displays plain text, and offers to close the display */
-import { type PropType, computed, ref, watch } from 'vue';
+import { type PropType, onUnmounted, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
 import CloseButton from '../buttons/CloseButton.vue';
 import type { ITrack } from '@/store/ITrack';
+import { createTrackStore } from '@/store/track/index';
 
 const props = defineProps({
     /** The track to display
@@ -39,10 +40,17 @@ const textContent = ref('');
 const app = useAppStore();
 const { mediaUrls } = storeToRefs(app);
 
-/** Gets the effective media source URL for this track
+// --- tracking the associated ITrack
+
+/** The dynamic track store for this component.
+ * @remarks Code inside the setup script runs once per component instance,
+ * thus the track store must be destroyed after component unload.
  */
-const mediaUrl = computed(() => {
-    return app.getMediaUrlByTrack(props.track);
+const trackStore = createTrackStore(props.track.Id);
+const { mediaUrl } = storeToRefs(trackStore);
+
+onUnmounted(() => {
+    trackStore.$dispose();
 });
 
 /** Updates the text by fetching the media URL */
