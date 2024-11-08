@@ -40,7 +40,7 @@
         >
             <CollapsiblePanel>
                 <template #caption>
-                    <span class="has-opacity-half">Available media</span>
+                    <span class="has-opacity-half">Available media files</span>
                 </template>
 
                 <div class="block mt-5">
