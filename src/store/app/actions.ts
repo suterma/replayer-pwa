@@ -849,7 +849,6 @@ export const actions = {
      * No media data is added, it must get handled elsewhere.
      */
     addTrack(track: ITrack): void {
-        log.debug('actions::ADD_TRACK:', track);
         state.compilation.value.Tracks.push(track);
         state.selectedCueId.value = CompilationHandler.EmptyId;
         state.scheduledCueId.value = CompilationHandler.EmptyId;
