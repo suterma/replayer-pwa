@@ -21,8 +21,6 @@ import { Reading } from './Reading';
 import { PlaybackState } from '@/code/media/PlaybackState';
 import useLog from '@/composables/LogComposable';
 
-const { log } = useLog();
-
 /** A store for multitrack audio-related global state
  * @remarks This uses and extends the audio store, specifically for a
  * multitrack playback scenario
@@ -46,6 +44,8 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
      * continuous pace.
      */
     const synchPlaybackOffsetCorrection = 0.014;
+
+    const { log } = useLog();
 
     const audio = useAudioStore();
 
@@ -295,7 +295,7 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
 
     // --- handle the subscriptions ---
 
-    // /** Sync after playback stops */
+    /** Sync after playback stops */
     watch(
         () => isAllPaused.value,
         (paused, wasPaused) => {
