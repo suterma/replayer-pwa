@@ -36,7 +36,7 @@
             <TrackHeader
                 v-model:is-expanded="isExpanded"
                 :can-collapse="!hasSingleMediaTrack"
-                :trackId="trackId"
+                :track-id="trackId"
                 :is-active="isActiveTrack"
             >
                 <template #left-start>
@@ -214,7 +214,8 @@
                                     <div class="field">
                                         <p class="control">
                                             <button class="button is-indicator">
-                                                <MeasureDisplay :model-value="currentPosition
+                                                <MeasureDisplay
+:model-value="currentPosition
                                                     "></MeasureDisplay>
                                             </button>
                                         </p>
@@ -410,7 +411,8 @@
                             :disabled="!canPlay"
                         >
                             <!-- The messages need to be shown inside the native fullscren element; otherwise they would get hidden below -->
-                            <MessageOverlay v-if="
+                            <MessageOverlay
+v-if="
                                 isFullscreen && hasNativeFullscreenSupport
                             " />
 
@@ -594,7 +596,8 @@
                                             "
                                     ></CueButtonsField>
                                 </div>
-                                <div v-if="
+                                <div
+v-if="
                                     (!hasSingleMediaTrack &&
                                         !isFullscreen &&
                                         isTrackPlayable) ||

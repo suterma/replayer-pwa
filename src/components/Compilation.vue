@@ -35,7 +35,7 @@
                     v-if="CompilationHandler.isMediaTrack(track)"
                     :id="'track-' + track.Id"
                     class="block"
-                    :trackId="track.Id"
+                    :track-id="track.Id"
                     data-cy="track"
                     @previous-track="app.playPreviousTrack()"
                     @next-track="app.playNextTrack()"

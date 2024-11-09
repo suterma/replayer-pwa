@@ -65,9 +65,9 @@
                         }"
                     >
                         <StyledInput
+                            v-model="name"
                             class="input"
                             :class="{ 'has-text-success': isActive }"
-                            v-model="name"
                             type="text"
                             placeholder="Track name"
                             title="Track name"
@@ -89,8 +89,8 @@
                         <p class="control is-expanded">
                             <LabeledInput label="by">
                                 <StyledInput
-                                    class="input is-italic"
                                     v-model="artist"
+                                    class="input is-italic"
                                     type="text"
                                     placeholder="Artist"
                                     title="Artist"
@@ -113,8 +113,8 @@
                         <p class="control is-expanded">
                             <LabeledInput label="on">
                                 <StyledInput
-                                    class="input is-italic"
                                     v-model="album"
+                                    class="input is-italic"
                                     type="text"
                                     placeholder="Album"
                                     title="Album"
