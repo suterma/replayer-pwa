@@ -26,7 +26,6 @@
             @forward="forward"
             @volumedown="volumeDown"
             @volumeup="volumeUp"
-            @cleanup="trackStore.persistPlayheadPosition()"
         />
 
         <div class="block">
@@ -214,8 +213,7 @@
                                     <div class="field">
                                         <p class="control">
                                             <button class="button is-indicator">
-                                                <MeasureDisplay
-:model-value="currentPosition
+                                                <MeasureDisplay :model-value="currentPosition
                                                     "></MeasureDisplay>
                                             </button>
                                         </p>
@@ -411,8 +409,7 @@
                             :disabled="!canPlay"
                         >
                             <!-- The messages need to be shown inside the native fullscren element; otherwise they would get hidden below -->
-                            <MessageOverlay
-v-if="
+                            <MessageOverlay v-if="
                                 isFullscreen && hasNativeFullscreenSupport
                             " />
 
@@ -596,8 +593,7 @@ v-if="
                                             "
                                     ></CueButtonsField>
                                 </div>
-                                <div
-v-if="
+                                <div v-if="
                                     (!hasSingleMediaTrack &&
                                         !isFullscreen &&
                                         isTrackPlayable) ||
@@ -627,7 +623,7 @@ v-if="
                                     :key="track.Id"
                                     :enable-video="isVideoTrack"
                                     :media-url="mediaUrl"
-                                    :start="track.PlayheadPosition"
+                                    :start="initialPlayheadPosition"
                                     :track-id="track.Id"
                                     :cues="track.Cues"
                                     :show-level-meter-for-edit="showLevelMeterForEdit
@@ -648,12 +644,12 @@ v-if="
                                          (happening from an to and from play view change)
                                           thus the isTrackPlayable is added to the key -->
                                         <TrackYouTubeElement
-                                            :key="track.Id + isTrackPlayable"
-                                            :title="track.Name"
+                                            :key="props.trackId + isTrackPlayable"
+                                            :title="name"
                                             :url="mediaUrl"
-                                            :start="track.PlayheadPosition"
-                                            :track-id="track.Id"
-                                            :cues="track.Cues"
+                                            :start="initialPlayheadPosition"
+                                            :track-id="props.trackId"
+                                            :cues="cues"
                                             :small-video="!isFullscreen"
                                             @click="setActiveTrack"
                                         >
@@ -833,6 +829,7 @@ const {
     isAudioTrack,
     isVideoTrack,
     isYoutubeVideoTrack,
+    initialPlayheadPosition
 } = storeToRefs(trackStore);
 
 onUnmounted(() => {
@@ -1049,6 +1046,12 @@ provide(currentPositionDisplayInjectionKey, readonly(currentPositionDisplay));
 const currentPositionCoarse = computed(
     () => Math.round(currentPosition.value * 10) / 10,
 );
+
+/** Keep the currenlt playback position for the next use of this track. */
+onBeforeUnmount(() => {
+    trackStore.persistPlayheadPosition();
+});
+
 
 // --- Track state ---
 
@@ -1321,7 +1324,6 @@ function getCuePreRollStartTime(cue: ICue): number {
  * These should get handled by the keyboard shortcut engine.
  */
 function cueClick(cue: ICue, togglePlayback = true) {
-    //log.debug(`MediaTrack(${name})::cueClick:cue:`, cue);
     if (cue.Time != null && Number.isFinite(cue.Time)) {
         // Handle cue as current or scheduled?
         if (
@@ -1424,12 +1426,6 @@ watch(isActiveTrack, (isActive, wasActive) => {
 watch(
     [activeTrackId, isTrackEditable],
     ([activeTrackId, newIsEditable], [previousTrackId]) => {
-        // log.debug(
-        //     `MediaTrack(${props.track.Name})::activeTrack:activeTrackId:`,
-        //     activeTrackId,
-        //     'prev:',
-        //     previousTrackId,
-        // );
         if (newIsEditable) {
             skipTransitionName.value = 'item-expand';
         } else if (activeTrackId != null && previousTrackId != null) {
@@ -1552,7 +1548,7 @@ watch(
                 // Separator for cue and tracks
                 (playingCueDescription || playingCueRemarks ? ' | ' : '') +
                 // Track with separator
-                (name ? name + ' | ' : '') +
+                (name.value ? name.value + ' | ' : '') +
                 newTitle;
 
             if (existingTitle !== newTitle) {

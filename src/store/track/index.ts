@@ -282,11 +282,15 @@ export function createTrackStore(trackId: string) {
 
 
         /** Persists the running playhead position
-         * @remarks Implements #132
-             */
+         * @remarks Implements #132 */
         function persistPlayheadPosition() {
             track.PlayheadPosition = currentPosition.value;
         }
+
+        /** The last persisted playhead position. To be used for setting the initial position on track load. */
+        const initialPlayheadPosition = computed(() =>
+            track.PlayheadPosition
+        );
 
         // --- audio state ---
 
@@ -408,9 +412,12 @@ export function createTrackStore(trackId: string) {
             /** The tags of the track */
             tags,
 
+            /** The last persisted playhead position. To be used for setting the initial position on track load. */
+            initialPlayheadPosition,
             playbackRate,
             pitchShift,
 
+            /** Persists the running playhead position */
             persistPlayheadPosition,
 
             setActiveTrack,
