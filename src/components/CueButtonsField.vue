@@ -31,7 +31,10 @@
         </CueButton>
         <!-- Using the v-for on a template instead of the actual component saves unnecessary renderings. 
              See https://stackoverflow.com/a/76074016/79485 -->
-        <template v-for="cue in track.Cues" :key="cue.Id">
+        <template
+            v-for="cue in cues"
+            :key="cue.Id"
+        >
             <CueButton
                 :id="cue.Id"
                 class="is-flex-grow-1"
@@ -69,14 +72,13 @@
     >
         <!-- Delete Cue (With Hotkey, for the active track) -->
         <Hotkey
-            v-if="track.Cues.length > 0 && canDeleteCue"
+            v-if="cues.length > 0 && canDeleteCue"
             v-slot="{ clickRef }"
             :disabled="disabled || !canDeleteCue"
             :keys="['del']"
             @hotkey="message.pushInputFeedback('DELETE', 'Trash selected')"
         >
             <CueButton
-                :id="track.Id + '-inline-delete-cue'"
                 :ref="clickRef"
                 class="is-flex-grow-1 is-flex-shrink-5 is-info is-colorless is-outlined"
                 title="Removes the selected cue"
@@ -109,7 +111,6 @@
         >
             <CueButton
                 v-if="isActiveTrack"
-                :id="track.Id + '-inline-insert-cue'"
                 :ref="clickRef"
                 class="is-flex-grow-1 is-flex-shrink-5 is-warning is-outlined"
                 title="Add a cue now (at the current playback time)!"
@@ -128,13 +129,16 @@
                 :is-cue-selected="false"
                 :is-cue-scheduled="false"
                 data-cy="insert-cue"
-                @click="createNewCue"
+                @click="emit('createNewCue')"
             ></CueButton>
         </Hotkey>
     </div>
 </template>
 
-<script setup lang="ts">
+<script
+    setup
+    lang="ts"
+>
 import { computed, inject, nextTick, type PropType } from 'vue';
 import CueButton from '@/components/buttons/CueButton.vue';
 import CompilationHandler from '@/store/compilation-handler';
@@ -147,7 +151,6 @@ import {
 import { PlaybackMode } from '@/store/PlaybackMode';
 import type { ICue } from '@/store/ICue';
 import { Cue } from '@/store/Cue';
-import type { ITrack } from '@/store/ITrack';
 import { mdiTrashCanOutline, mdiPlus } from '@mdi/js';
 import { Hotkey } from '@simolation/vue-hotkey';
 import { useMessageStore } from '@/store/messages';
@@ -157,13 +160,18 @@ import { PlaybackState } from '@/code/media/PlaybackState';
 /** A field of large cue buttons for a track
  */
 
-const emit = defineEmits(['click']);
+const emit = defineEmits(
+    ['click',
+        /** Occurs, when a new cue should get created at the current playhead position.
+         */
+        'createNewCue',
+    ]);
 
 const props = defineProps({
-    /** The track, for which to show the cues
+    /** The cues to show
      */
-    track: {
-        type: Object as PropType<ITrack>,
+    cues: {
+        type: Object as PropType<ICue[]>,
         required: true,
     },
 
@@ -193,20 +201,6 @@ const props = defineProps({
 // --- cue edit features ---
 
 const currentPosition = inject(currentPositionInjectionKey);
-
-/** Handles the request for a new cue by creating one for the current time
- */
-function createNewCue(): void {
-    if (currentPosition?.value != null) {
-        const cueId = app.addCueAtTime(props.track.Id, currentPosition.value);
-
-        // focus the new cue button (to keep the focus from staying with the Add-Cue button)
-        nextTick(() => {
-            const element = document.getElementById(cueId);
-            element?.focus();
-        });
-    }
-}
 
 /** Handles the request for deletion of the currently selected cue.
  */
@@ -262,9 +256,9 @@ function cueClicked(event: PointerEvent): void {
     if (clickedCueId === prefixCueButtonId) {
         emit('click', prefixCue.value);
     } else {
-        if (props.track.Cues) {
+        if (props.cues) {
             const clickedCue = CompilationHandler.getCueById(
-                props.track.Cues,
+                props.cues,
                 clickedCueId,
             );
             if (clickedCue) {
@@ -281,7 +275,7 @@ const prefixCue = computed(() => {
         null,
         '',
         0,
-        props.track.Cues?.[0]?.Time ?? null,
+        props.cues?.[0]?.Time ?? null,
         false /* //not yet implemented: later allow some virtual "pre-roll" using a timer*/,
         false /* //not yet implemented: later allow some virtual "fade-ipre-roll", if defined, using a timer*/,
         prefixCueButtonId,
@@ -329,6 +323,7 @@ function percentComplete(cue: ICue): number | null {
 </script>
 <style lang="scss">
 .cue-buttons-field.buttons {
+
     /* Virtual buttons should take up not unnecessary much space */
     .cue.button.is-virtual {
         max-width: 14em;

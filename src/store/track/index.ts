@@ -231,6 +231,11 @@ export function createTrackStore(trackId: string) {
             return cues.value.length !== undefined && cues.value.length > 0;
         });
 
+        /** The number of cues this track has */
+        const cuesCount = computed(() => {
+            return cues.value.length;
+        });
+
         /** Gets the current cue (by position), if any, regardless whether it is selected
          */
         const playingCue = computed(() => {
@@ -372,6 +377,9 @@ export function createTrackStore(trackId: string) {
 
             /** Whether this track has any cue at all */
             hasCues,
+
+            /** The number of cues this track has */
+            cuesCount,
 
             /** Gets the current cue (by position), if any, regardless whether it is selected */
             playingCue,

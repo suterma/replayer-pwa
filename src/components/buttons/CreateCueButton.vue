@@ -18,21 +18,25 @@
             data-cy="insert-cue"
             @click="emit('createNewCue')"
         >
-            <BaseIcon v-once :path="mdiPlus" />
+            <BaseIcon
+                v-once
+                :path="mdiPlus"
+            />
             <!-- On large screens also show an indicative text -->
             <span class="is-hidden-touch">Cue</span>
             <span class="has-opacity-half">&nbsp;at&nbsp;</span>
             <span class="is-minimum-7-characters is-family-monospace">{{
                 currentPositionDisplay
-            }}</span>
-            <ShortcutDisplay :class="{ 'is-invisible': !useShortcut }"
-                >INSERT</ShortcutDisplay
-            >
+                }}</span>
+            <ShortcutDisplay :class="{ 'is-invisible': !useShortcut }">INSERT</ShortcutDisplay>
         </button>
     </Hotkey>
 </template>
 
-<script setup lang="ts">
+<script
+    setup
+    lang="ts"
+>
 /** A toggle switch for the playback mode
  * @remarks Handles and emits various states and event for playback control.
  */

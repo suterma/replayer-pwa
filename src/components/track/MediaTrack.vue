@@ -53,10 +53,10 @@
                                 @click="setActiveTrack()"
                             ><span
                                     :class="{
-                                        'is-invisible': cues.length == 0,
+                                        'is-invisible': !hasCues,
                                     }"
                                     class="has-text-warning"
-                                >{{ cues.length }}</span></SelectButton>
+                                >{{ cuesCount }}</span></SelectButton>
                             <SoloButton
                                 :disabled="!canPlay"
                                 :is-soloed="isSoloed"
@@ -86,11 +86,11 @@
                         <span
                             v-if="!hasSingleMediaTrack && !isTrackEditable"
                             :class="{
-                                'is-hidden': cues.length == 0,
+                                'is-hidden': !hasCues,
                             }"
                             class="ml-3 tag is-warning is-rounded is-hidden-mobile is-unselectable"
                         >{{
-                            cues.length }}</span>
+                            cuesCount }}</span>
 
                         <!-- Title -->
                         <TrackTitle
@@ -151,18 +151,19 @@
         <!-- The buttons field (for a single track in play mode) -->
         <div
             v-if="isTrackPlayable && hasSingleMediaTrack && hasCues"
-            :key="track.Id"
+            :key="trackId"
             class="block transition-in-place"
         >
             <CueButtonsField
                 :disabled="!canPlay"
-                :playback-mode="playbackMode as PlaybackMode"
-                :track="track"
+                :playback-mode="playbackMode"
+                :cues="cues"
                 :is-active-track="isActiveTrack"
                 @click="(cue) => {
                     cueClick(cue);
                 }
                     "
+                @create-new-cue="trackStore.createNewCue()"
             ></CueButtonsField>
         </div>
 
@@ -180,25 +181,25 @@
                 <MeterLevelEditor
                     v-if="experimentalUseMeter && isTrackEditable"
                     v-experiment="experimentalUseMeter"
-                    :meter="track.Meter"
-                    :use-measure-numbers="track.UseMeasureNumbers"
+                    :meter="meter"
+                    :use-measure-numbers="useMeasureNumbers"
                     @update:meter="(value: any /*IMeter*/): void => {
-                        app.updateMeter(track.Id, value);
+                        app.updateMeter(trackId, value);
                     }
                         "
                     @adjust-origin-time="() => {
                         app.updateTrackOriginTime(
-                            track.Id,
+                            trackId,
                             currentPosition,
                         );
                     }
                         "
                     @update:use-measure-numbers="(value: boolean | null) => {
-                        app.updateUseMeasureNumbers(track.Id, value);
+                        app.updateUseMeasureNumbers(trackId, value);
                     }
                         "
                 ><template
-                        v-if="hasMeter && track.UseMeasureNumbers"
+                        v-if="hasMeter && useMeasureNumbers"
                         #left-end
                     >
                         <div
@@ -260,7 +261,7 @@
                 <CueLevelEditors
                     :cues="cues"
                     :disabled="!canPlay"
-                    :playback-mode="playbackMode as PlaybackMode"
+                    :playback-mode="playbackMode"
                     @click="cueClick"
                     @seek="(cue: ICue) => {
                         if (cue.Time) {
@@ -584,13 +585,14 @@
                                     <CueButtonsField
                                         :playback-mode="playbackMode as PlaybackMode
                                             "
-                                        :track="track"
+                                        :cues="cues"
                                         :disabled="!canPlay"
                                         :is-active-track="isActiveTrack"
                                         @click="(cue) => {
                                             cueClick(cue);
                                         }
                                             "
+                                        @create-new-cue="trackStore.createNewCue()"
                                     ></CueButtonsField>
                                 </div>
                                 <div v-if="
@@ -813,6 +815,7 @@ const {
     volume,
     name,
     cues,
+    cuesCount,
     track,
     playingCueDescription,
     playingCueRemarks,
