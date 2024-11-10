@@ -447,9 +447,6 @@ export function createTrackStore(trackId: string) {
             /** The tags of the track */
             tags,
 
-            /** Whether this track has any tags at all */
-            hasTags,
-
             /** The last persisted playhead position. To be used for setting the initial position on track load. */
             initialPlayheadPosition,
             playbackRate,
