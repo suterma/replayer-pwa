@@ -3,7 +3,9 @@
         <!-- Left side -->
         <div class="level-left">
             <div class="level-item">
-                <span class="title is-4"><slot></slot></span>
+                <span class="title is-4">
+                    <slot></slot>
+                </span>
 
                 <!-- Just show the type icon here -->
                 <MediaSourceIndicator
@@ -22,7 +24,7 @@
             >
                 <TrackTitle
                     class="is-flex-shrink-1 ml-3"
-                    :track="track"
+                    :trackId="track.Id"
                     :tags="showTags"
                 ></TrackTitle>
             </div>
@@ -36,7 +38,10 @@
         </div>
     </nav>
 
-    <h3 v-if="showMediaSource" class="subtitle">
+    <h3
+        v-if="showMediaSource"
+        class="subtitle"
+    >
         <span class="is-size-7 is-family-monospace">
             <MediaSourceIndicator
                 class="pl-6 ml-1"
@@ -49,14 +54,16 @@
                     &nbsp; (<TimeDisplay
                         class="is-size-7"
                         :model-value="track.Duration"
-                    ></TimeDisplay
-                    >)
+                    ></TimeDisplay>)
                 </span>
             </MediaSourceIndicator>
         </span>
     </h3>
 
-    <table v-if="showCues && track.Cues.length > 0" class="table is-narrow">
+    <table
+        v-if="showCues && track.Cues.length > 0"
+        class="table is-narrow"
+    >
         <thead>
             <tr>
                 <th class="is-size-7">Shortcut</th>
@@ -80,7 +87,10 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="cue in track.Cues" :key="cue.Id">
+            <tr
+                v-for="cue in track.Cues"
+                :key="cue.Id"
+            >
                 <td>
                     <p class="tag has-border is-family-monospace">
                         {{ cue.Shortcut }}
@@ -108,9 +118,7 @@
                     class="level-item is-flex-shrink-1"
                 >
                     <button class="button is-indicator">
-                        <MeasureDifferenceDisplay
-                            :model-value="cue.Duration"
-                        ></MeasureDifferenceDisplay>
+                        <MeasureDifferenceDisplay :model-value="cue.Duration"></MeasureDifferenceDisplay>
                     </button>
                 </div>
             </tr>
@@ -118,7 +126,10 @@
     </table>
 </template>
 
-<script setup lang="ts">
+<script
+    setup
+    lang="ts"
+>
 /** A printable display of a track, with cue listing */
 
 import { type PropType, computed, provide, readonly } from 'vue';
