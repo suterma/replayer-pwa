@@ -77,6 +77,12 @@ export function createTrackStore(trackId: string) {
             );
         }
 
+        /** The extracted duration of the loaded media file for this track.
+         * @remarks This is only defined if there is a loaded media file for this track.*/
+        const duration = computed(() =>
+            track.Duration
+        );
+
         // --- Track metadata ---
 
         /** The name of the track */
@@ -437,6 +443,10 @@ export function createTrackStore(trackId: string) {
              * @param {number} trackDuration - the track duratin in [seconds]. Could be NaN or infinity, depending on the source.
              */
             updateDurations,
+
+            /** The extracted duration of the loaded media file for this track.
+             * @remarks This is only defined if there is a loaded media file for this track.*/
+            duration,
         };
     })();
 }

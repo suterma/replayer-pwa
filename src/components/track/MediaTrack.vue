@@ -117,7 +117,7 @@
                             }"
                             @click="app.skipToPlayPause(trackId)"
                         >
-                            <span :id="`track-${track.Id}-HeaderLevelPlaceholder`"></span>
+                            <span :id="`track-${trackId}-HeaderLevelPlaceholder`"></span>
                         </div>
                     </div>
                 </template>
@@ -129,7 +129,7 @@
                         <VolumeKnob
                             v-if="isTrackMixable"
                             :disabled="!canPlay"
-                            :volume="track.Volume"
+                            :volume="volume"
                             @update:volume="updateVolume"
                         />
                     </div>
@@ -305,7 +305,7 @@
                         :disabled="!canPlay"
                         class="is-fullwidth ml-4-tablet mr-4-tablet"
                         :model-value="currentPositionCoarse"
-                        :track-duration="track.Duration"
+                        :track-duration="duration"
                         @update:model-value="(position) => seekToSeconds(position)
                             "
                         @seek="(seconds) => seek(seconds)"
@@ -330,7 +330,7 @@
                             </span>
                             <span class="ml-2 is-italic is-size-7">{{
                                 playingCueRemarks
-                                }}</span>
+                            }}</span>
                         </p>
                     </PlayheadSlider>
                 </div>
@@ -347,7 +347,7 @@
                             :hide-cue-navigation="true"
                             :playback-mode="playbackMode"
                             :is-pre-roll-enabled="isPreRollEnabled"
-                            :volume="track.Volume"
+                            :volume="volume"
                             :hide-play-pause-button="true"
                             @update:playback-mode="updatePlaybackMode"
                             @update:volume="updateVolume"
@@ -481,7 +481,7 @@
                                         <PlayheadSlider
                                             class="is-fullwidth"
                                             :model-value="currentPositionCoarse"
-                                            :track-duration="track.Duration"
+                                            :track-duration="duration"
                                             :disabled="!canPlay"
                                             @update:model-value="(position) =>
                                                 seekToSeconds(position)
@@ -509,7 +509,7 @@
                                                 </span>
                                                 <span class="ml-2 is-italic is-size-7">{{
                                                     playingCueRemarks
-                                                }}</span>
+                                                    }}</span>
                                             </p>
                                         </PlayheadSlider>
                                     </div>
@@ -530,7 +530,7 @@
                                                 "
                                             :is-pre-roll-enabled="isPreRollEnabled
                                                 "
-                                            :volume="track.Volume"
+                                            :volume="volume"
                                             :is-fading="fadingMode !== FadingMode.None
                                                 "
                                             :hide-play-pause-button="false"
@@ -583,8 +583,7 @@
                             >
                                 <div v-if="isFullscreen">
                                     <CueButtonsField
-                                        :playback-mode="playbackMode as PlaybackMode
-                                            "
+                                        :playback-mode="playbackMode"
                                         :cues="cues"
                                         :disabled="!canPlay"
                                         :is-active-track="isActiveTrack"
@@ -602,8 +601,7 @@
                                     (!isFullscreen && isTrackMixable)
                                 ">
                                     <CueButtonsBar
-                                        :playback-mode="playbackMode as PlaybackMode
-                                            "
+                                        :playback-mode="playbackMode"
                                         :cues="track.Cues"
                                         :disabled="!canPlay"
                                         @click="(cue) => {
@@ -622,11 +620,11 @@
                             >
                                 <TrackMediaElement
                                     v-if="isVideoTrack || isAudioTrack"
-                                    :key="track.Id"
+                                    :key="trackId"
                                     :enable-video="isVideoTrack"
                                     :media-url="mediaUrl"
                                     :start="initialPlayheadPosition"
-                                    :track-id="track.Id"
+                                    :track-id="trackId"
                                     :cues="track.Cues"
                                     :show-level-meter-for-edit="showLevelMeterForEdit
                                         "
@@ -646,11 +644,11 @@
                                          (happening from an to and from play view change)
                                           thus the isTrackPlayable is added to the key -->
                                         <TrackYouTubeElement
-                                            :key="props.trackId + isTrackPlayable"
+                                            :key="trackId + isTrackPlayable"
                                             :title="name"
                                             :url="mediaUrl"
                                             :start="initialPlayheadPosition"
-                                            :track-id="props.trackId"
+                                            :track-id="trackId"
                                             :cues="cues"
                                             :small-video="!isFullscreen"
                                             @click="setActiveTrack"
@@ -680,7 +678,6 @@
  * @remarks Also handles the common replayer events for tracks
  */
 import {
-    type PropType,
     type Ref,
     computed,
     provide,
@@ -739,7 +736,6 @@ import type { ICueScheduler } from '@/code/media/ICueScheduler';
 import { CueScheduler } from '@/code/media/CueScheduler';
 import type { ICue } from '@/store/ICue';
 import { PlaybackMode } from '@/store/PlaybackMode';
-import type { ITrack } from '@/store/ITrack';
 import MessageOverlay from '@/components/MessageOverlay.vue';
 import { Subscription } from 'sub-events';
 import { PlaybackState } from '@/code/media/PlaybackState';
@@ -832,7 +828,8 @@ const {
     isAudioTrack,
     isVideoTrack,
     isYoutubeVideoTrack,
-    initialPlayheadPosition
+    initialPlayheadPosition,
+    duration
 } = storeToRefs(trackStore);
 
 onUnmounted(() => {
@@ -976,7 +973,6 @@ function updateCurrentPosition(currentTime: number) {
 
 function updateDuration(duration: number) {
     removeCueScheduling();
-    trackDuration.value = duration;
     trackStore.updateDurations(duration);
 }
 
@@ -1050,7 +1046,7 @@ const currentPositionCoarse = computed(
     () => Math.round(currentPosition.value * 10) / 10,
 );
 
-/** Keep the currenlt playback position for the next use of this track. */
+/** Keep the current playback position for the next use of this track. */
 onBeforeUnmount(() => {
     trackStore.persistPlayheadPosition();
 });
@@ -1068,11 +1064,6 @@ const canPlay = computed(
         playbackState.value === PlaybackState.Playing ||
         playbackState.value === PlaybackState.Ready,
 );
-/** Gets the duration of the current track, in [seconds]
- * @remarks This is only available after successful load of the track (i.e. it's media metadata).
- * Could be NaN or infinity, depending on the source
- */
-const trackDuration: Ref<number | null> = ref(null);
 
 /** Indicates this track's playback state
  */
@@ -1213,7 +1204,6 @@ function toggleSolo(solo: boolean | null = null): void {
 }
 
 /** Whether this track is soloed */
-
 const isSoloed = ref(false);
 
 // --- transport ---
