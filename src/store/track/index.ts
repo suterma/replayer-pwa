@@ -123,7 +123,12 @@ export function createTrackStore(trackId: string) {
             return track.Cues;
         });
 
-        /** Gets the effective media source URL for this track
+        /** The URL or the local file name (possibly including a path) for the media file. */
+        const trackUrl = computed(() => {
+            return track.Url;
+        });
+
+        /** Gets the effective media source URL for this track, either an http or blob URL.
          * @remarks For non-online URL's, a match is sought from 
          * previously stored binary blobs
          */
@@ -390,10 +395,13 @@ export function createTrackStore(trackId: string) {
             /** Gets the current cue (by position), if any, regardless whether it is selected */
             playingCue,
 
-            /** Gets the effective media source URL for this track
+            /** Gets the effective media source URL for this track, either an http or blob URL.
              * @remarks For non-online URL's, a match is sought from previously stored binary blobs
              */
             mediaUrl,
+
+            /** The URL or the local file name (possibly including a path) for the media file. */
+            trackUrl,
 
             /** The pre-roll duration [in secods] to use for this track. 
              * Zero for no pre-roll.

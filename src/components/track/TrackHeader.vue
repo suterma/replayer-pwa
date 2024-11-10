@@ -38,7 +38,7 @@
                 >
                     <template #caption>
                         <MediaSourceIndicator
-                            :source="mediaUrl"
+                            :source="trackUrl"
                             :unavailable="playbackState === PlaybackState.Unavailable
                                 "
                             show-size
@@ -48,7 +48,7 @@
                     </template>
                     <MediaDropZone
                         ref="mediaDropZone"
-                        :replace-url="mediaUrl"
+                        :replace-url="trackUrl"
                         :track-id="trackId"
                         @accepted="acceptedMedia()"
                     >
@@ -335,6 +335,7 @@ const {
     hasNextCue,
     hasCues,
     mediaUrl,
+    trackUrl,
     pitchShift,
     playbackRate,
     preRollDuration
