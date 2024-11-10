@@ -101,8 +101,7 @@
                                 'is-clickable': canPlay,
                                 'has-cursor-not-allowed': !canPlay,
                             }"
-                            :track="track"
-                            :is-active="isActiveTrack"
+                            :trackId="trackId"
                             @click="setActiveTrack()"
                         ></TrackTitle>
                     </div>
@@ -330,7 +329,7 @@
                             </span>
                             <span class="ml-2 is-italic is-size-7">{{
                                 playingCueRemarks
-                            }}</span>
+                                }}</span>
                         </p>
                     </PlayheadSlider>
                 </div>
@@ -356,7 +355,7 @@
                                 <MediaContextMenu
                                     v-if="mediaHandler"
                                     :handler="mediaHandler"
-                                    :track="track"
+                                    :beatsPerMinute="meter?.BeatsPerMinute"
                                 />
                             </template>
                         </MediaControlsBar>
@@ -397,7 +396,7 @@
                                 (isTrackPlayable && isActiveTrack) ||
                                 (isTrackEditable && isExpanded)
                                 "
-                            :key="track.Id"
+                            :key="trackId"
                             :class="{
                                 section: isTrackPlayable || isTrackMixable,
                                 'transition-in-place':
@@ -466,8 +465,7 @@
                                                     'has-cursor-not-allowed':
                                                         !canPlay,
                                                 }"
-                                                :track="track"
-                                                :is-active="isActiveTrack"
+                                                :trackId="trackId"
                                                 :small="!isFullscreen"
                                                 @click="setActiveTrack()"
                                             ></TrackTitle>
@@ -509,7 +507,7 @@
                                                 </span>
                                                 <span class="ml-2 is-italic is-size-7">{{
                                                     playingCueRemarks
-                                                    }}</span>
+                                                }}</span>
                                             </p>
                                         </PlayheadSlider>
                                     </div>
@@ -555,7 +553,7 @@
                                                 <MediaContextMenu
                                                     v-if="mediaHandler"
                                                     :handler="mediaHandler"
-                                                    :track="track"
+                                                    :beatsPerMinute="meter?.BeatsPerMinute"
                                                 />
                                             </template>
                                             <PlaybackIndicator
@@ -602,7 +600,7 @@
                                 ">
                                     <CueButtonsBar
                                         :playback-mode="playbackMode"
-                                        :cues="track.Cues"
+                                        :cues="cues"
                                         :disabled="!canPlay"
                                         @click="(cue) => {
                                             cueClick(cue);
@@ -625,7 +623,7 @@
                                     :media-url="mediaUrl"
                                     :start="initialPlayheadPosition"
                                     :track-id="trackId"
-                                    :cues="track.Cues"
+                                    :cues="cues"
                                     :show-level-meter-for-edit="showLevelMeterForEdit
                                         "
                                     :show-waveforms-on-edit="showWaveformsOnEdit
@@ -717,7 +715,6 @@ import TrackTitle from '@/components/track/TrackTitle.vue';
 import { useSettingsStore } from '@/store/settings';
 import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
-import { Meter } from '@/code/music/Meter';
 import {
     currentPositionDisplayInjectionKey,
     currentPositionInjectionKey,
@@ -812,7 +809,6 @@ const {
     name,
     cues,
     cuesCount,
-    track,
     playingCueDescription,
     playingCueRemarks,
     playingCueIsSelected,

@@ -117,6 +117,16 @@ export function createTrackStore(trackId: string) {
             },
         });
 
+        /** Whether this track has any cue at all */
+        const hasCues = computed(() => {
+            return cues.value.length !== undefined && cues.value.length > 0;
+        });
+
+        /** Whether this track has any tags at all */
+        const hasTags = computed(() => {
+            return tags.value.size !== undefined && tags.value.size > 0;
+        });
+
 
         /** Returns all cues of this track */
         const cues = computed(() => {
@@ -237,10 +247,7 @@ export function createTrackStore(trackId: string) {
             return cues.value?.map((cue) => cue.Id) ?? [];
         });
 
-        /** Whether this track has any cue at all */
-        const hasCues = computed(() => {
-            return cues.value.length !== undefined && cues.value.length > 0;
-        });
+
 
         /** The number of cues this track has */
         const cuesCount = computed(() => {
@@ -389,6 +396,9 @@ export function createTrackStore(trackId: string) {
             /** Whether this track has any cue at all */
             hasCues,
 
+            /** Whether this track has any tags at all */
+            hasTags,
+
             /** The number of cues this track has */
             cuesCount,
 
@@ -427,12 +437,18 @@ export function createTrackStore(trackId: string) {
 
             /** The name of the track */
             name,
+
             /** The album of the track */
             album,
+
             /** The artist of the track */
             artist,
+
             /** The tags of the track */
             tags,
+
+            /** Whether this track has any tags at all */
+            hasTags,
 
             /** The last persisted playhead position. To be used for setting the initial position on track load. */
             initialPlayheadPosition,
