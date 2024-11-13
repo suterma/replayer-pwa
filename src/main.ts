@@ -28,7 +28,6 @@ import { useAudioStore } from './store/audio';
 import useLog from '@/composables/LogComposable';
 import { useSettingsStore } from './store/settings';
 import { useMultitrackStore } from './store/multitrack';
-import { Store } from './store';
 
 const { log } = useLog();
 log.info(`Replayer app version: ${import.meta.env.VITE_APP_VERSION}`);

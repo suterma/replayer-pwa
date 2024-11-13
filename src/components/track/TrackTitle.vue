@@ -9,37 +9,27 @@
             }"
             :name="name"
         ></TrackTitleName>
-        <ArtistDisplay
-            class="ml-2 is-size-7"
-            :artist="artist"
-            :album="album"
-        />
-        <MeterDisplay
-            class="ml-2 is-size-7"
-            :meter="meter"
-        ></MeterDisplay>
+        <ArtistDisplay class="ml-2 is-size-7" :artist="artist" :album="album" />
+        <MeterDisplay class="ml-2 is-size-7" :meter="meter"></MeterDisplay>
 
         <TagsDisplay
             v-if="hasTags && props.tags"
             class="ml-0 is-size-7"
-            :tags="tags"
+            :tags="trackTags"
             small
             readonly
         ></TagsDisplay>
     </div>
 </template>
 
-<script
-    setup
-    lang="ts"
->
+<script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { onUnmounted, } from 'vue';
+import { onUnmounted } from 'vue';
 import TrackTitleName from '@/components/track/TrackTitleName.vue';
 import MeterDisplay from '@/components/displays/MeterDisplay.vue';
 import ArtistDisplay from '@/components/displays/ArtistDisplay.vue';
 import TagsDisplay from '@/components/displays/TagsDisplay.vue';
-import { createTrackStore } from '@/store/track';
+import { createTrackStore } from '@/store/track/index';
 
 /** Displays a track's title, including name, meter, BPM and tags.
  * @remarks This component makes some layout decisions, but intentionally color decisions.
@@ -78,7 +68,7 @@ const {
     meter,
     hasTags,
     name,
-    tags,
+    tags: trackTags,
     artist,
     album,
 } = storeToRefs(trackStore);
@@ -86,7 +76,4 @@ const {
 onUnmounted(() => {
     trackStore.$dispose();
 });
-
-
-
 </script>

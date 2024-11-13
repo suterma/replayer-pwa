@@ -12,7 +12,7 @@
  */
 
 import { defineStore } from 'pinia';
-import { computed, ref, watchEffect } from 'vue';
+import { computed, ref } from 'vue';
 import { useAppStore } from '../app';
 import { storeToRefs } from 'pinia';
 import { useAudioStore } from '../audio';
@@ -71,17 +71,12 @@ export function createTrackStore(trackId: string) {
          */
         function updateDurations(trackDuration: number): void {
             track.Duration = trackDuration;
-            CompilationHandler.updateCueDurations(
-                track.Cues,
-                trackDuration,
-            );
+            CompilationHandler.updateCueDurations(track.Cues, trackDuration);
         }
 
         /** The extracted duration of the loaded media file for this track.
          * @remarks This is only defined if there is a loaded media file for this track.*/
-        const duration = computed(() =>
-            track.Duration
-        );
+        const duration = computed(() => track.Duration);
 
         // --- Track metadata ---
 
@@ -127,7 +122,6 @@ export function createTrackStore(trackId: string) {
             return tags.value.size !== undefined && tags.value.size > 0;
         });
 
-
         /** Returns all cues of this track */
         const cues = computed(() => {
             return track.Cues;
@@ -139,7 +133,7 @@ export function createTrackStore(trackId: string) {
         });
 
         /** Gets the effective media source URL for this track, either an http or blob URL.
-         * @remarks For non-online URL's, a match is sought from 
+         * @remarks For non-online URL's, a match is sought from
          * previously stored binary blobs
          */
         const mediaUrl = computed(() => {
@@ -155,11 +149,11 @@ export function createTrackStore(trackId: string) {
             return url;
         });
 
-        /** Whether all required values for the use of the measure number as 
+        /** Whether all required values for the use of the measure number as
          * position are available. */
         const hasMeter = computed(() => Meter.isValid(track.Meter));
 
-        /** The pre-roll duration [in secods] to use for this track. 
+        /** The pre-roll duration [in secods] to use for this track.
          * Zero for no pre-roll.
          * @remarks This considers the default pre-roll setting and the possibly
          * defined track-specific pre-roll duration.
@@ -247,8 +241,6 @@ export function createTrackStore(trackId: string) {
             return cues.value?.map((cue) => cue.Id) ?? [];
         });
 
-
-
         /** The number of cues this track has */
         const cuesCount = computed(() => {
             return cues.value.length;
@@ -303,7 +295,6 @@ export function createTrackStore(trackId: string) {
                 );
         }
 
-
         /** Persists the running playhead position
          * @remarks Implements #132 */
         function persistPlayheadPosition() {
@@ -311,9 +302,7 @@ export function createTrackStore(trackId: string) {
         }
 
         /** The last persisted playhead position. To be used for setting the initial position on track load. */
-        const initialPlayheadPosition = computed(() =>
-            track.PlayheadPosition
-        );
+        const initialPlayheadPosition = computed(() => track.PlayheadPosition);
 
         // --- audio state ---
 
@@ -342,7 +331,7 @@ export function createTrackStore(trackId: string) {
             /** The track's musical meter */
             meter,
 
-            /** Whether all required values for the use of the measure number as 
+            /** Whether all required values for the use of the measure number as
              * position are available. */
             hasMeter,
 
@@ -413,7 +402,7 @@ export function createTrackStore(trackId: string) {
             /** The URL or the local file name (possibly including a path) for the media file. */
             trackUrl,
 
-            /** The pre-roll duration [in secods] to use for this track. 
+            /** The pre-roll duration [in secods] to use for this track.
              * Zero for no pre-roll.
              * @remarks This considers the default pre-roll setting and the possibly
              * defined track-specific pre-roll duration.
@@ -421,9 +410,9 @@ export function createTrackStore(trackId: string) {
             preRollDuration,
 
             /** The track
-             * @remarks It is recommended to not use the track as a whole, 
+             * @remarks It is recommended to not use the track as a whole,
              * but to use the specific track properties as destructured refs
-            */
+             */
             track,
 
             /** Whether this is the first track in the set of media tracks */
@@ -471,7 +460,3 @@ export function createTrackStore(trackId: string) {
         };
     })();
 }
-function useSettingStore() {
-    throw new Error('Function not implemented.');
-}
-

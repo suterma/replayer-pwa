@@ -101,7 +101,7 @@
                                 'is-clickable': canPlay,
                                 'has-cursor-not-allowed': !canPlay,
                             }"
-                            :trackId="trackId"
+                            :track-id="trackId"
                             @click="setActiveTrack()"
                         ></TrackTitle>
                     </div>
@@ -213,7 +213,8 @@
                                     <div class="field">
                                         <p class="control">
                                             <button class="button is-indicator">
-                                                <MeasureDisplay :model-value="currentPosition
+                                                <MeasureDisplay
+:model-value="currentPosition
                                                     "></MeasureDisplay>
                                             </button>
                                         </p>
@@ -355,7 +356,7 @@
                                 <MediaContextMenu
                                     v-if="mediaHandler"
                                     :handler="mediaHandler"
-                                    :beatsPerMinute="meter?.BeatsPerMinute"
+                                    :beats-per-minute="meter?.BeatsPerMinute"
                                 />
                             </template>
                         </MediaControlsBar>
@@ -409,7 +410,8 @@
                             :disabled="!canPlay"
                         >
                             <!-- The messages need to be shown inside the native fullscren element; otherwise they would get hidden below -->
-                            <MessageOverlay v-if="
+                            <MessageOverlay
+v-if="
                                 isFullscreen && hasNativeFullscreenSupport
                             " />
 
@@ -465,7 +467,7 @@
                                                     'has-cursor-not-allowed':
                                                         !canPlay,
                                                 }"
-                                                :trackId="trackId"
+                                                :track-id="trackId"
                                                 :small="!isFullscreen"
                                                 @click="setActiveTrack()"
                                             ></TrackTitle>
@@ -553,7 +555,7 @@
                                                 <MediaContextMenu
                                                     v-if="mediaHandler"
                                                     :handler="mediaHandler"
-                                                    :beatsPerMinute="meter?.BeatsPerMinute"
+                                                    :beats-per-minute="meter?.BeatsPerMinute"
                                                 />
                                             </template>
                                             <PlaybackIndicator
@@ -592,7 +594,8 @@
                                         @create-new-cue="trackStore.createNewCue()"
                                     ></CueButtonsField>
                                 </div>
-                                <div v-if="
+                                <div
+v-if="
                                     (!hasSingleMediaTrack &&
                                         !isFullscreen &&
                                         isTrackPlayable) ||

@@ -31,10 +31,7 @@
         </CueButton>
         <!-- Using the v-for on a template instead of the actual component saves unnecessary renderings. 
              See https://stackoverflow.com/a/76074016/79485 -->
-        <template
-            v-for="cue in cues"
-            :key="cue.Id"
-        >
+        <template v-for="cue in cues" :key="cue.Id">
             <CueButton
                 :id="cue.Id"
                 class="is-flex-grow-1"
@@ -135,11 +132,8 @@
     </div>
 </template>
 
-<script
-    setup
-    lang="ts"
->
-import { computed, inject, nextTick, type PropType } from 'vue';
+<script setup lang="ts">
+import { computed, inject, type PropType } from 'vue';
 import CueButton from '@/components/buttons/CueButton.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import { useAppStore } from '@/store/app';
@@ -160,12 +154,12 @@ import { PlaybackState } from '@/code/media/PlaybackState';
 /** A field of large cue buttons for a track
  */
 
-const emit = defineEmits(
-    ['click',
-        /** Occurs, when a new cue should get created at the current playhead position.
-         */
-        'createNewCue',
-    ]);
+const emit = defineEmits([
+    'click',
+    /** Occurs, when a new cue should get created at the current playhead position.
+     */
+    'createNewCue',
+]);
 
 const props = defineProps({
     /** The cues to show
@@ -323,7 +317,6 @@ function percentComplete(cue: ICue): number | null {
 </script>
 <style lang="scss">
 .cue-buttons-field.buttons {
-
     /* Virtual buttons should take up not unnecessary much space */
     .cue.button.is-virtual {
         max-width: 14em;

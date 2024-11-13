@@ -24,7 +24,7 @@
             >
                 <TrackTitle
                     class="is-flex-shrink-1 ml-3"
-                    :trackId="track.Id"
+                    :track-id="track.Id"
                     :tags="showTags"
                 ></TrackTitle>
             </div>
