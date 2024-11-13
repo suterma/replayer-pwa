@@ -16,18 +16,11 @@
  *  Uses the {YouTubeConsentDialog} to aks for consent from the user
  */
 import { consentYouTube } from '@/code/ui/dialogs';
-import { onMounted } from 'vue';
 import { useSettingsStore } from './../../store/settings';
 import { storeToRefs } from 'pinia';
 
 const settings = useSettingsStore();
 const { youTubeConsent } = storeToRefs(settings);
-
-onMounted(() => {
-    if (!youTubeConsent.value) {
-        getConsent();
-    }
-});
 
 function getConsent() {
     consentYouTube().then((ok) => {
