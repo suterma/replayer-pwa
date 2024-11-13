@@ -4,7 +4,7 @@
         <div class="field" v-bind="$attrs">
             <p class="control">
                 <button class="button" @click="getConsent">
-                    YouTube consent...
+                    YouTube consent required...
                 </button>
             </p>
         </div>
