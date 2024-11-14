@@ -322,7 +322,7 @@
                             </span>
                             <span class="ml-2 is-italic is-size-7">{{
                                 playingCueRemarks
-                                }}</span>
+                            }}</span>
                         </p>
                     </PlayheadSlider>
                 </div>
@@ -447,13 +447,15 @@
                                         ></CollapsibleButton>
                                         <!-- Keep some distance to the fullscreen button -->
 
-                                        <p class="ml-3">
-                                            <!-- Title -->
+                                        <!-- Title -->
+                                        <p
+                                            class="ml-3"
+                                            v-if="!isTrackEditable"
+                                        >
                                             <!-- Use smaller title in collapsed/non-fullscreen state -->
                                             <TrackTitle
-                                                v-if="!isTrackEditable"
                                                 tags
-                                                class="is-flex-shrink-1 ml-3"
+                                                class="is-flex-shrink-1"
                                                 :class="{
                                                     'is-clickable': canPlay,
                                                     'has-cursor-not-allowed':
@@ -463,6 +465,22 @@
                                                 :small="!isFullscreen"
                                                 @click="setActiveTrack()"
                                             ></TrackTitle>
+                                            <!-- On smaller screens, show the metadata, below the title 
+                                             (it's hidden within the title on smaller screens) -->
+                                            <span
+                                                v-if="artist || album || meter"
+                                                class='is-hidden-tablet'
+                                            >
+                                                <ArtistDisplay
+                                                    class="mr-2 is-size-7"
+                                                    :artist="artist"
+                                                    :album="album"
+                                                />
+                                                <MeterDisplay
+                                                    class="mr-2 is-size-7"
+                                                    :meter="meter"
+                                                ></MeterDisplay>
+                                            </span>
                                         </p>
                                     </div>
                                 </div>
@@ -501,7 +519,7 @@
                                                 </span>
                                                 <span class="ml-2 is-italic is-size-7">{{
                                                     playingCueRemarks
-                                                }}</span>
+                                                    }}</span>
                                             </p>
                                         </PlayheadSlider>
                                     </div>
@@ -735,6 +753,8 @@ import { Subscription } from 'sub-events';
 import { PlaybackState } from '@/code/media/PlaybackState';
 import useLog from '@/composables/LogComposable';
 import { createTrackStore } from '@/store/track/index';
+import MeterDisplay from '@/components/displays/MeterDisplay.vue';
+import ArtistDisplay from '@/components/displays/ArtistDisplay.vue';
 
 const { log } = useLog();
 const emit = defineEmits([
@@ -800,6 +820,7 @@ const {
     mediaHandler,
     useMeasureNumbers,
     meter,
+    artist, album,
     hasMeter,
     currentPosition,
     volume,
