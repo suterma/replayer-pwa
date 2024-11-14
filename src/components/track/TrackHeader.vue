@@ -262,6 +262,7 @@ import { playbackStateInjectionKey } from './TrackInjectionKeys';
 import { useSettingsStore } from '@/store/settings';
 import { storeToRefs } from 'pinia';
 import { createTrackStore } from '@/store/track/index';
+import { PlaybackState } from '@/code/media/PlaybackState';
 
 const emit = defineEmits(['update:isExpanded']);
 
