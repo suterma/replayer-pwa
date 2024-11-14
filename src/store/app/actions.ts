@@ -170,7 +170,6 @@ export const actions = {
     addCue(trackId: string, cue: ICue): void {
         const matchingTrack = getters.getTrackById(trackId);
         if (matchingTrack) {
-            log.debug('actions::ADD_CUE:matchingTrack', matchingTrack);
 
             matchingTrack.Cues.push(cue);
 
@@ -178,10 +177,6 @@ export const actions = {
             CompilationHandler.sort(matchingTrack.Cues);
 
             if (matchingTrack.Duration != null) {
-                log.debug(
-                    'actions::ADD_CUE:matchingTrack.Duration',
-                    matchingTrack.Duration,
-                );
                 CompilationHandler.updateCueDurations(
                     matchingTrack.Cues,
                     matchingTrack.Duration,
@@ -196,7 +191,6 @@ export const actions = {
         if (tag) {
             const matchingTrack = getters.getTrackById(trackId);
             if (matchingTrack) {
-                log.debug('actions::addTag:matchingTrack', matchingTrack);
                 matchingTrack.Tags.add(tag);
             }
         }
@@ -207,7 +201,6 @@ export const actions = {
     removeTag(trackId: string, tag: string): void {
         const matchingTrack = getters.getTrackById(trackId);
         if (matchingTrack) {
-            log.debug('actions::removeTag:matchingTrack', matchingTrack);
             matchingTrack.Tags.delete(tag);
         }
     },
