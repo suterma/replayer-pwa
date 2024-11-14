@@ -4,7 +4,7 @@
 
         <button
             v-if="hasSecondTrack && !hideTrackNavigation"
-            class="button"
+            class="button is-nav"
             :disabled="!hasPreviousTrack || disabled"
             title="skip to previous track"
             data-cy="previous-track"
@@ -12,9 +12,10 @@
         >
             <BaseIcon v-once :path="mdiSkipPrevious" />
         </button>
+
         <button
             v-if="!hideCueNavigation"
-            class="button"
+            class="button is-nav"
             :disabled="!hasPreviousCue || disabled"
             title="skip to previous cue"
             data-cy="previous-cue"
@@ -26,7 +27,7 @@
         <!-- Stop (do not show on small devices, user still can use play/pause) -->
         <button
             v-if="!hideStopButton"
-            class="button is-hidden-mobile"
+            class="button is-nav is-hidden-mobile"
             :disabled="disabled"
             title="Stop"
             data-cy="stop"
@@ -48,7 +49,7 @@
 
         <button
             v-if="!hideCueNavigation"
-            class="button"
+            class="button is-nav"
             :disabled="!hasNextCue || disabled"
             title="skip to next cue"
             data-cy="next-cue"
@@ -59,7 +60,7 @@
 
         <button
             v-if="hasSecondTrack && !hideTrackNavigation"
-            class="button"
+            class="button is-nav"
             :disabled="!hasNextTrack || disabled"
             title="skip to next track"
             data-cy="next-track"

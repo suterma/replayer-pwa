@@ -10768,8 +10768,8 @@ Not showing the border otherwise keeps the UI in non-edit modes calm */
 }
 
 /*************************************************************
- * Specific styles for nav buttons (inside a nav element or with the is-nav class)
- * These nav buttons do not have an immediate function, but rather serve
+ * Specific styles for nav buttons (with the is-nav class)
+ * These nav buttons do not have an editing function, but rather serve
  * a navigational purpose
  * Note: These styles are based on a the "slate" bulmaswatch theme and borrow variables from there
  **************************************************************/
@@ -10778,8 +10778,7 @@ Not showing the border otherwise keeps the UI in non-edit modes calm */
 * Except, when focused by keyboard this should not apply (and the usual focus border should be applied)
 * to allow visual cues for keyboard navigation
 */
-.button.is-nav,
-nav .button {
+.button.is-nav {
   background: none;
   border-width: 1px;
   border-style: solid;
@@ -10787,8 +10786,7 @@ nav .button {
   text-decoration: none;
 }
 
-.button.is-nav:focus:not(:active),
-nav .button:focus:not(:active) {
+.button.is-nav:focus:not(:active) {
   box-shadow: none;
 }
 
@@ -10796,20 +10794,17 @@ nav .button:focus:not(:active) {
 * Nav-Buttons should in general not show a focus visual,
 * except for keyboard navigation, with the specific modifier, focus-visible
 */
-.button.is-nav:focus,
-nav .button:focus {
+.button.is-nav:focus {
   border-color: transparent;
   box-shadow: none;
 }
 
-.button.is-nav:focus-visible,
-nav .button:focus-visible {
+.button.is-nav:focus-visible {
   border-color: #ededed;
 }
 
 /* Indicate an actionable item */
-.button.is-nav:hover,
-nav .button:hover {
+.button.is-nav:hover {
   background: rgba(122, 130, 136, 0.2);
 }
 
