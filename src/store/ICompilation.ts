@@ -12,17 +12,12 @@
  */
 
 import type { ITrack } from './ITrack';
-import { CompilationType } from './CompilationType';
 
 /** @interface Defines a Replayer Compilation, consisting of a set of tracks with their cues.
  * @remarks This definition corresponds to the definitions in https://github.com/suterma/Replayer/blob/master/SOURCE/Replayer.Model/ICompilation.cs for the classic WinForms Replayer
- * The implemented type is advertised as the Type. Using this pattern saves the code from implementing a full blown plugin architecture.
  */
 
 export interface ICompilation {
-    /** Gets the implemented type of this compilation. */
-    Type: CompilationType;
-
     /** The media path. This is where the media files are retrieved from.
      * @remarks Applies to all included media files, but may be overridden by specific paths to individual files
      */
