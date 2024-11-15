@@ -109,7 +109,9 @@
             </template>
             <template v-else>
                 <!-- Display in non-edit view -->
-                <div class="level-item is-justify-content-flex-start">
+                <div
+                    class="notranslate level-item is-justify-content-flex-start"
+                >
                     <span class="title is-3" data-cy="compilation-title">
                         <!-- Use a placeholder to still use the height when not actual title is displayed -->
                         <template v-if="compilation.Title">
@@ -118,7 +120,7 @@
                         <template v-else>&nbsp;</template>
                     </span>
                 </div>
-                <div class="level-item">
+                <div class="notranslate level-item">
                     <p class="is-size-7">
                         <ArtistDisplay
                             class="has-cropped-text"

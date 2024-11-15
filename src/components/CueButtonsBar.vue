@@ -1,6 +1,6 @@
 <template>
     <div
-        class="cue-buttons-bar buttons field has-addons is-fullwidth is-flex-wrap-nowrap"
+        class="notranslate cue-buttons-bar buttons field has-addons is-fullwidth is-flex-wrap-nowrap"
     >
         <!-- A virtual cue button as prefix, when the first cue is not at the zero position -->
         <!-- Note: Do not crop the (non-existing) text in virtual cue buttons

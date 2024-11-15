@@ -1,7 +1,7 @@
 <template>
     <!-- align like a bulma level, vertically centered -->
     <p
-        class="control is-flex is-align-items-center"
+        class="notranslate control is-flex is-align-items-center"
         :title="
             unavailable
                 ? `Track media '${mediaSource}' is unavailable. Please reload or replace it in the editor.`

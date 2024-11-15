@@ -321,7 +321,7 @@
                         <!-- On mobile, the text is cropped at full width minus seek buttons, because of the level's automatic stacking,
                                     on lager viewports the text is cropped to not exceed the dynamic playhead slider -->
                         <p
-                            class="is-size-7 has-cropped-text"
+                            class="notranslate is-size-7 has-cropped-text"
                             :class="{
                                 'has-opacity-half': !canPlay,
                                 'has-text-success': playingCueIsSelected,
@@ -518,7 +518,7 @@
                                             <!-- On mobile, the text is cropped at full width minus seek buttons, because of the level's automatic stacking,
                                     on lager viewports the text is strictly cropped to 129px -->
                                             <p
-                                                class="is-size-7 has-cropped-text"
+                                                class="notranslate is-size-7 has-cropped-text"
                                                 :class="{
                                                     'has-text-success':
                                                         playingCueIsSelected,

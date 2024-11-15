@@ -59,6 +59,7 @@
                                         <!-- NOTE: Toggling the disabled attribute does not work as intended -->
                                         <a
                                             v-if="Boolean(mediaUrl)"
+                                            class="notranslate"
                                             :href="mediaUrl"
                                             target="_blank"
                                         >
@@ -66,6 +67,7 @@
                                         </a>
                                         <a
                                             v-else
+                                            class="notranslate"
                                             :href="mediaUrl"
                                             target="_blank"
                                             disabled

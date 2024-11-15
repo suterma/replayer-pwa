@@ -1,6 +1,6 @@
 <template>
     <span
-        class="tags"
+        class="notranslate tags"
         :class="{
             'are-large': !small,
         }"

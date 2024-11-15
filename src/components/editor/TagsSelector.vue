@@ -1,5 +1,5 @@
 <template>
-    <TransitionGroup name="list" tag="div" class="buttons">
+    <TransitionGroup name="list" tag="div" class="notranslate buttons">
         <ToggleButton
             v-for="tag in allTags"
             :key="tag"

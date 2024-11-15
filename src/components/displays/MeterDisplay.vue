@@ -1,5 +1,5 @@
 <template>
-    <span v-if="meter">
+    <span v-if="meter" class="notranslate">
         <span v-if="meter?.BeatsPerMinute" class="is-single-line mr-3">
             <span class="has-opacity-half">BPM:&nbsp;</span>
             <span>{{ meter?.BeatsPerMinute }}</span>

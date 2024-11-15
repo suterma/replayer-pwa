@@ -1,5 +1,5 @@
 <template>
-    <div class="cue-buttons-field buttons has-gap is-fullwidth">
+    <div class="notranslate cue-buttons-field buttons has-gap is-fullwidth">
         <!-- A virtual cue button as prefix, when the first cue is not at the zero position -->
         <CueButton
             v-if="(prefixCue.Duration ?? 0 > 0) && showInitialZeroTimeCue"

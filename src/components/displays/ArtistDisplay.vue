@@ -1,5 +1,5 @@
 <template>
-    <span :class="{ 'mr-3': artist || album }">
+    <span class="notranslate" :class="{ 'mr-3': artist || album }">
         <span v-if="artist" class="is-single-line">
             <span class="has-opacity-half">by&nbsp;</span>
             <span class="is-italic">
