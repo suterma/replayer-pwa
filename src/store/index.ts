@@ -27,4 +27,6 @@ export enum Store {
     Audio = 'AUDIO',
     /** A store for multitrack audio-related global state */
     Multitrack = 'MULTITRACK',
+    /** A store for track-related state, for a single track */
+    Track = 'TRACK',
 }

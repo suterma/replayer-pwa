@@ -20,10 +20,12 @@ import CompilationHandler from '../compilation-handler';
 import FileHandler from '../filehandler';
 import { Meter } from '@/code/music/Meter';
 import { useSettingsStore } from '../settings';
+import { Store } from '..';
 
-// export factory function
-export function createTrackStore(trackId: string) {
-    return defineStore(`tracks/${trackId}`, () => {
+/** A factory function for a single track store */
+export function useTrackStore(trackId: string) {
+    /** A dynamic store for holding data for a single track */
+    return defineStore(`${Store.Track}/${trackId}`, () => {
         const app = useAppStore();
         const settings = useSettingsStore();
         const audio = useAudioStore();

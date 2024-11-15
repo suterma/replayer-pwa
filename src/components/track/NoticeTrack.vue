@@ -23,7 +23,7 @@ import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
 import CloseButton from '../buttons/CloseButton.vue';
 import type { ITrack } from '@/store/ITrack';
-import { createTrackStore } from '@/store/track/index';
+import { useTrackStore } from '@/store/track/index';
 
 const props = defineProps({
     /** The track to display
@@ -46,7 +46,7 @@ const { mediaUrls } = storeToRefs(app);
  * @remarks Code inside the setup script runs once per component instance,
  * thus the track store must be destroyed after component unload.
  */
-const trackStore = createTrackStore(props.track.Id);
+const trackStore = useTrackStore(props.track.Id);
 const { mediaUrl } = storeToRefs(trackStore);
 
 onUnmounted(() => {

@@ -262,7 +262,7 @@ import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { playbackStateInjectionKey } from './TrackInjectionKeys';
 import { useSettingsStore } from '@/store/settings';
 import { storeToRefs } from 'pinia';
-import { createTrackStore } from '@/store/track/index';
+import { useTrackStore } from '@/store/track/index';
 import { PlaybackState } from '@/code/media/PlaybackState';
 import FileHandler from '@/store/filehandler';
 
@@ -302,11 +302,8 @@ const props = defineProps({
 
 // --- tracking the associated ITrack
 
-/** The dynamic track store for this component.
- * @remarks Code inside the setup script runs once per component instance,
- * thus the track store must be destroyed after component unload.
- */
-const trackStore = createTrackStore(props.trackId);
+/** The dynamic track store for this component. */
+const trackStore = useTrackStore(props.trackId);
 const {
     useMeasureNumbers,
     track,
@@ -319,10 +316,6 @@ const {
     trackUrl,
     preRollDuration,
 } = storeToRefs(trackStore);
-
-onUnmounted(() => {
-    trackStore.$dispose();
-});
 
 const app = useAppStore();
 

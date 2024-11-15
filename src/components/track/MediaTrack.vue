@@ -789,7 +789,7 @@ import MessageOverlay from '@/components/MessageOverlay.vue';
 import { Subscription } from 'sub-events';
 import { PlaybackState } from '@/code/media/PlaybackState';
 import useLog from '@/composables/LogComposable';
-import { createTrackStore } from '@/store/track/index';
+import { useTrackStore } from '@/store/track/index';
 import MeterDisplay from '@/components/displays/MeterDisplay.vue';
 import ArtistDisplay from '@/components/displays/ArtistDisplay.vue';
 
@@ -851,7 +851,7 @@ const {
  * @remarks Code inside the setup script runs once per component instance,
  * thus the track store must be destroyed after component unload.
  */
-const trackStore = createTrackStore(props.trackId);
+const trackStore = useTrackStore(props.trackId);
 const {
     isActiveTrack,
     mediaHandler,

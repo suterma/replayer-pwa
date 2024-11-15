@@ -220,7 +220,7 @@ import { confirm } from '@/code/ui/dialogs';
 import TagInput from '@/components/editor/TagInput.vue';
 import TagsDisplay from '@/components/displays/TagsDisplay.vue';
 import { PlaybackState } from '@/code/media/PlaybackState';
-import { createTrackStore } from '@/store/track/index';
+import { useTrackStore } from '@/store/track/index';
 
 const props = defineProps({
     /** The track to display
@@ -243,7 +243,7 @@ const { showPdfInline } = storeToRefs(settings);
  * @remarks Code inside the setup script runs once per component instance,
  * thus the track store must be destroyed after component unload.
  */
-const trackStore = createTrackStore(props.track.Id);
+const trackStore = useTrackStore(props.track.Id);
 const { mediaUrl } = storeToRefs(trackStore);
 
 onUnmounted(() => {

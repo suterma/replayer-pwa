@@ -10,7 +10,6 @@
             }"
             :name="name"
         >
-
         </TrackTitleName>
 
         <!-- <span
@@ -29,19 +28,13 @@
             </i>
         </span> -->
 
-        <span
-            v-if="artist || album || meter"
-            class='is-hidden-mobile'
-        >
+        <span v-if="artist || album || meter" class="is-hidden-mobile">
             <ArtistDisplay
                 class="mr-2 is-size-7"
                 :artist="artist"
                 :album="album"
             />
-            <MeterDisplay
-                class="mr-2 is-size-7"
-                :meter="meter"
-            ></MeterDisplay>
+            <MeterDisplay class="mr-2 is-size-7" :meter="meter"></MeterDisplay>
         </span>
 
         <TagsDisplay
@@ -54,17 +47,14 @@
     </div>
 </template>
 
-<script
-    setup
-    lang="ts"
->
+<script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { computed, onUnmounted } from 'vue';
 import TrackTitleName from '@/components/track/TrackTitleName.vue';
 import MeterDisplay from '@/components/displays/MeterDisplay.vue';
 import ArtistDisplay from '@/components/displays/ArtistDisplay.vue';
 import TagsDisplay from '@/components/displays/TagsDisplay.vue';
-import { createTrackStore } from '@/store/track/index';
+import { useTrackStore } from '@/store/track/index';
 import NavButton from '@/components/buttons/NavButton.vue';
 import { mdiDotsVertical } from '@mdi/js';
 
@@ -104,11 +94,8 @@ const props = defineProps({
 
 // --- tracking the associated ITrack
 
-/** The dynamic track store for this component.
- * @remarks Code inside the setup script runs once per component instance,
- * thus the track store must be destroyed after component unload.
- */
-const trackStore = createTrackStore(props.trackId);
+/** The dynamic track store for this component. */
+const trackStore = useTrackStore(props.trackId);
 const {
     isActiveTrack,
     meter,
@@ -118,10 +105,6 @@ const {
     artist,
     album,
 } = storeToRefs(trackStore);
-
-onUnmounted(() => {
-    trackStore.$dispose();
-});
 
 // const tooltipText = computed(() => {
 //     const artistLabel = artist.value ? "by " + artist.value + " " : "";
