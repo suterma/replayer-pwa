@@ -220,6 +220,7 @@
                 <!-- Slot for additional level display items -->
                 <slot name="right-start"></slot>
                 <NavButton
+                    v-if="FileHandler.isValidHttpUrl(trackUrl)"
                     v-tooltip.left="'Share with link...'"
                     :icon-path="mdiShareVariant"
                     data-cy="button-track-share"
@@ -263,6 +264,7 @@ import { useSettingsStore } from '@/store/settings';
 import { storeToRefs } from 'pinia';
 import { createTrackStore } from '@/store/track/index';
 import { PlaybackState } from '@/code/media/PlaybackState';
+import FileHandler from '@/store/filehandler';
 
 const emit = defineEmits(['update:isExpanded']);
 
