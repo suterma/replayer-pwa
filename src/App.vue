@@ -7,23 +7,22 @@
 <template>
     <!-- Use the full width for a navigable channel arrangement the mix view, 
         and a more accessible narrower blog style width for all other content -->
-    <div
-        :class="{
-            'container is-fullhd':
-                router.currentRoute.value.name != 'mix' && !useWideContentWidth,
-        }"
-    >
+    <div :class="{
+        'container is-fullhd':
+            router.currentRoute.value.name != 'mix' && !useWideContentWidth,
+    }">
         <StageMark></StageMark>
         <!-- The app menu, on the right, without bottom margin to not alter the layout of content below -->
-        <section
-            class="section has-background-none is-hidden-print is-pulled-right pb-0"
-        >
+        <section class="section has-background-none is-hidden-print is-pulled-right pb-0">
             <AppContextMenu :has-compilation="hasCompilation"></AppContextMenu>
         </section>
 
         <!-- The routed view section -->
         <!-- To facilitate route-specific styles, the route name is provided as it's own class -->
-        <section class="section route" :class="router.currentRoute.value.name">
+        <section
+            class="section route"
+            :class="router.currentRoute.value.name"
+        >
             <router-view></router-view>
             <MessageOverlay />
             <DialogWrapper :transition-attrs="{ name: 'dialog' }" />
@@ -47,9 +46,7 @@
     </div>
     <!-- The bottom nav bar, used as a media player panel
         for the media player widget in some view modes -->
-    <nav
-        class="navbar is-fixed-bottom has-background-grey-dark is-hidden-print"
-    >
+    <nav class="navbar is-fixed-bottom has-background-grey-dark is-hidden-print">
         <div
             id="media-player-panel"
             ref="mediaPlayerPanel"
@@ -62,7 +59,10 @@
         ></div>
     </nav>
 </template>
-<script setup lang="ts">
+<script
+    setup
+    lang="ts"
+>
 import AppContextMenu from '@/components/context-menu/AppContextMenu.vue';
 import StageMark from '@/components/indicators/StageMark.vue';
 import MessageOverlay from '@/components/MessageOverlay.vue';
@@ -152,6 +152,12 @@ function handleAppUpdate() {
         if (compare(previousVersion, '2.5.0', '<')) {
             updateText =
                 'Version 2.5.0: Improves tag handling and cue display\r\n' +
+                updateText;
+        }
+
+        if (compare(previousVersion, '2.5.1', '<')) {
+            updateText =
+                'Version 2.5.1: UI improvements\r\n' +
                 updateText;
         }
 
