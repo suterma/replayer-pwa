@@ -1,6 +1,7 @@
 <template>
     <!-- Have some more margin to keep the editing track separate from the other, listed tracks -->
     <div
+        ref="track"
         class="track is-together-print"
         :class="{
             'is-active-track': isActiveTrack,
@@ -28,10 +29,7 @@
             @volumeup="volumeUp"
         />
 
-        <div
-            class="block"
-            ref="trackHeader"
-        >
+        <div class="block">
             <!-- Each track is an item in a list and contains all the cues -->
             <!-- Track header for editing, including artist info, expansion-toggler and adaptive spacing -->
             <!-- NOTE: The @click handler on the header component only handles clicks on otherwise non-interactive elements -->
@@ -1471,7 +1469,7 @@ watch(
 
 /// --- scrolling ---
 
-const trackHeader = useTemplateRef('trackHeader')
+const track = useTemplateRef('track')
 
 /** Handle scrolling to the changed active track.
  * @remarks This is intentionally only invoked on when the active track changes
@@ -1480,7 +1478,7 @@ const trackHeader = useTemplateRef('trackHeader')
  * scrolling after app reload does not work.
  */
 watch(
-    [isActiveTrack, isTrackEditable, trackHeader],
+    [isActiveTrack, isTrackEditable, track],
     () => {
         if (
             isActiveTrack.value &&
@@ -1498,7 +1496,7 @@ watch(
 function scrollToTrack() {
     nextTick(() => {
         log.debug('MediaTrack::Scrolling to track header for ' + props.trackId);
-        VueScrollTo.scrollTo(trackHeader.value, {
+        VueScrollTo.scrollTo(track.value, {
             /** If already visible, do not scroll to make it on top of the view */
             force: false,
             /** empirical value (taking into account the non-existing fixed top navbar) */
