@@ -326,7 +326,7 @@
                             </span>
                             <span class="ml-2 is-italic is-size-7">{{
                                 playingCueRemarks
-                                }}</span>
+                            }}</span>
                         </p>
                     </PlayheadSlider>
                 </div>
@@ -523,7 +523,7 @@
                                                 </span>
                                                 <span class="ml-2 is-italic is-size-7">{{
                                                     playingCueRemarks
-                                                }}</span>
+                                                    }}</span>
                                             </p>
                                         </PlayheadSlider>
                                     </div>
@@ -1477,7 +1477,7 @@ const track = useTemplateRef('track')
 /** Handle scrolling to the changed active track.
  * @remarks This is intentionally only invoked on when the active track changes
  * If a user scrolls to a certain cue within the same track, no scrolling should occur, to keep the UI calm.
- * @devdoc Watching the trackHeader seems to be necessary, otherwise the initial
+ * @devdoc Watching the template ref seems to be necessary, otherwise the initial
  * scrolling after app reload does not work.
  */
 watch(
@@ -1636,6 +1636,11 @@ function removeCueScheduling(): void {
     margin-bottom: 0;
 }
 
+/* Minimize gap between left and right when above each other in mobile level */
+.level-left+.level-right {
+    margin-top: .25rem;
+}
+
 /* Track item styles*/
 
 // Define an overall width allocation for fixed right-hand side of the playback control level items
@@ -1681,7 +1686,6 @@ function removeCueScheduling(): void {
 * @remarks This allows the use of cropped text for the
 * cue description with dynamic width 
 *******************************************************************************/
-//.track .is-single-media-track {
 @media screen and (max-width: 768px) {
 
     /** in Play mode */
@@ -1707,8 +1711,6 @@ function removeCueScheduling(): void {
         max-width: calc(100vw - 640px);
     }
 }
-
-//}
 
 /*******************************************************************************
  * Hide the widget track slider for video content, 
