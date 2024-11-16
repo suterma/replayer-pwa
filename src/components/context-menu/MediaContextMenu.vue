@@ -13,10 +13,8 @@
                 <template #right-item>
                     <div class="button is-nav is-indicator">
                         <span class="is-family-monospace">{{
-                            props.handler.pitchShiftController.pitchShift.toFixed(
-                                2,
-                            )
-                        }}
+                            currentPitchShiftDisplay
+                            }}
                             cent</span>
                     </div>
 
@@ -49,9 +47,7 @@
                 <template #right-item>
                     <div class="button is-nav is-indicator">
                         <span class="is-family-monospace">{{
-                            props.handler.playbackRateController.playbackRate.toFixed(
-                                2,
-                            )
+                            currentPlaybackRateDisplay
                         }}x</span>
                     </div>
 
@@ -92,7 +88,7 @@
     setup
     lang="ts"
 >
-import { type PropType } from 'vue';
+import { computed, ref, type PropType } from 'vue';
 import DropdownMenu from '@/components/dropdown-menu/DropdownMenu.vue';
 import MenuItemContent from '@/components/dropdown-menu/MenuItemContent.vue';
 import { mdiCog } from '@mdi/js';
@@ -122,15 +118,38 @@ const props = defineProps({
 const settings = useSettingsStore();
 const { experimentalPitchShift } = storeToRefs(settings);
 
+
+const currentPlaybackRateDisplay = ref(props.handler.playbackRateController.playbackRate.toFixed(2));
+const currentBpmDisplay = ref(props.beatsPerMinute ? Math.round(
+    props.beatsPerMinute *
+    props.handler.playbackRateController
+        .playbackRate,
+) : '');
+
 /** Updates the playback rate */
 function updatePlaybackRate(rate: number) {
     // eslint-disable-next-line vue/no-mutating-props
     props.handler.playbackRateController.playbackRate = rate;
+
+    currentPlaybackRateDisplay.value = rate.toFixed(
+        2,
+    )
+    currentBpmDisplay.value = props.beatsPerMinute ? Math.round(
+        props.beatsPerMinute *
+        props.handler.playbackRateController
+            .playbackRate,
+    ) : ''
 }
+
+
+const currentPitchShiftDisplay = ref(props.handler.pitchShiftController.pitchShift.toFixed(2));
 
 /** Updates the pitch shift */
 function updatePitchShift(shift: number) {
     // eslint-disable-next-line vue/no-mutating-props
     props.handler.pitchShiftController.pitchShift = shift;
+
+    currentPitchShiftDisplay.value = shift.toFixed(2);
 }
+
 </script>
