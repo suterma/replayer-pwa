@@ -21,14 +21,12 @@
                     collapsed-text="Click to expand / edit cues"
                     expanded-text="Click to collapse"
                     @update:model-value="toggleExpanded"
-                    ><span
+                ><span
                         :class="{
                             'is-invisible': isExpanded || cues.length == 0,
                         }"
                         class="tag is-warning is-rounded"
-                        >{{ cues.length }}</span
-                    ></CollapsibleButton
-                >
+                    >{{ cues.length }}</span></CollapsibleButton>
             </div>
 
             <!-- The edit part -->
@@ -40,9 +38,8 @@
                     <template #caption>
                         <MediaSourceIndicator
                             :source="trackUrl"
-                            :unavailable="
-                                playbackState === PlaybackState.Unavailable
-                            "
+                            :unavailable="playbackState === PlaybackState.Unavailable
+                                "
                             show-size
                             :show-source-icon="false"
                         >
@@ -136,17 +133,14 @@
                     title="The custom pre-roll duration for in track in [seconds]"
                     class="level-item"
                 >
-                    <template #caption
-                        ><span class="label">Pre-roll</span></template
-                    >
+                    <template #caption><span class="label">Pre-roll</span></template>
                     <LabeledInput label="Pre-roll">
                         <TimeInput
                             class="has-text-right"
                             :model-value="preRollDuration"
                             size="9"
-                            @update:model-value="
-                                (value: number | null) => updatePreRoll(value)
-                            "
+                            @update:model-value="(value: number | null) => updatePreRoll(value)
+                                "
                         />
                         <template #addon>
                             <div
@@ -178,11 +172,10 @@
                     title="The custom pre-roll duration in this track in [measures]"
                     class="level-item"
                 >
-                    <template #caption
-                        ><span v-experiment="true" class="label"
-                            >Pre-roll (measures)</span
-                        ></template
-                    >
+                    <template #caption><span
+                            v-experiment="true"
+                            class="label"
+                        >Pre-roll (measures)</span></template>
                     <LabeledInput
                         v-experiment="true"
                         label="Pre-roll (measures)"
@@ -190,19 +183,19 @@
                         <MetricalEditor
                             differential
                             :model-value="preRollDuration"
-                            @update:model-value="
-                                (value: number | null) => updatePreRoll(value)
-                            "
+                            @update:model-value="(value: number | null) => updatePreRoll(value)
+                                "
                         >
                         </MetricalEditor>
                     </LabeledInput>
                 </CoveredPanel>
 
                 <!-- Tags -->
-                <CoveredPanel title="Tag" class="level-item">
-                    <template #caption
-                        ><span class="label">Tags</span></template
-                    >
+                <CoveredPanel
+                    title="Tag"
+                    class="level-item"
+                >
+                    <template #caption><span class="label">Tags</span></template>
                     <TagInput @new-tag="addNewTag"></TagInput>
                 </CoveredPanel>
                 <TagsDisplay
@@ -239,10 +232,13 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script
+    setup
+    lang="ts"
+>
 /** A header for editing "beats per minute" track metadata
  */
-import { type Ref, computed, inject, onUnmounted, ref, watchEffect } from 'vue';
+import { type Ref, computed, inject, ref, watchEffect } from 'vue';
 import { TrackApi } from '@/code/api/TrackApi';
 import { mdiShareVariant, mdiSwapVertical, mdiTrashCanOutline } from '@mdi/js';
 import MediaDropZone from '@/components/MediaDropZone.vue';
@@ -390,7 +386,10 @@ function acceptedMedia() {
 }
 </style>
 
-<style lang="scss" scoped>
+<style
+    lang="scss"
+    scoped
+>
 /** Custom modification for the level in the context of a track.
 * @remarks Allow the title text (on the left) to break between words, 
 * and keep the context items (on the right) as close as reasonably possible */
@@ -423,8 +422,7 @@ function acceptedMedia() {
             flex-shrink: 0;
             flex-grow: 0;
             text-align: right;
-        }
-    }
+        } }
 }
 
 .is-editable .level {

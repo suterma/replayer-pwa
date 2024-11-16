@@ -14,7 +14,7 @@
                     <div class="button is-nav is-indicator">
                         <span class="is-family-monospace">{{
                             currentPitchShiftDisplay
-                            }}
+                        }}
                             cent</span>
                     </div>
 
@@ -48,7 +48,7 @@
                     <div class="button is-nav is-indicator">
                         <span class="is-family-monospace">{{
                             currentPlaybackRateDisplay
-                        }}x</span>
+                            }}x</span>
                     </div>
 
                     <div
@@ -88,7 +88,7 @@
     setup
     lang="ts"
 >
-import { computed, ref, type PropType } from 'vue';
+import { ref, type PropType } from 'vue';
 import DropdownMenu from '@/components/dropdown-menu/DropdownMenu.vue';
 import MenuItemContent from '@/components/dropdown-menu/MenuItemContent.vue';
 import { mdiCog } from '@mdi/js';

@@ -7,10 +7,7 @@
 <template>
     <!-- Use the full width for a navigable channel arrangement the mix view, 
         and a more accessible narrower blog style width for all other content -->
-    <div :class="{
-        'container is-fullhd':
-            router.currentRoute.value.name != 'mix' && !useWideContentWidth,
-    }">
+    <div :class="{ 'container is-fullhd': router.currentRoute.value.name != 'mix' && !useWideContentWidth, }">
         <StageMark></StageMark>
         <!-- The app menu, on the right, without bottom margin to not alter the layout of content below -->
         <section class="section has-background-none is-hidden-print is-pulled-right pb-0">
