@@ -169,11 +169,11 @@ export function useTrackStore(trackId: string) {
 
         // --- Track state ---
 
-        const { selectedTrackId, selectedCueId } = storeToRefs(app);
+        const { activeTrackId, selectedCueId } = storeToRefs(app);
 
         /** Whether this track is the active track in the set of tracks */
         const isActiveTrack = computed(() => {
-            return trackId === selectedTrackId.value;
+            return trackId === activeTrackId.value;
         });
 
         /** Sets this track as the active track
