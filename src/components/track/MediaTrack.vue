@@ -1,7 +1,6 @@
 <template>
     <!-- Have some more margin to keep the editing track separate from the other, listed tracks -->
     <div
-        ref="track"
         class="track is-together-print"
         :class="{
             'is-active-track': isActiveTrack,
@@ -29,7 +28,10 @@
             @volumeup="volumeUp"
         />
 
-        <div class="block">
+        <div
+            class="block"
+            ref="track"
+        >
             <!-- Each track is an item in a list and contains all the cues -->
             <!-- Track header for editing, including artist info, expansion-toggler and adaptive spacing -->
             <!-- NOTE: The @click handler on the header component only handles clicks on otherwise non-interactive elements -->
@@ -37,6 +39,7 @@
                 v-model:is-expanded="isExpanded"
                 :can-collapse="!hasSingleMediaTrack"
                 :track-id="trackId"
+                :key="trackId"
                 :is-active="isActiveTrack"
             >
                 <template #left-start>
@@ -323,7 +326,7 @@
                             </span>
                             <span class="ml-2 is-italic is-size-7">{{
                                 playingCueRemarks
-                            }}</span>
+                                }}</span>
                         </p>
                     </PlayheadSlider>
                 </div>
@@ -520,7 +523,7 @@
                                                 </span>
                                                 <span class="ml-2 is-italic is-size-7">{{
                                                     playingCueRemarks
-                                                    }}</span>
+                                                }}</span>
                                             </p>
                                         </PlayheadSlider>
                                     </div>
