@@ -79,8 +79,7 @@
  * @remarks Also handles the common replayer events for compilations
  * @remarks Also supports shuffling of tracks
  */
-import { watch, nextTick, onMounted, onUnmounted } from 'vue';
-import VueScrollTo from 'vue-scrollto';
+import { onMounted, onUnmounted } from 'vue';
 import MediaTrack from '@/components/track/MediaTrack.vue';
 import MasterTrack from '@/components/track/MasterTrack.vue';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
@@ -99,11 +98,8 @@ const { log } = useLog();
 
 const app = useAppStore();
 const {
-    activeTrackId,
-    hasSingleMediaTrack,
     allTracks,
     getAllTags,
-    trackViewMode,
     isTrackEditable,
     isTrackMixable,
     compilation,
@@ -115,23 +111,7 @@ const noSleep: NoSleep = new NoSleep();
 const settings = useSettingsStore();
 const { preventScreenTimeout } = storeToRefs(settings);
 
-/** Handle scrolling to the changed active track.
- * @remarks This is intentionally only invoked on when the active track changes (and it's not the only audio track).
- * If a user scrolls to a certain cue within the same track, no scrolling should occur, to keep the UI calm.
- */
-watch(
-    [activeTrackId, trackViewMode],
-    () => {
-        if (
-            activeTrackId.value &&
-            activeTrackId.value != CompilationHandler.EmptyId &&
-            !hasSingleMediaTrack.value
-        ) {
-            scrollToTrack(activeTrackId.value);
-        }
-    },
-    { immediate: true /* to handle it at least once after mount time */ },
-);
+
 
 /**
  * @remarks Implements #26 in a simple way, as soon as a compilation is shown (disregarding the actual selection of a track)
@@ -167,23 +147,6 @@ function deactivateWakeLock(): void {
     if (noSleep.isEnabled) {
         noSleep.disable();
     }
-}
-
-/** Visually scrolls to the track, making it visually at the top of
- * the view.
- */
-function scrollToTrack(trackId: string) {
-    nextTick(() => {
-        const trackElement = document.getElementById('track-' + trackId);
-        VueScrollTo.scrollTo(trackElement, {
-            /** Always scroll, make it on top of the view */
-            force: true,
-            /** empirical value (taking into account the non-existing fixed top navbar) */
-            offset: -22,
-            /** Avoid interference with the key press overlay */
-            cancelable: false,
-        });
-    });
 }
 
 /** Handles the playback after a track has ended.

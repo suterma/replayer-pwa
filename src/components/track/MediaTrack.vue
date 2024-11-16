@@ -206,8 +206,7 @@
                                     <div class="field">
                                         <p class="control">
                                             <button class="button is-indicator">
-                                                <MeasureDisplay
-:model-value="currentPosition
+                                                <MeasureDisplay :model-value="currentPosition
                                                     "></MeasureDisplay>
                                             </button>
                                         </p>
@@ -358,15 +357,15 @@
             </nav>
         </Transition>
 
-        <!-- The media player widget (with controls) but only once the source is available from the store
-            Note: The mediaUrl property (the actual src attribute in the underlying media
-            element) is also depending on the track state as a performance optimizations
+        <!-- This outer block is always present to reserve the space for the 
+         media player widget inside, to avoid layout shifting for non-expaded tracks -->
+        <div class="block">
+            <!-- The media player widget (with controls) but only once the source is available from the store
+             Note: The mediaUrl property (the actual src attribute in the underlying media
+             element) is also depending on the track state as a performance optimizations
             -->
-        <div
-            v-if="mediaUrl"
-            class="block"
-        >
             <Teleport
+                v-if="mediaUrl"
                 to="#media-player-panel"
                 :disabled="isTrackEditable"
             >
@@ -403,8 +402,7 @@
                             :disabled="!canPlay"
                         >
                             <!-- The messages need to be shown inside the native fullscren element; otherwise they would get hidden below -->
-                            <MessageOverlay
-v-if="
+                            <MessageOverlay v-if="
                                 isFullscreen && hasNativeFullscreenSupport
                             " />
 
@@ -609,8 +607,7 @@ v-if="
                                             "
                                     ></CueButtonsField>
                                 </div>
-                                <div
-v-if="
+                                <div v-if="
                                     (!hasSingleMediaTrack &&
                                         !isFullscreen &&
                                         isTrackPlayable) ||
@@ -703,6 +700,7 @@ import {
     watchEffect,
     onBeforeUnmount,
     onUnmounted,
+    nextTick,
 } from 'vue';
 import OnYouTubeConsent from '@/components/dialogs/OnYouTubeConsent.vue';
 import CueLevelEditors from '@/components/CueLevelEditors.vue';
@@ -758,6 +756,7 @@ import useLog from '@/composables/LogComposable';
 import { useTrackStore } from '@/store/track/index';
 import MeterDisplay from '@/components/displays/MeterDisplay.vue';
 import ArtistDisplay from '@/components/displays/ArtistDisplay.vue';
+import VueScrollTo from 'vue-scrollto';
 
 const { log } = useLog();
 const emit = defineEmits([
@@ -1464,6 +1463,46 @@ watch(
         }
     },
 );
+
+
+/// --- scrolling ---
+
+/** Handle scrolling to the changed active track.
+ * @remarks This is intentionally only invoked on when the active track changes
+ * If a user scrolls to a certain cue within the same track, no scrolling should occur, to keep the UI calm.
+ */
+watch(
+    [isActiveTrack, isTrackEditable, canPlay],
+    () => {
+        if (
+            isActiveTrack.value &&
+            !hasSingleMediaTrack.value
+        ) {
+            scrollToTrack(activeTrackId.value);
+        }
+    },
+    { immediate: true /* to handle it at least once after mount time */ },
+);
+
+/** Visually scrolls to the track, making it visually at the top of
+ * the view.
+ */
+function scrollToTrack(trackId: string) {
+    nextTick(() => {
+        const trackElementId = 'track-' + trackId;
+        log.debug("Scrolling to track element " + trackElementId)
+        const trackElement = document.getElementById('track-' + trackId);
+        VueScrollTo.scrollTo(trackElement, {
+            /** If already visible, do not scroll to make it on top of the view */
+            force: false,
+            /** empirical value (taking into account the non-existing fixed top navbar) */
+            offset: -22,
+            /** Avoid interference with the key press overlay */
+            cancelable: false,
+        });
+    });
+}
+
 
 /// --- fullscreen ---
 
