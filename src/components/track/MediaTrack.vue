@@ -28,7 +28,10 @@
             @volumeup="volumeUp"
         />
 
-        <div class="block">
+        <div
+            class="block"
+            ref="trackHeader"
+        >
             <!-- Each track is an item in a list and contains all the cues -->
             <!-- Track header for editing, including artist info, expansion-toggler and adaptive spacing -->
             <!-- NOTE: The @click handler on the header component only handles clicks on otherwise non-interactive elements -->
@@ -701,6 +704,7 @@ import {
     onBeforeUnmount,
     onUnmounted,
     nextTick,
+    useTemplateRef,
 } from 'vue';
 import OnYouTubeConsent from '@/components/dialogs/OnYouTubeConsent.vue';
 import CueLevelEditors from '@/components/CueLevelEditors.vue';
@@ -1467,18 +1471,22 @@ watch(
 
 /// --- scrolling ---
 
+const trackHeader = useTemplateRef('trackHeader')
+
 /** Handle scrolling to the changed active track.
  * @remarks This is intentionally only invoked on when the active track changes
  * If a user scrolls to a certain cue within the same track, no scrolling should occur, to keep the UI calm.
+ * @devdoc Watching the trackHeader seems to be necessary, otherwise the initial
+ * scrolling after app reload does not work.
  */
 watch(
-    [isActiveTrack, isTrackEditable, canPlay],
+    [isActiveTrack, isTrackEditable, trackHeader],
     () => {
         if (
             isActiveTrack.value &&
             !hasSingleMediaTrack.value
         ) {
-            scrollToTrack(activeTrackId.value);
+            scrollToTrack();
         }
     },
     { immediate: true /* to handle it at least once after mount time */ },
@@ -1487,12 +1495,10 @@ watch(
 /** Visually scrolls to the track, making it visually at the top of
  * the view.
  */
-function scrollToTrack(trackId: string) {
+function scrollToTrack() {
     nextTick(() => {
-        const trackElementId = 'track-' + trackId;
-        log.debug("Scrolling to track element " + trackElementId)
-        const trackElement = document.getElementById('track-' + trackId);
-        VueScrollTo.scrollTo(trackElement, {
+        log.debug('MediaTrack::Scrolling to track header for ' + props.trackId);
+        VueScrollTo.scrollTo(trackHeader.value, {
             /** If already visible, do not scroll to make it on top of the view */
             force: false,
             /** empirical value (taking into account the non-existing fixed top navbar) */

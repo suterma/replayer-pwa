@@ -1,5 +1,8 @@
 <template>
-    <div class="track is-together-print block" data-cy="track-master">
+    <div
+        class="track is-together-print block"
+        data-cy="track-master"
+    >
         <div class="block">
             <!-- Each track is an item in a list and contains all the cues --><!-- Track header for editing, including artist info, expansion-toggler and adaptive spacing --><!-- NOTE: The @click handler on the header component only handles clicks on otherwise non-interactive elements --><!-- Header level with wrap for items in the left part.
          Using flex-start on the level, to cause the left and right parts to both 
@@ -35,12 +38,14 @@
                             @click="multitrack.toggleAllMute()"
                         />
                         <div class="is-flex-shrink-1 ml-3 is-clickable">
-                            <p class="title is-4" :title="name">
+                            <p
+                                class="title is-4"
+                                :title="name"
+                            >
                                 <span
                                     class="has-text-weight-light"
                                     data-cy="track-name-master"
-                                    >{{ name }}</span
-                                >
+                                >{{ name }}</span>
                             </p>
                         </div>
                     </div>
@@ -52,14 +57,12 @@
                         class="is-fullwidth"
                         :model-value="currentTime"
                         :track-duration="allTrackDuration"
-                        @update:model-value="
-                            (position: number): Promise<void> =>
-                                multitrack.seekAllToSeconds(position)
-                        "
-                        @seek="
-                            (seconds: number): Promise<void> =>
-                                multitrack.seekAll(seconds)
-                        "
+                        @update:model-value="(position: number): Promise<void> =>
+                            multitrack.seekAllToSeconds(position)
+                            "
+                        @seek="(seconds: number): Promise<void> =>
+                            multitrack.seekAll(seconds)
+                            "
                     >
                     </PlayheadSlider>
                 </div>
@@ -74,15 +77,13 @@
                             <span
                                 class="is-minimum-7-characters is-family-monospace has-text-info"
                                 title="Click to update time display"
-                                >({{
-                                    multitrack.timeSpreading?.toFixed(6)
-                                }}s)</span
-                            >
+                            >({{
+                                multitrack.timeSpreading?.toFixed(6)
+                                }}s)</span>
                         </button>
                         <button
-                            v-tooltip.top="
-                                `Spreading: ${(multitrack.timeSpreading * 1000).toFixed(0)} ms (${spreadingInfo})`
-                            "
+                            v-tooltip.top="`Spreading: ${(multitrack.timeSpreading * 1000).toFixed(0)} ms (${spreadingInfo})`
+                                "
                             class="button is-info is-outlined"
                             title="Click to synch tracks"
                             @click="multitrack.syncTracks()"
@@ -93,11 +94,10 @@
                                 v-if="Number.isFinite(multitrack.timeSpreading)"
                                 class="ml-2 is-info"
                                 :class="spreadingClass"
-                                :value="
-                                    multitrack.timeSpreading *
+                                :value="multitrack.timeSpreading *
                                     1000 *
                                     3.33 /* 15ms equals 50% */
-                                "
+                                    "
                             />
                             <BaseIcon
                                 v-else
@@ -143,7 +143,10 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script
+    setup
+    lang="ts"
+>
 import PlaybackIndicator from '@/components/indicators/PlaybackIndicator.vue';
 import CircularProgress from '@/components/indicators/CircularProgress.vue';
 import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
@@ -227,8 +230,8 @@ const { height: compilationHeaderHeight } = useElementSize(compilationHeader);
 const mediaPlayerPanelComputedHeight = computed(() => {
     return mediaPlayerPanelHeight.value && compilationHeaderHeight.value
         ? mediaPlayerPanelHeight.value +
-              compilationHeaderHeight.value +
-              80 /* additional fixed spacing to compensate for various 
+        compilationHeaderHeight.value +
+        80 /* additional fixed spacing to compensate for various 
               media width-related margins and paddings */
         : 205 /*empirically determined useful max height*/;
 });
@@ -249,6 +252,7 @@ function toggleVertical(event: Event): void {
         load();
     }
     if (showVertical.value) {
+        log.debug('MasterTrack::Scrolling to event target');
         VueScrollTo.scrollTo(event.target, {
             /** Always scroll, make it on top of the view */
             force: true,
