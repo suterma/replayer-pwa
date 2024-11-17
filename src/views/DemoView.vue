@@ -9,7 +9,10 @@
     <p>Loading the demo....</p>
 </template>
 
-<script setup lang="ts">
+<script
+    setup
+    lang="ts"
+>
 /** A view for demo purposes
  * @remarks Just loads the demo compilation and navigates to the play view.
  */
@@ -30,7 +33,8 @@ onMounted(() => {
 
 function loadDemo() {
     const demoCompilationUrl =
-        'https://lib.replayer.app/demo/demo-compilation-featuring-lidija-roos-with-info.xml';
+        //'https://lib.replayer.app/demo/demo-compilation-featuring-lidija-roos-with-info.xml';
+        'https://lib.replayer.app/demo/demo-compilation-featuring-lidija-roos.xml';
     log.debug('DemoView::loadDemo:', demoCompilationUrl);
     useAppStore()
         .loadFromUrl(demoCompilationUrl)
