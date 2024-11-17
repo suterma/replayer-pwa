@@ -18,7 +18,10 @@
         <Compilation v-if="hasCompilation" />
 
         <!-- Otherwise, show the claim -->
-        <div v-else class="section pl-0 pr-0 block">
+        <div
+            v-else
+            class="section pl-0 pr-0 block"
+        >
             <p class="has-text-centered">
                 Replayer is a free, cue-based media player for rehearsals with
                 playback music.
@@ -62,7 +65,10 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script
+    setup
+    lang="ts"
+>
 /** A view for playing an existing compilation */
 
 import Compilation from '@/components/Compilation.vue';
@@ -85,7 +91,7 @@ const { isTrackEditable, hasCompilation, hasAnyAvailableMedia } =
 /** For an unloaded compilation, the title is reverted to the default
  */
 watch(
-    [() => hasCompilation.value],
+    [hasCompilation],
     ([hasCompilation]) => {
         if (!hasCompilation) {
             // use the default title

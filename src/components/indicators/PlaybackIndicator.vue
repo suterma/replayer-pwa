@@ -8,23 +8,37 @@
         <i
             v-if="state === PlaybackState.Unavailable"
             class="icon mdi has-text-warning"
-            ><svg viewBox="0 0 24 24">
-                <path fill="currentColor" :d="mdiAlert" />
+        ><svg viewBox="0 0 24 24">
+                <path
+                    fill="currentColor"
+                    :d="mdiAlert"
+                />
             </svg>
         </i>
         <template v-else>
             <i
                 v-if="state === PlaybackState.Unloaded"
                 class="icon mdi has-text-dark"
-                ><svg viewBox="0 0 24 24">
-                    <path fill="currentColor" :d="playbackIconPath" />
+            ><svg viewBox="0 0 24 24">
+                    <path
+                        fill="currentColor"
+                        :d="playbackIconPath"
+                    />
                 </svg>
             </i>
 
             <template v-else>
-                <i style="position: relative" class="icon mdi"
-                    ><svg viewBox="0 0 24 24" class="has-text-grey">
-                        <path fill="currentColor" :d="playbackIconPath" />
+                <i
+                    style="position: relative"
+                    class="icon mdi"
+                ><svg
+                        viewBox="0 0 24 24"
+                        class="has-text-grey"
+                    >
+                        <path
+                            fill="currentColor"
+                            :d="playbackIconPath"
+                        />
                     </svg>
                     <svg
                         viewBox="0 0 24 24"
@@ -35,14 +49,20 @@
                             'is-transparent': isPausing,
                         }"
                     >
-                        <path fill="currentColor" :d="playbackIconPath" />
+                        <path
+                            fill="currentColor"
+                            :d="playbackIconPath"
+                        />
                     </svg>
                 </i>
             </template>
         </template>
     </label>
 </template>
-<script setup lang="ts">
+<script
+    setup
+    lang="ts"
+>
 /** An indicator for the playback state of a track
  * @devdoc For rendering optimization for the two most switched states,
  * ready and playing, the transition is updating only opacity, when
@@ -179,6 +199,7 @@ watch(
 label.is-indicator.playback-indicator i svg.has-transition {
     transition: opacity v-bind('transitionDurationValue') linear;
 }
+
 label.is-indicator.playback-indicator i svg.is-transparent {
     opacity: 0;
 }

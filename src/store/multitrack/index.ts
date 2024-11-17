@@ -297,7 +297,7 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
 
     /** Sync after playback stops */
     watch(
-        () => isAllPaused.value,
+        isAllPaused,
         (paused, wasPaused) => {
             if (paused && !wasPaused) {
                 nextTick(() => {
@@ -312,7 +312,7 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
 
     // /** Sync after playback start */
     watch(
-        () => isAllPlaying.value,
+        isAllPlaying,
         (playing, wasPlaying) => {
             if (playing && !wasPlaying) {
                 // A short delay seems to work best for sync after playback start

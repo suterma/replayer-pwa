@@ -10,13 +10,19 @@
                 <span>
                     {{ textContent }}
                 </span>
-                <CloseButton v-model="closed" class="top-right"> </CloseButton>
+                <CloseButton
+                    v-model="closed"
+                    class="top-right"
+                > </CloseButton>
             </div>
         </div>
     </Transition>
 </template>
 
-<script setup lang="ts">
+<script
+    setup
+    lang="ts"
+>
 /** A track variant that displays plain text, and offers to close the display */
 import { type PropType, onUnmounted, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
@@ -65,7 +71,7 @@ function updateText() {
 }
 
 watch(
-    () => mediaUrl,
+    mediaUrl,
     () => {
         updateText();
     },
@@ -77,7 +83,7 @@ watch(
  * the map of URL's.
  */
 watch(
-    () => mediaUrls,
+    mediaUrls,
     () => {
         updateText();
     },
