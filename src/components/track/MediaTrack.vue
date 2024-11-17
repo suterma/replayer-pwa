@@ -29,17 +29,17 @@
         />
 
         <div
-            class="block"
             ref="track"
+            class="block"
         >
             <!-- Each track is an item in a list and contains all the cues -->
             <!-- Track header for editing, including artist info, expansion-toggler and adaptive spacing -->
             <!-- NOTE: The @click handler on the header component only handles clicks on otherwise non-interactive elements -->
             <TrackHeader
+                :key="trackId"
                 v-model:is-expanded="isExpanded"
                 :can-collapse="!hasSingleMediaTrack"
                 :track-id="trackId"
-                :key="trackId"
                 :is-active="isActiveTrack"
             >
                 <template #left-start>
@@ -210,7 +210,8 @@
                                     <div class="field">
                                         <p class="control">
                                             <button class="button is-indicator">
-                                                <MeasureDisplay :model-value="currentPosition
+                                                <MeasureDisplay
+:model-value="currentPosition
                                                     "></MeasureDisplay>
                                             </button>
                                         </p>
@@ -406,7 +407,8 @@
                             :disabled="!canPlay"
                         >
                             <!-- The messages need to be shown inside the native fullscren element; otherwise they would get hidden below -->
-                            <MessageOverlay v-if="
+                            <MessageOverlay
+v-if="
                                 isFullscreen && hasNativeFullscreenSupport
                             " />
 
@@ -611,7 +613,8 @@
                                             "
                                     ></CueButtonsField>
                                 </div>
-                                <div v-if="
+                                <div
+v-if="
                                     (!hasSingleMediaTrack &&
                                         !isFullscreen &&
                                         isTrackPlayable) ||

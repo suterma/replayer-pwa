@@ -41,7 +41,6 @@ export default abstract class XmlCompilationParser {
      * @devdoc The XML type contains all properties as arrays, even the single item ones. This is a limitation of the used XML-To-JS converter */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private static parseFromXmlCompilation(xmlCompilation: any): ICompilation {
-        log.debug('Raw xmlCompilation:', xmlCompilation);
         return new Compilation(
             XmlCompilationParser.FirstStringOf(xmlCompilation.MediaPath),
             XmlCompilationParser.FirstStringOf(xmlCompilation.Title),
@@ -115,14 +114,14 @@ export default abstract class XmlCompilationParser {
                     XmlCompilationParser.FirstStringOf(xmlTrack.Album),
                     XmlCompilationParser.FirstStringOf(xmlTrack.Artist),
                     XmlCompilationParser.FirstNumberOf(xmlTrack.PreRoll) ??
-                        null,
+                    null,
                     XmlCompilationParser.FirstNumberOf(
                         xmlTrack.PlayheadPosition,
                     ) ?? null,
                     XmlCompilationParser.FirstNumberOf(xmlTrack.PlaybackRate) ??
-                        DefaultPlaybackRate,
+                    DefaultPlaybackRate,
                     XmlCompilationParser.FirstNumberOf(xmlTrack.PitchShift) ??
-                        DefaultPitchShift,
+                    DefaultPitchShift,
                     /** NOTE: the formerly used measure property is deprecated */
                     XmlCompilationParser.parseFromXmlMeter(
                         xmlTrack.Meter ? xmlTrack.Meter[0] : null,
@@ -140,7 +139,7 @@ export default abstract class XmlCompilationParser {
                         : new Set<string>([]),
                     null,
                     XmlCompilationParser.FirstNumberOf(xmlTrack.Volume) ??
-                        DefaultTrackVolume,
+                    DefaultTrackVolume,
                 );
                 tracks.push(track);
             });
@@ -171,9 +170,9 @@ export default abstract class XmlCompilationParser {
                     XmlCompilationParser.FirstNumberOf(xmlCue.Time),
                     null,
                     XmlCompilationParser.FirstBooleanOf(xmlCue.OmitPreRoll) ??
-                        false,
+                    false,
                     XmlCompilationParser.FirstBooleanOf(xmlCue.OmitFadeIn) ??
-                        false,
+                    false,
                     XmlCompilationParser.FirstStringOf(xmlCue.Id),
                 );
                 cues.push(cue);
@@ -236,7 +235,6 @@ export default abstract class XmlCompilationParser {
                     .parseStringPromise(text /*, options */)
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     .then((text: any) => {
-                        log.debug('Parsed XML compilation: ', text);
                         return XmlCompilationParser.parseFromXmlCompilation(
                             text.XmlCompilation,
                         );
