@@ -15,25 +15,19 @@
                 @click="download"
             />
         </Hotkey>
-        <Hotkey
-            v-once
-            v-slot="{ clickRef }"
-            :keys="['ctrl', 'x']"
-            :excluded-elements="[]"
-        >
-            <DropdownMenuButton
-                :ref="clickRef"
-                title="Close..."
-                sub-title="Close current compilation"
-                :icon-path="mdiTrashCanOutline"
-                shortcut="CTRL+X"
-                @click="close"
-            />
-        </Hotkey>
+        <DropdownMenuButton
+            title="Close..."
+            sub-title="Close current compilation"
+            :icon-path="mdiTrashCanOutline"
+            @click="close"
+        />
     </Teleport>
 </template>
 
-<script setup lang="ts">
+<script
+    setup
+    lang="ts"
+>
 import { type PropType } from 'vue';
 import DropdownMenuButton from '@/components/dropdown-menu/DropdownMenuButton.vue';
 import { confirm, downloadCompilation } from '@/code/ui/dialogs';
