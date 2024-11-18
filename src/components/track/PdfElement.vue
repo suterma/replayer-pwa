@@ -21,15 +21,14 @@
 </template>
 
 <script setup lang="ts">
-const pdfContainer = ref(null);
-const pdfScrollContainer = ref(null);
-
 /** A track variant that displays a PDF document, either as link or as an expandable inline viewer */
 import { computed, ref, inject, onMounted, onUpdated, watchEffect } from 'vue';
-
 import PDFObject from 'pdfobject';
 import VueScrollTo from 'vue-scrollto';
 import useLog from '@/composables/LogComposable';
+import { navbarCompensationHeightInjectionKey } from '@/AppInjectionKeys';
+import FileHandler from '@/store/filehandler';
+
 const { log } = useLog();
 const props = defineProps({
     /** The PDF URL
@@ -47,8 +46,9 @@ const props = defineProps({
     },
 });
 
-import { navbarCompensationHeightInjectionKey } from '@/AppInjectionKeys';
-import FileHandler from '@/store/filehandler';
+const pdfContainer = ref<HTMLElement | null>(null);
+const pdfScrollContainer = ref<HTMLElement | null>(null);
+
 const navbarCompensationHeight = inject(navbarCompensationHeightInjectionKey);
 
 /** Gets the net available available window height
