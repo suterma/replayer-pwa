@@ -147,11 +147,7 @@
                     <!-- Right side -->
                     <div class="level-right is-justify-content-flex-end">
                         <PlaybackIndicator
-                            :state="
-                                !!mediaUrl
-                                    ? PlaybackState.Ready
-                                    : PlaybackState.Unavailable
-                            "
+                            :state="playbackState"
                             :playback-icon-path="mdiFilePdfBox"
                             data-cy="playback-indicator"
                             paused-text="PDF track"
