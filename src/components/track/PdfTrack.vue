@@ -24,7 +24,7 @@
                     >
                         <template v-if="!isFullscreen">
                             <div class="level-item is-narrow">
-                                <template v-if="showPdfInline">
+                                <template v-if="renderPdfInline">
                                     <!-- Offer the native full screen, if available -->
                                     <FullscreenToggler
                                         v-if="hasNativeFullscreenSupport"
@@ -170,7 +170,7 @@
                     v-if="
                         (isExpanded || isFullscreen) &&
                         mediaUrl &&
-                        showPdfInline
+                        renderPdfInline
                     "
                     class="block"
                     :media-url="mediaUrl"
@@ -207,6 +207,7 @@ import TagInput from '@/components/editor/TagInput.vue';
 import TagsDisplay from '@/components/displays/TagsDisplay.vue';
 import { PlaybackState } from '@/code/media/PlaybackState';
 import { useTrackStore } from '@/store/track/index';
+import FileHandler from '@/store/filehandler';
 
 const props = defineProps({
     /** The id of the track to handle
@@ -234,6 +235,16 @@ const { mediaUrl, hasTags, tags, name, trackUrl } = storeToRefs(trackStore);
 
 onUnmounted(() => {
     trackStore.$dispose();
+});
+
+// --- pdf state ---
+
+/** Whether to render PDF content inline.
+ * @remarks Do not try to render online PDF content inline, because it typically
+ * fails due to CORS.
+ */
+const renderPdfInline = computed(() => {
+    return showPdfInline && !FileHandler.isValidHttpUrl(mediaUrl.value ?? '');
 });
 
 /** Whether the pdf is currently expanded */
