@@ -237,6 +237,8 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
     }
 
     return {
+        /** Whether to offer PDF content inline (instead of link-only)
+         * @remarks Inline rendering does not work on older mobile devices*/
         showPdfInline,
         levelMeterSizeIsLarge,
         showInitialZeroTimeCue,
