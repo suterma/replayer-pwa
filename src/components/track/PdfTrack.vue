@@ -173,7 +173,7 @@
                             mediaUrl &&
                             renderPdfInline
                         "
-                        :media-url="mediaUrl"
+                        :url="mediaUrl"
                         :is-fullscreen="isFullscreen"
                     ></PdfElement>
                 </Transition>
@@ -280,12 +280,12 @@ provide(playbackStateInjectionKey, readonly(playbackState));
 
 /// --- scrolling ---
 
-/** A ref to the PDF element container */
 const pdfElementContainer = ref<HTMLDivElement | null>(null);
 
-const { y: windowVerticalPosition } = useWindowScroll();
+const { y: windowVerticalPosition } = useWindowScroll({ behavior: 'smooth' });
 const { top: pdfVerticalPosition } = useElementBounding(pdfElementContainer);
 
+/** Scroll to top, when the track's PDF area gets expanded */
 watch(isExpanded, (isExpanded, wasExpanded) => {
     if (isExpanded && !wasExpanded) {
         scrollToPdf();
@@ -306,14 +306,6 @@ function scrollToPdf() {
             'PdfTrack::pdfVerticalPosition.value',
             pdfVerticalPosition.value,
         );
-        // VueScrollTo.scrollTo(pdfScrollContainer.value, {
-        //     /** Always scroll, make it on top of the view */
-        //     force: true,
-        //     /** empirical value (taking into account the non-existing fixed top navbar) */
-        //     offset: 0,
-        //     /** Avoid interference with the key press overlay */
-        //     cancelable: false,
-        // });
         windowVerticalPosition.value =
             windowVerticalPosition.value + pdfVerticalPosition.value;
     });

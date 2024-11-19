@@ -1,23 +1,20 @@
 <template>
-    <!-- A container for the (replaced) pdf container, to allow proper scrolling -->
-    <div ref="pdfScrollContainer" data-cy="pdf-scrollcontainer">
-        <a
-            v-if="usePdfLinkFallback"
-            :href="mediaUrl"
-            alt="Show this track's PDF in an external viewer"
-            target="_blank"
-            >{{ mediaUrl }}</a
-        >
-        <div
-            v-else
-            ref="pdfContainer"
-            :style="{
-                'min-height': isFullscreen ? '100vh' : availableHeight + 'px',
-                'max-height': isFullscreen ? '100vh' : availableHeight + 'px',
-                width: '100%',
-            }"
-        ></div>
-    </div>
+    <a
+        v-if="usePdfLinkFallback"
+        :href="url"
+        alt="Show this track's PDF in an external viewer"
+        target="_blank"
+        >{{ url }}</a
+    >
+    <div
+        v-else
+        ref="pdfContainer"
+        :style="{
+            'min-height': isFullscreen ? '100vh' : availableHeight + 'px',
+            'max-height': isFullscreen ? '100vh' : availableHeight + 'px',
+            width: '100%',
+        }"
+    ></div>
 </template>
 
 <script setup lang="ts">
@@ -31,7 +28,7 @@ const { log } = useLog();
 const props = defineProps({
     /** The PDF URL
      */
-    mediaUrl: {
+    url: {
         type: String,
         required: true,
     },
@@ -45,7 +42,6 @@ const props = defineProps({
 });
 
 const pdfContainer = ref<HTMLElement | null>(null);
-const pdfScrollContainer = ref<HTMLElement | null>(null);
 
 const navbarCompensationHeight = inject(navbarCompensationHeightInjectionKey);
 
@@ -64,21 +60,17 @@ const availableHeight = computed(() => {
 
 const initPDF = () => {
     if (pdfContainer.value) {
-        log.debug('PdfElement::Rendering PDF for mediaUrl: ', props.mediaUrl);
+        log.debug('PdfElement::Rendering PDF for mediaUrl: ', props.url);
         try {
-            const success = PDFObject.embed(
-                props.mediaUrl,
-                pdfContainer.value,
-                {
-                    pdfOpenParams: { view: 'FitH' },
-                    height: props.isFullscreen
-                        ? '100vh'
-                        : availableHeight.value + 'px',
-                    width: '100%',
-                    forcePDFJS: false,
-                    PDFJS_URL: '/pdfjs/web/viewer.html?v=2',
-                },
-            );
+            const success = PDFObject.embed(props.url, pdfContainer.value, {
+                pdfOpenParams: { view: 'FitH' },
+                height: props.isFullscreen
+                    ? '100vh'
+                    : availableHeight.value + 'px',
+                width: '100%',
+                forcePDFJS: false,
+                PDFJS_URL: '/pdfjs/web/viewer.html?v=2',
+            });
             if (!success) {
                 log.warn('PdfElement::Rendering failed');
                 usePdfLinkFallback.value = true;
