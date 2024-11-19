@@ -15,7 +15,6 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import { createPinia } from 'pinia';
 import router from './router';
-import VueScrollTo from 'vue-scrollto';
 //@ts-ignore (because vue3-promise-dialog does not provide types)
 import { PromiseDialog } from 'vue3-promise-dialog';
 import { useMessageStore } from './store/messages';
@@ -51,7 +50,6 @@ const pinia = createPinia();
 const app = createApp(App)
     .use(pinia)
     .use(router)
-    .use(VueScrollTo, { duration: 300 /* replayer-transition-duration */ })
     .use(PromiseDialog, {})
     .use(youtubeManager)
     .directive('focus', FocusDirective)

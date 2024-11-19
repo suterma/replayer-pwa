@@ -1,6 +1,7 @@
 <template>
     <!-- Have some more margin to keep the editing track separate from the other, listed tracks -->
     <div
+        v-scroll.top="isActiveTrack"
         class="track is-together-print"
         :class="{
             'is-active-track': isActiveTrack,
@@ -210,8 +211,7 @@
                                     <div class="field">
                                         <p class="control">
                                             <button class="button is-indicator">
-                                                <MeasureDisplay
-:model-value="currentPosition
+                                                <MeasureDisplay :model-value="currentPosition
                                                     "></MeasureDisplay>
                                             </button>
                                         </p>
@@ -327,7 +327,7 @@
                             </span>
                             <span class="ml-2 is-italic is-size-7">{{
                                 playingCueRemarks
-                            }}</span>
+                                }}</span>
                         </p>
                     </PlayheadSlider>
                 </div>
@@ -407,8 +407,7 @@
                             :disabled="!canPlay"
                         >
                             <!-- The messages need to be shown inside the native fullscren element; otherwise they would get hidden below -->
-                            <MessageOverlay
-v-if="
+                            <MessageOverlay v-if="
                                 isFullscreen && hasNativeFullscreenSupport
                             " />
 
@@ -525,7 +524,7 @@ v-if="
                                                 </span>
                                                 <span class="ml-2 is-italic is-size-7">{{
                                                     playingCueRemarks
-                                                    }}</span>
+                                                }}</span>
                                             </p>
                                         </PlayheadSlider>
                                     </div>
@@ -613,8 +612,7 @@ v-if="
                                             "
                                     ></CueButtonsField>
                                 </div>
-                                <div
-v-if="
+                                <div v-if="
                                     (!hasSingleMediaTrack &&
                                         !isFullscreen &&
                                         isTrackPlayable) ||
@@ -707,8 +705,6 @@ import {
     watchEffect,
     onBeforeUnmount,
     onUnmounted,
-    nextTick,
-    useTemplateRef,
 } from 'vue';
 import OnYouTubeConsent from '@/components/dialogs/OnYouTubeConsent.vue';
 import CueLevelEditors from '@/components/CueLevelEditors.vue';
@@ -764,7 +760,6 @@ import useLog from '@/composables/LogComposable';
 import { useTrackStore } from '@/store/track/index';
 import MeterDisplay from '@/components/displays/MeterDisplay.vue';
 import ArtistDisplay from '@/components/displays/ArtistDisplay.vue';
-import VueScrollTo from 'vue-scrollto';
 
 const { log } = useLog();
 const emit = defineEmits([
@@ -1471,48 +1466,6 @@ watch(
         }
     },
 );
-
-
-/// --- scrolling ---
-
-const track = useTemplateRef('track')
-
-/** Handle scrolling to the changed active track.
- * @remarks This is intentionally only invoked on when the active track changes
- * If a user scrolls to a certain cue within the same track, no scrolling should occur, to keep the UI calm.
- * @devdoc Watching the template ref seems to be necessary, otherwise the initial
- * scrolling after app reload does not work.
- */
-watch(
-    [isActiveTrack, isTrackEditable, track],
-    () => {
-        if (
-            isActiveTrack.value &&
-            !hasSingleMediaTrack.value
-        ) {
-            scrollToTrack();
-        }
-    },
-    { immediate: true /* to handle it at least once after mount time */ },
-);
-
-/** Visually scrolls to the track, making it visually at the top of
- * the view.
- */
-function scrollToTrack() {
-    nextTick(() => {
-        log.debug('MediaTrack::Scrolling to track header for ' + props.trackId);
-        VueScrollTo.scrollTo(track.value, {
-            /** If already visible, do not scroll to make it on top of the view */
-            force: false,
-            /** empirical value (taking into account the non-existing fixed top navbar) */
-            offset: -22,
-            /** Avoid interference with the key press overlay */
-            cancelable: false,
-        });
-    });
-}
-
 
 /// --- fullscreen ---
 

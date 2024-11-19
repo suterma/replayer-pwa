@@ -18,6 +18,7 @@ import { type DirectiveBinding } from 'vue';
  * after it has been mounted
  * @remarks With modifiers, the scrolling can be to the top or
  * just to the visible app area (this excludes the footer and header nav bar)
+ * Using a boolean value, the scrolling can be activated / deactivated.
  */
 export function ScrollDirective(
     el: HTMLElement,
@@ -28,11 +29,17 @@ export function ScrollDirective(
     });
     const { top: elementVerticalPosition } = useElementBounding(el);
 
-    if (binding.modifiers.visible) {
-        // scroll to visible app area
-        //TODO!!
-    } else {
-        windowVerticalPosition.value =
-            windowVerticalPosition.value + elementVerticalPosition.value;
+    // Handle the active/inactive state (active by default)
+    const isActive = (binding.value as unknown as boolean | null) ?? true;
+    if (isActive) {
+        if (binding.modifiers.visible) {
+            // scroll to visible app area
+            //TODO!!
+        } else {
+            windowVerticalPosition.value =
+                windowVerticalPosition.value + elementVerticalPosition.value;
+        }
     }
+
+
 }

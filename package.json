@@ -57,7 +57,6 @@
         "vue-global-events": "^2.2.0",
         "vue-peaks": "^2.0.2",
         "vue-router": "^4.4.5",
-        "vue-scrollto": "^2.20.0",
         "vue3-promise-dialog": "^0.3.4",
         "vuedraggable": "^4.1.0",
         "waveform-data": "^4.5.0",

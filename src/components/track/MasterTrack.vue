@@ -79,7 +79,7 @@
                                 title="Click to update time display"
                             >({{
                                 multitrack.timeSpreading?.toFixed(6)
-                                }}s)</span>
+                            }}s)</span>
                         </button>
                         <button
                             v-tooltip.top="`Spreading: ${(multitrack.timeSpreading * 1000).toFixed(0)} ms (${spreadingInfo})`
@@ -163,7 +163,6 @@ import {
     mdiRotateRightVariant,
     mdiCircle,
 } from '@mdi/js';
-import VueScrollTo from 'vue-scrollto';
 import { useStyleTag, refDebounced } from '@vueuse/core';
 import PlayheadSlider from '@/components/PlayheadSlider.vue';
 import SoloButton from '../buttons/SoloButton.vue';
