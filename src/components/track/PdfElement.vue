@@ -1,6 +1,6 @@
 <template>
     <!-- A container for the (replaced) pdf container, to allow proper scrolling -->
-    <div ref="pdfScrollContainer">
+    <div ref="pdfScrollContainer" data-cy="pdf-scrollcontainer">
         <a
             v-if="usePdfLinkFallback"
             :href="mediaUrl"
@@ -22,12 +22,10 @@
 
 <script setup lang="ts">
 /** A track variant that displays a PDF document, either as link or as an expandable inline viewer */
-import { computed, ref, inject, onMounted, onUpdated, watchEffect } from 'vue';
+import { computed, ref, inject, onMounted, onUpdated } from 'vue';
 import PDFObject from 'pdfobject';
-import VueScrollTo from 'vue-scrollto';
 import useLog from '@/composables/LogComposable';
 import { navbarCompensationHeightInjectionKey } from '@/AppInjectionKeys';
-import FileHandler from '@/store/filehandler';
 
 const { log } = useLog();
 const props = defineProps({
@@ -89,37 +87,13 @@ const initPDF = () => {
             log.warn('PdfElement::Rendering failed because: ', error);
             usePdfLinkFallback.value = true;
         }
-
-        /** When using non-full-screen, scroll back to the pdf viewport */
-        if (!props.isFullscreen) {
-            scrollToPdf();
-        }
     }
 };
 
 onMounted(initPDF);
 onUpdated(initPDF);
 
-/** Visually scrolls to the PDF, making it visually at the top of
- * the view.
- */
-function scrollToPdf() {
-    log.debug('PdfElement::scrollToPdf');
-    VueScrollTo.scrollTo(pdfScrollContainer.value, {
-        /** Always scroll, make it on top of the view */
-        force: true,
-        /** empirical value (taking into account the non-existing fixed top navbar) */
-        offset: 0,
-        /** Avoid interference with the key press overlay */
-        cancelable: false,
-    });
-}
-
 const usePdfLinkFallback = ref(false);
-
-watchEffect(() => {
-    usePdfLinkFallback.value = FileHandler.isValidHttpUrl(props.mediaUrl);
-});
 </script>
 
 <style>

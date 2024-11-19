@@ -165,27 +165,35 @@
                     </div>
                 </div>
             </div>
-            <Transition name="item-expand">
-                <PdfElement
-                    v-if="
-                        (isExpanded || isFullscreen) &&
-                        mediaUrl &&
-                        renderPdfInline
-                    "
-                    class="block"
-                    :media-url="mediaUrl"
-                    :is-fullscreen="isFullscreen"
-                ></PdfElement>
-            </Transition>
-            <!-- Spacer -->
-            <div class="block"></div>
+            <div ref="pdfElementContainer" class="block">
+                <Transition name="item-expand">
+                    <PdfElement
+                        v-if="
+                            (isExpanded || isFullscreen) &&
+                            mediaUrl &&
+                            renderPdfInline
+                        "
+                        :media-url="mediaUrl"
+                        :is-fullscreen="isFullscreen"
+                    ></PdfElement>
+                </Transition>
+            </div>
         </FullscreenPanel>
     </div>
 </template>
 
 <script setup lang="ts">
 /** A track variant that displays a PDF document, either as link or as an expandable inline viewer */
-import { computed, type Ref, ref, provide, readonly, onUnmounted } from 'vue';
+import {
+    computed,
+    type Ref,
+    ref,
+    provide,
+    readonly,
+    onUnmounted,
+    nextTick,
+    watch,
+} from 'vue';
 import { useAppStore } from '@/store/app';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import MediaDropZone from '@/components/MediaDropZone.vue';
@@ -208,6 +216,9 @@ import TagsDisplay from '@/components/displays/TagsDisplay.vue';
 import { PlaybackState } from '@/code/media/PlaybackState';
 import { useTrackStore } from '@/store/track/index';
 import FileHandler from '@/store/filehandler';
+import { useElementBounding, useWindowScroll } from '@vueuse/core';
+import useLog from '@/composables/LogComposable';
+const { log } = useLog();
 
 const props = defineProps({
     /** The id of the track to handle
@@ -266,6 +277,47 @@ const playbackState = computed(() => {
  *  PDF's can not play
  */
 provide(playbackStateInjectionKey, readonly(playbackState));
+
+/// --- scrolling ---
+
+/** A ref to the PDF element container */
+const pdfElementContainer = ref<HTMLDivElement | null>(null);
+
+const { y: windowVerticalPosition } = useWindowScroll();
+const { top: pdfVerticalPosition } = useElementBounding(pdfElementContainer);
+
+watch(isExpanded, (isExpanded, wasExpanded) => {
+    if (isExpanded && !wasExpanded) {
+        scrollToPdf();
+    }
+});
+
+/** Visually scrolls to the PDF container, making it appear at the top of
+ * the view.
+ */
+function scrollToPdf() {
+    log.debug('PdfTrack::scrollToPdf');
+    nextTick(() => {
+        log.debug(
+            'PdfTrack::windowVerticalPosition.value',
+            windowVerticalPosition.value,
+        );
+        log.debug(
+            'PdfTrack::pdfVerticalPosition.value',
+            pdfVerticalPosition.value,
+        );
+        // VueScrollTo.scrollTo(pdfScrollContainer.value, {
+        //     /** Always scroll, make it on top of the view */
+        //     force: true,
+        //     /** empirical value (taking into account the non-existing fixed top navbar) */
+        //     offset: 0,
+        //     /** Avoid interference with the key press overlay */
+        //     cancelable: false,
+        // });
+        windowVerticalPosition.value =
+            windowVerticalPosition.value + pdfVerticalPosition.value;
+    });
+}
 
 /** Removes the track from the compilation
  */
