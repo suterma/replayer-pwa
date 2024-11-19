@@ -22,6 +22,7 @@ import { useMessageStore } from './store/messages';
 import { createManager } from '@vue-youtube/core';
 import { ExperimentDirective } from './directives/ExperimentDirective';
 import { FocusDirective } from './directives/FocusDirective';
+import { ScrollDirective } from './directives/ScrollDirective';
 import { TooltipDirective } from './directives/TooltipDirective';
 import { useAppStore } from './store/app';
 import { useAudioStore } from './store/audio';
@@ -54,6 +55,7 @@ const app = createApp(App)
     .use(PromiseDialog, {})
     .use(youtubeManager)
     .directive('focus', FocusDirective)
+    .directive('scroll', ScrollDirective)
     .directive('experiment', ExperimentDirective)
     .directive('tooltip', TooltipDirective);
 
