@@ -1,40 +1,34 @@
 <template>
-    <!-- A container for the (replaced) pdf container, to allow proper scrolling -->
-    <div ref="pdfScrollContainer">
-        <a
-            v-if="usePdfLinkFallback"
-            :href="mediaUrl"
-            alt="Show this track's PDF in an external viewer"
-            target="_blank"
-            >{{ mediaUrl }}</a
-        >
-        <div
-            v-else
-            ref="pdfContainer"
-            :style="{
-                'min-height': isFullscreen ? '100vh' : availableHeight + 'px',
-                'max-height': isFullscreen ? '100vh' : availableHeight + 'px',
-                width: '100%',
-            }"
-        ></div>
-    </div>
+    <a
+        v-if="usePdfLinkFallback"
+        :href="url"
+        alt="Show this track's PDF in an external viewer"
+        target="_blank"
+        >{{ url }}</a
+    >
+    <div
+        v-else
+        ref="pdfContainer"
+        :style="{
+            'min-height': isFullscreen ? '100vh' : availableHeight + 'px',
+            'max-height': isFullscreen ? '100vh' : availableHeight + 'px',
+            width: '100%',
+        }"
+    ></div>
 </template>
 
 <script setup lang="ts">
-const pdfContainer = ref(null);
-const pdfScrollContainer = ref(null);
-
 /** A track variant that displays a PDF document, either as link or as an expandable inline viewer */
-import { computed, ref, inject, onMounted, onUpdated, watchEffect } from 'vue';
-
+import { computed, ref, inject, onMounted, onUpdated } from 'vue';
 import PDFObject from 'pdfobject';
-import VueScrollTo from 'vue-scrollto';
 import useLog from '@/composables/LogComposable';
+import { navbarCompensationHeightInjectionKey } from '@/AppInjectionKeys';
+
 const { log } = useLog();
 const props = defineProps({
     /** The PDF URL
      */
-    mediaUrl: {
+    url: {
         type: String,
         required: true,
     },
@@ -47,8 +41,8 @@ const props = defineProps({
     },
 });
 
-import { navbarCompensationHeightInjectionKey } from '@/AppInjectionKeys';
-import FileHandler from '@/store/filehandler';
+const pdfContainer = ref<HTMLElement | null>(null);
+
 const navbarCompensationHeight = inject(navbarCompensationHeightInjectionKey);
 
 /** Gets the net available available window height
@@ -66,21 +60,17 @@ const availableHeight = computed(() => {
 
 const initPDF = () => {
     if (pdfContainer.value) {
-        log.debug('PdfElement::Rendering PDF for mediaUrl: ', props.mediaUrl);
+        log.debug('PdfElement::Rendering PDF for mediaUrl: ', props.url);
         try {
-            const success = PDFObject.embed(
-                props.mediaUrl,
-                pdfContainer.value,
-                {
-                    pdfOpenParams: { view: 'FitH' },
-                    height: props.isFullscreen
-                        ? '100vh'
-                        : availableHeight.value + 'px',
-                    width: '100%',
-                    forcePDFJS: false,
-                    PDFJS_URL: '/pdfjs/web/viewer.html?v=2',
-                },
-            );
+            const success = PDFObject.embed(props.url, pdfContainer.value, {
+                pdfOpenParams: { view: 'FitH' },
+                height: props.isFullscreen
+                    ? '100vh'
+                    : availableHeight.value + 'px',
+                width: '100%',
+                forcePDFJS: false,
+                PDFJS_URL: '/pdfjs/web/viewer.html?v=2',
+            });
             if (!success) {
                 log.warn('PdfElement::Rendering failed');
                 usePdfLinkFallback.value = true;
@@ -89,37 +79,13 @@ const initPDF = () => {
             log.warn('PdfElement::Rendering failed because: ', error);
             usePdfLinkFallback.value = true;
         }
-
-        /** When using non-full-screen, scroll back to the pdf viewport */
-        if (!props.isFullscreen) {
-            scrollToPdf();
-        }
     }
 };
 
 onMounted(initPDF);
 onUpdated(initPDF);
 
-/** Visually scrolls to the PDF, making it visually at the top of
- * the view.
- */
-function scrollToPdf() {
-    log.debug('PdfElement::scrollToPdf');
-    VueScrollTo.scrollTo(pdfScrollContainer.value, {
-        /** Always scroll, make it on top of the view */
-        force: true,
-        /** empirical value (taking into account the non-existing fixed top navbar) */
-        offset: 0,
-        /** Avoid interference with the key press overlay */
-        cancelable: false,
-    });
-}
-
 const usePdfLinkFallback = ref(false);
-
-watchEffect(() => {
-    usePdfLinkFallback.value = FileHandler.isValidHttpUrl(props.mediaUrl);
-});
 </script>
 
 <style>

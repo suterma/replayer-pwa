@@ -24,7 +24,7 @@
                     >
                         <template v-if="!isFullscreen">
                             <div class="level-item is-narrow">
-                                <template v-if="showPdfInline">
+                                <template v-if="renderPdfInline">
                                     <!-- Offer the native full screen, if available -->
                                     <FullscreenToggler
                                         v-if="hasNativeFullscreenSupport"
@@ -63,7 +63,7 @@
                                             :href="mediaUrl"
                                             target="_blank"
                                         >
-                                            {{ track.Name }}
+                                            {{ name }}
                                         </a>
                                         <a
                                             v-else
@@ -72,14 +72,14 @@
                                             target="_blank"
                                             disabled
                                         >
-                                            {{ track.Name }}
+                                            {{ name }}
                                         </a>
                                     </span>
                                 </p>
                                 <TagsDisplay
-                                    v-if="!isTrackEditable && trackHasTags"
+                                    v-if="!isTrackEditable && hasTags"
                                     class="ml-2"
-                                    :tags="props.track.Tags"
+                                    :tags="tags"
                                     small
                                     readonly
                                 ></TagsDisplay>
@@ -97,7 +97,7 @@
                                 >
                                     <template #caption>
                                         <MediaSourceIndicator
-                                            :source="track.Url"
+                                            :source="trackUrl"
                                             :unavailable="!mediaUrl"
                                             :show-source-icon="false"
                                         >
@@ -105,8 +105,8 @@
                                     </template>
                                     <MediaDropZone
                                         ref="mediaDropZone"
-                                        :replace-url="track.Url"
-                                        :track-id="track.Id"
+                                        :replace-url="trackUrl"
+                                        :track-id="trackId"
                                         @accepted="acceptedMedia()"
                                     >
                                     </MediaDropZone>
@@ -119,16 +119,13 @@
                                     class="is-fullwidth"
                                 >
                                     <StyledInput
+                                        v-model="name"
                                         class="input"
-                                        :model-value="track?.Name"
                                         type="text"
                                         placeholder="Track name"
                                         title="Track name"
                                         data-cy="track-name-input"
                                         :focus-on-mounted="false"
-                                        @change="
-                                            updateName($event.target.value)
-                                        "
                                     />
                                 </LabeledInput>
                             </div>
@@ -140,9 +137,9 @@
                                 <TagInput @new-tag="addNewTag"></TagInput>
                             </CoveredPanel>
                             <TagsDisplay
-                                v-if="trackHasTags"
+                                v-if="hasTags"
                                 class="level-item"
-                                :tags="props.track.Tags"
+                                :tags="tags"
                                 @remove="removeTag"
                             ></TagsDisplay>
                         </template>
@@ -150,11 +147,7 @@
                     <!-- Right side -->
                     <div class="level-right is-justify-content-flex-end">
                         <PlaybackIndicator
-                            :state="
-                                !!mediaUrl
-                                    ? PlaybackState.Ready
-                                    : PlaybackState.Unavailable
-                            "
+                            :state="playbackState"
                             :playback-icon-path="mdiFilePdfBox"
                             data-cy="playback-indicator"
                             paused-text="PDF track"
@@ -172,37 +165,28 @@
                     </div>
                 </div>
             </div>
-            <Transition name="item-expand">
-                <PdfElement
-                    v-if="
-                        (isExpanded || isFullscreen) &&
-                        mediaUrl &&
-                        showPdfInline
-                    "
-                    class="block"
-                    :media-url="mediaUrl"
-                    :is-fullscreen="isFullscreen"
-                ></PdfElement>
-            </Transition>
-            <!-- Spacer -->
-            <div class="block"></div>
+            <div class="block">
+                <Transition name="item-expand">
+                    <PdfElement
+                        v-if="
+                            (isExpanded || isFullscreen) &&
+                            mediaUrl &&
+                            renderPdfInline
+                        "
+                        v-scroll.top
+                        :url="mediaUrl"
+                        :is-fullscreen="isFullscreen"
+                    ></PdfElement>
+                </Transition>
+            </div>
         </FullscreenPanel>
     </div>
 </template>
 
 <script setup lang="ts">
 /** A track variant that displays a PDF document, either as link or as an expandable inline viewer */
-import {
-    type PropType,
-    computed,
-    type Ref,
-    ref,
-    provide,
-    readonly,
-    onUnmounted,
-} from 'vue';
+import { computed, type Ref, ref, provide, readonly, onUnmounted } from 'vue';
 import { useAppStore } from '@/store/app';
-import type { ITrack } from '@/store/ITrack';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import MediaDropZone from '@/components/MediaDropZone.vue';
 import CoveredPanel from '@/components/CoveredPanel.vue';
@@ -223,12 +207,13 @@ import TagInput from '@/components/editor/TagInput.vue';
 import TagsDisplay from '@/components/displays/TagsDisplay.vue';
 import { PlaybackState } from '@/code/media/PlaybackState';
 import { useTrackStore } from '@/store/track/index';
+import FileHandler from '@/store/filehandler';
 
 const props = defineProps({
-    /** The track to display
+    /** The id of the track to handle
      */
-    track: {
-        type: Object as PropType<ITrack>,
+    trackId: {
+        type: String,
         required: true,
     },
 });
@@ -245,11 +230,21 @@ const { showPdfInline } = storeToRefs(settings);
  * @remarks Code inside the setup script runs once per component instance,
  * thus the track store must be destroyed after component unload.
  */
-const trackStore = useTrackStore(props.track.Id);
-const { mediaUrl } = storeToRefs(trackStore);
+const trackStore = useTrackStore(props.trackId);
+const { mediaUrl, hasTags, tags, name, trackUrl } = storeToRefs(trackStore);
 
 onUnmounted(() => {
     trackStore.$dispose();
+});
+
+// --- pdf state ---
+
+/** Whether to render PDF content inline.
+ * @remarks Do not try to render online PDF content inline, because it typically
+ * fails due to CORS.
+ */
+const renderPdfInline = computed(() => {
+    return showPdfInline && !FileHandler.isValidHttpUrl(mediaUrl.value ?? '');
 });
 
 /** Whether the pdf is currently expanded */
@@ -275,14 +270,13 @@ provide(playbackStateInjectionKey, readonly(playbackState));
 /** Removes the track from the compilation
  */
 function remove() {
-    confirm(
-        'Removing track',
-        `Do you want to remove track "${props.track.Name}"?`,
-    ).then((ok) => {
-        if (ok) {
-            app.removeTrack(props.track.Id);
-        }
-    });
+    confirm('Removing track', `Do you want to remove track "${name}"?`).then(
+        (ok) => {
+            if (ok) {
+                app.removeTrack(props.trackId);
+            }
+        },
+    );
 }
 
 // --- drop zone handling ---
@@ -293,33 +287,16 @@ function acceptedMedia() {
     mediaDropZonePanel.value?.cover();
 }
 
-// --- update ---
-
-/** Updates the track name */
-function updateName(name: string) {
-    const trackId = props.track.Id;
-    const artist = props.track.Artist;
-    const album = props.track.Album;
-
-    app.updateTrackData(trackId, name, artist, album);
-}
-
 // --- Tag handling ---
 
 /** Adds the text from the tag input as new tag and clears the input */
 function addNewTag(tag: string) {
-    const trackId = props.track.Id;
-    app.addTag(trackId, tag);
+    app.addTag(props.trackId, tag);
 }
 
 function removeTag(tag: string) {
-    const trackId = props.track.Id;
-    app.removeTag(trackId, tag);
+    app.removeTag(props.trackId, tag);
 }
-
-const trackHasTags = computed(() => {
-    return props.track.Tags.size > 0;
-});
 </script>
 
 <style lang="scss">

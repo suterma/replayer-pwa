@@ -11,9 +11,8 @@
  * JavaScript code in this page
  */
 
+/** @file A set of injection keys for providing app state to descendant components of the app*/
 import type { InjectionKey, Ref } from 'vue';
-
-/** @file A set of injection keys for providing app state to descendant components of the app,
 
 /** A symbol for providing and injecting the nav bar compensation height */
 export const navbarCompensationHeightInjectionKey = Symbol() as InjectionKey<

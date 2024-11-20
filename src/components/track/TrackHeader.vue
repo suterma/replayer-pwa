@@ -422,7 +422,8 @@ function acceptedMedia() {
             flex-shrink: 0;
             flex-grow: 0;
             text-align: right;
-        } }
+        }
+    }
 }
 
 .is-editable .level {

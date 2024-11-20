@@ -1,9 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-    <div
-        class="compilation"
-        data-cy="compilation"
-    >
+    <div class="compilation" data-cy="compilation">
         <!-- Handle all relevant Replayer events for the compilation level -->
         <ReplayerEventHandler
             @tonextcue="app.toNextCue()"
@@ -27,10 +24,7 @@
         ></TagsSelector>
 
         <div class="tracks">
-            <template
-                v-for="track in allTracks"
-                :key="track.Id"
-            >
+            <template v-for="track in allTracks" :key="track.Id">
                 <MediaTrack
                     v-if="CompilationHandler.isMediaTrack(track)"
                     :id="'track-' + track.Id"
@@ -53,7 +47,7 @@
                     v-else-if="CompilationHandler.isPdfTrack(track)"
                     :id="'track-' + track.Id"
                     class="block"
-                    :track="track"
+                    :track-id="track.Id"
                     data-cy="pdf-track"
                 >
                 </PdfTrack>
@@ -71,10 +65,7 @@
     </div>
 </template>
 
-<script
-    setup
-    lang="ts"
->
+<script setup lang="ts">
 /** Displays the contained set of tracks according to the required mode.
  * @remarks Also handles the common replayer events for compilations
  * @remarks Also supports shuffling of tracks
@@ -97,21 +88,14 @@ import { useMessageStore } from '@/store/messages';
 const { log } = useLog();
 
 const app = useAppStore();
-const {
-    allTracks,
-    getAllTags,
-    isTrackEditable,
-    isTrackMixable,
-    compilation,
-} = storeToRefs(app);
+const { allTracks, getAllTags, isTrackEditable, isTrackMixable, compilation } =
+    storeToRefs(app);
 
 /** The wake lock fill-in that can prevent screen timeout */
 const noSleep: NoSleep = new NoSleep();
 
 const settings = useSettingsStore();
 const { preventScreenTimeout } = storeToRefs(settings);
-
-
 
 /**
  * @remarks Implements #26 in a simple way, as soon as a compilation is shown (disregarding the actual selection of a track)
