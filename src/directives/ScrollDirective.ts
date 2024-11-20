@@ -40,6 +40,4 @@ export function ScrollDirective(
                 windowVerticalPosition.value + elementVerticalPosition.value;
         }
     }
-
-
 }
