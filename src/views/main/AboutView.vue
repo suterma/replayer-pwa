@@ -57,7 +57,7 @@
                                     </li>
                                     <li>
                                         <a
-                                            href="./#/play?media=https://lib.replayer.app/demo/as-a-child-by-lidja-roos.aiff&title=As+A+Child+(AIFF)&album=Not+For+Sale&artist=Lidija+Roos&0.0="
+                                            href="./#/play?media=https://lib.replayer.app/demo/as-a-child-by-lidija-roos.aiff&title=As+A+Child+(AIFF)&album=Not+For+Sale&artist=Lidija+Roos&0.0="
                                             target="_blank"
                                         >
                                             AIFF audio, with only 1 cue</a>
