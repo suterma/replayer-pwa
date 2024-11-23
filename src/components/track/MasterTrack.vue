@@ -244,22 +244,11 @@ const navbarCompensationHeight = refDebounced(
     300 /*replayer-transition-duration*/,
 );
 
-function toggleVertical(event: Event): void {
+function toggleVertical(): void {
     if (showVertical.value) {
         unload();
     } else {
         load();
-    }
-    if (showVertical.value) {
-        log.debug('MasterTrack::Scrolling to event target');
-        VueScrollTo.scrollTo(event.target, {
-            /** Always scroll, make it on top of the view */
-            force: true,
-            /** empirical value */
-            offset: 0,
-            /** Avoid interference with the key press overlay */
-            cancelable: false,
-        });
     }
 }
 
