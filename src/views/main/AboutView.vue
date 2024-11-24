@@ -220,7 +220,7 @@
                                     </li>
                                     <li>
                                         <a
-                                            href="./#/play?package=demo-compilation-featuring-lidija-roos-online-resources-of-multiple-types.xml"
+                                            href="./#/play?package=https://lib.replayer.app/demo/demo-compilation-featuring-lidija-roos-online-resources-of-multiple-types.xml"
                                             target="_blank"
                                         >
                                             XML (.xml) package, with 5 online

@@ -14,9 +14,10 @@
 import {
     tryOnMounted,
     unrefElement,
+    useElementBounding,
+    useWindowScroll,
     type MaybeComputedElementRef,
 } from '@vueuse/core';
-import { ref } from 'vue';
 
 export interface UseScrollElementOptions {
     /**
@@ -36,23 +37,26 @@ export function useElementScroll(
     target: MaybeComputedElementRef,
     options: UseScrollElementOptions = {},
 ) {
-    const { immediate = true } = options;
+    const { immediate = false } = options;
 
-    const bottom = ref(0);
-    const top = ref(0);
+    const { y: windowVerticalPosition } = useWindowScroll({
+        behavior: 'smooth',
+    });
 
+    /** Scrolls to the target element */
     function scroll() {
-        const el = unrefElement(target);
 
-        if (!el) {
-            bottom.value = 0;
-            top.value = 0;
-            return;
-        }
-
-        const rect = el.getBoundingClientRect();
-        bottom.value = rect.bottom;
-        top.value = rect.top;
+        // due to unknown reasons, nextTick() does
+        // not work here, scrolling would not occur.
+        // With setTimeout(), scrolling is sucessful
+        setTimeout(() => {
+            const targetElement = unrefElement(target);
+            const { top: elementVerticalPosition } = useElementBounding(targetElement);
+            {
+                windowVerticalPosition.value =
+                    windowVerticalPosition.value + elementVerticalPosition.value;
+            }
+        }, 0);
     }
 
     tryOnMounted(() => {
@@ -60,10 +64,7 @@ export function useElementScroll(
     });
 
     return {
-        bottom,
-
-        top,
-
+        /** Scrolls to the target element */
         scroll,
     };
 }
