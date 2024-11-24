@@ -1,6 +1,6 @@
 <template>
     <!-- Have some more margin to keep the editing track separate from the other, listed tracks -->
-    <div ref="track" v-scroll.top="isActiveTrack" class="track is-together-print" :class="{
+    <div ref="track" v-scroll.visible="isActiveTrack" class="track is-together-print" :class="{
         'is-active-track': isActiveTrack,
         'is-inactive-track': !isActiveTrack,
         'is-editable': isTrackEditable,
@@ -202,7 +202,7 @@
                             </span>
                             <span class="ml-2 is-italic is-size-7">{{
                                 playingCueRemarks
-                                }}</span>
+                            }}</span>
                         </p>
                     </PlayheadSlider>
                 </div>
@@ -334,7 +334,7 @@
                                                 </span>
                                                 <span class="ml-2 is-italic is-size-7">{{
                                                     playingCueRemarks
-                                                }}</span>
+                                                    }}</span>
                                             </p>
                                         </PlayheadSlider>
                                     </div>

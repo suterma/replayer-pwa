@@ -15,6 +15,7 @@ import {
     tryOnMounted,
     unrefElement,
     useElementBounding,
+    useElementVisibility,
     useWindowScroll,
     type MaybeComputedElementRef,
 } from '@vueuse/core';
@@ -23,9 +24,15 @@ export interface UseScrollElementOptions {
     /**
      * Immediately call update on component mounted
      *
-     * @default true
+     * @default false
      */
     immediate?: boolean;
+
+    /**
+     * Scroll only if the element is not yet visible 
+     * @default false
+     */
+    onlyInvisible?: boolean;
 }
 
 /**
@@ -37,7 +44,9 @@ export function useElementScroll(
     target: MaybeComputedElementRef,
     options: UseScrollElementOptions = {},
 ) {
-    const { immediate = false } = options;
+    const {
+        immediate = false,
+        onlyInvisible = false } = options;
 
     const { y: windowVerticalPosition } = useWindowScroll({
         behavior: 'smooth',
@@ -50,11 +59,13 @@ export function useElementScroll(
         // not work here, scrolling would not occur.
         // With setTimeout(), scrolling is sucessful
         setTimeout(() => {
-            const targetElement = unrefElement(target);
-            const { top: elementVerticalPosition } = useElementBounding(targetElement);
-            {
-                windowVerticalPosition.value =
-                    windowVerticalPosition.value + elementVerticalPosition.value;
+            const targetIsVisible = useElementVisibility(target)
+            if (!onlyInvisible || !targetIsVisible) {
+                const { top: elementVerticalPosition } = useElementBounding(target);
+                {
+                    windowVerticalPosition.value =
+                        windowVerticalPosition.value + elementVerticalPosition.value;
+                }
             }
         }, 0);
     }

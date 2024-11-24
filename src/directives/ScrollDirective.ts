@@ -11,7 +11,7 @@
  * JavaScript code in this page
  */
 
-import { useElementBounding, useWindowScroll } from '@vueuse/core';
+import { useElementScroll } from '@/composables/ElementScrollComposable';
 import { type DirectiveBinding } from 'vue';
 
 /** A directive that vertically scrolls to the component's root element,
@@ -24,20 +24,12 @@ export function ScrollDirective(
     el: HTMLElement,
     binding: DirectiveBinding<any>,
 ) {
-    const { y: windowVerticalPosition } = useWindowScroll({
-        behavior: 'smooth',
-    });
-    const { top: elementVerticalPosition } = useElementBounding(el);
-
     // Handle the active/inactive state (active by default)
     const isActive = (binding.value as unknown as boolean | null) ?? true;
+
+    const { scroll } = useElementScroll(el, { onlyInvisible: (binding.modifiers.visible === true) });
+
     if (isActive) {
-        if (binding.modifiers.visible) {
-            // scroll to visible app area
-            //TODO!!
-        } else {
-            windowVerticalPosition.value =
-                windowVerticalPosition.value + elementVerticalPosition.value;
-        }
+        scroll();
     }
 }
