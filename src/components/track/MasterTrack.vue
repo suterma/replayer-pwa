@@ -114,7 +114,7 @@
                             :is-engaged="showVertical"
                             engaged-label="show horizontal tracks"
                             disengaged-label="show vertical tracks"
-                            @click="toggleVertical($event)"
+                            @click="toggleVertical()"
                         >
                             <BaseIcon
                                 v-if="!showVertical"
