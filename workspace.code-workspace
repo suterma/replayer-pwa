@@ -1,20 +1,26 @@
 {
     "folders": [
         {
-            "path": "."
-        }
+            "path": ".",
+        },
     ],
     "settings": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
         "prettier.singleQuote": true,
         "prettier.tabWidth": 4,
         "editor.formatOnSave": true,
         "editor.detectIndentation": true,
-        "editor.rulers": [
-            80
-        ],
+        "editor.rulers": [80],
         "editor.guides.indentation": true,
         "javascript.preferences.quoteStyle": "single",
         "typescript.preferences.quoteStyle": "single",
-        "html.completion.attributeDefaultValue": "singlequotes"
-    }
+        "html.completion.attributeDefaultValue": "singlequotes",
+    },
+    "extensions": {
+        "recommendations": [
+            "esbenp.prettier-vscode",
+            "dbaeumer.vscode-eslint",
+            "vue.volar",
+        ],
+    },
 }
