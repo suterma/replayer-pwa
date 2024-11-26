@@ -13,7 +13,6 @@
 
 import {
     tryOnMounted,
-    unrefElement,
     useElementBounding,
     useElementVisibility,
     useWindowScroll,
@@ -48,26 +47,40 @@ export function useElementScroll(
         immediate = false,
         onlyInvisible = false } = options;
 
-    const { y: windowVerticalPosition } = useWindowScroll({
-        behavior: 'smooth',
-    });
+    const targetIsVisible = useElementVisibility(target)
 
     /** Scrolls to the target element */
     function scroll() {
-
-        // due to unknown reasons, nextTick() does
+        // We should wait just a little bit to take 
+        // imminent layout changes into considerations
+        // e.g. by expanding panels etc..
+        // NOTE: due to unknown reasons, nextTick() does
         // not work here, scrolling would not occur.
         // With setTimeout(), scrolling is sucessful
         setTimeout(() => {
-            const targetIsVisible = useElementVisibility(target)
             if (!onlyInvisible || !targetIsVisible) {
+                console.log("taget", target)
+
+                const { y: windowVerticalPosition } = useWindowScroll({
+                    behavior: 'smooth',
+                });
+                //const currentWindowVerticalPositionValue = windowVerticalPosition.value;
+                //console.log("currentWindowVerticalPositionValue: ", currentWindowVerticalPositionValue);
+
+
                 const { top: elementVerticalPosition } = useElementBounding(target);
-                {
-                    windowVerticalPosition.value =
-                        windowVerticalPosition.value + elementVerticalPosition.value;
-                }
+                //const currentElementVerticalPositionValue = elementVerticalPosition.value;
+                //console.log("currentElementVerticalPositionValue: ", currentElementVerticalPositionValue);
+
+
+
+                const targetVerticalPosition = windowVerticalPosition.value + elementVerticalPosition.value;
+
+                //console.log("targetVerticalPosition: ", targetVerticalPosition);
+
+                windowVerticalPosition.value = targetVerticalPosition;
             }
-        }, 0);
+        }, 30);
     }
 
     tryOnMounted(() => {
