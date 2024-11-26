@@ -1,5 +1,6 @@
 <template>
     <div
+        v-scroll.top="isActiveTrack"
         class="track is-together-print is-inactive-track is-pdf block"
         data-cy="track-pdf"
         :class="{
@@ -141,7 +142,8 @@
                                 class="level-item"
                                 :tags="tags"
                                 @remove="removeTag"
-                            ></TagsDisplay>
+                            >
+                            </TagsDisplay>
                         </template>
                     </div>
                     <!-- Right side -->
@@ -165,7 +167,7 @@
                     </div>
                 </div>
             </div>
-            <div class="block">
+            <div class="block" ref="pdfContainer">
                 <Transition name="item-expand">
                     <PdfElement
                         v-if="
@@ -173,7 +175,6 @@
                             mediaUrl &&
                             renderPdfInline
                         "
-                        v-scroll.top
                         :url="mediaUrl"
                         :is-fullscreen="isFullscreen"
                     ></PdfElement>
@@ -185,7 +186,15 @@
 
 <script setup lang="ts">
 /** A track variant that displays a PDF document, either as link or as an expandable inline viewer */
-import { computed, type Ref, ref, provide, readonly, onUnmounted } from 'vue';
+import {
+    computed,
+    type Ref,
+    ref,
+    provide,
+    watch,
+    readonly,
+    onUnmounted,
+} from 'vue';
 import { useAppStore } from '@/store/app';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import MediaDropZone from '@/components/MediaDropZone.vue';
@@ -208,6 +217,11 @@ import TagsDisplay from '@/components/displays/TagsDisplay.vue';
 import { PlaybackState } from '@/code/media/PlaybackState';
 import { useTrackStore } from '@/store/track/index';
 import FileHandler from '@/store/filehandler';
+import { useElementScroll } from '@/composables/ElementScrollComposable';
+import useLog from '@/composables/LogComposable';
+import { unrefElement } from '@vueuse/core';
+
+const { log } = useLog();
 
 const props = defineProps({
     /** The id of the track to handle
@@ -231,7 +245,8 @@ const { showPdfInline } = storeToRefs(settings);
  * thus the track store must be destroyed after component unload.
  */
 const trackStore = useTrackStore(props.trackId);
-const { mediaUrl, hasTags, tags, name, trackUrl } = storeToRefs(trackStore);
+const { mediaUrl, hasTags, tags, name, trackUrl, isActiveTrack } =
+    storeToRefs(trackStore);
 
 onUnmounted(() => {
     trackStore.$dispose();
@@ -287,6 +302,22 @@ function acceptedMedia() {
     mediaDropZonePanel.value?.cover();
 }
 
+// --- scrolling ---
+
+const pdfContainer = ref();
+
+/** When the view changes, the active track should be visually tracked
+ * @remarks Implements #155
+ */
+watch(isExpanded, (isExpanded) => {
+    if (isExpanded === true) {
+        const pdf = unrefElement(pdfContainer);
+        const { scroll } = useElementScroll(pdf);
+        log.debug('scrolling to pdf track element id: ', props.trackId);
+        scroll();
+    }
+});
+
 // --- Tag handling ---
 
 /** Adds the text from the tag input as new tag and clears the input */
@@ -312,23 +343,28 @@ function removeTag(tag: string) {
         for the given set of playback controls
         (slider, next/previous cue, playback mode, pre-roll toggler, fading toggler, volume knob, playback indicator)*/
             flex-basis: calc(100% - 0px);
+
             .level-item {
                 flex-shrink: 1;
             }
         }
+
         .level-right {
             flex-basis: 0px;
+
             .level-item {
                 flex-shrink: 1;
             }
         }
     }
+
     /*Note: For PDF tracks, the used width is smaller than in edit mode, 
 since there are less buttons on the right side (no track skip, no play/pause)*/
     .level.is-editable {
         .level-left {
             flex-basis: auto;
         }
+
         .level-right {
             flex-basis: auto;
         }
