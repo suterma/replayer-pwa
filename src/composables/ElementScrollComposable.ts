@@ -28,7 +28,7 @@ export interface UseScrollElementOptions {
     immediate?: boolean;
 
     /**
-     * Scroll only if the element is not yet visible 
+     * Scroll only if the element is not yet visible
      * @default false
      */
     onlyInvisible?: boolean;
@@ -43,44 +43,32 @@ export function useElementScroll(
     target: MaybeComputedElementRef,
     options: UseScrollElementOptions = {},
 ) {
-    const {
-        immediate = false,
-        onlyInvisible = false } = options;
+    const { immediate = false, onlyInvisible = false } = options;
 
-    const targetIsVisible = useElementVisibility(target)
+    const targetIsVisible = useElementVisibility(target);
 
     /** Scrolls to the target element */
     function scroll() {
-        // We should wait just a little bit to take 
-        // imminent layout changes into considerations
-        // e.g. by expanding panels etc..
-        // NOTE: due to unknown reasons, nextTick() does
-        // not work here, scrolling would not occur.
-        // With setTimeout(), scrolling is sucessful
-        setTimeout(() => {
-            if (!onlyInvisible || !targetIsVisible) {
-                console.log("taget", target)
+        if (!onlyInvisible || !targetIsVisible) {
+            console.log('taget', target);
 
-                const { y: windowVerticalPosition } = useWindowScroll({
-                    behavior: 'smooth',
-                });
-                //const currentWindowVerticalPositionValue = windowVerticalPosition.value;
-                //console.log("currentWindowVerticalPositionValue: ", currentWindowVerticalPositionValue);
+            const { y: windowVerticalPosition } = useWindowScroll({
+                behavior: 'smooth',
+            });
+            //const currentWindowVerticalPositionValue = windowVerticalPosition.value;
+            //console.log("currentWindowVerticalPositionValue: ", currentWindowVerticalPositionValue);
 
+            const { top: elementVerticalPosition } = useElementBounding(target);
+            //const currentElementVerticalPositionValue = elementVerticalPosition.value;
+            //console.log("currentElementVerticalPositionValue: ", currentElementVerticalPositionValue);
 
-                const { top: elementVerticalPosition } = useElementBounding(target);
-                //const currentElementVerticalPositionValue = elementVerticalPosition.value;
-                //console.log("currentElementVerticalPositionValue: ", currentElementVerticalPositionValue);
+            const targetVerticalPosition =
+                windowVerticalPosition.value + elementVerticalPosition.value;
 
+            //console.log("targetVerticalPosition: ", targetVerticalPosition);
 
-
-                const targetVerticalPosition = windowVerticalPosition.value + elementVerticalPosition.value;
-
-                //console.log("targetVerticalPosition: ", targetVerticalPosition);
-
-                windowVerticalPosition.value = targetVerticalPosition;
-            }
-        }, 30);
+            windowVerticalPosition.value = targetVerticalPosition;
+        }
     }
 
     tryOnMounted(() => {

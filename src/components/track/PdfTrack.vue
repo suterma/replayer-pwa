@@ -167,7 +167,7 @@
                     </div>
                 </div>
             </div>
-            <div class="block" ref="pdfContainer">
+            <div ref="pdfContainer" class="block">
                 <Transition name="item-expand">
                     <PdfElement
                         v-if="
@@ -194,6 +194,7 @@ import {
     watch,
     readonly,
     onUnmounted,
+    nextTick,
 } from 'vue';
 import { useAppStore } from '@/store/app';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
@@ -311,10 +312,13 @@ const pdfContainer = ref();
  */
 watch(isExpanded, (isExpanded) => {
     if (isExpanded === true) {
-        const pdf = unrefElement(pdfContainer);
-        const { scroll } = useElementScroll(pdf);
-        log.debug('scrolling to pdf track element id: ', props.trackId);
-        scroll();
+        // let the expanding layout settle first, before scrolling,
+        // Otherwise, the last elements in the viewport can not be scrolled properly
+        nextTick(() => {
+            const pdf = unrefElement(pdfContainer);
+            const { scroll } = useElementScroll(pdf);
+            scroll();
+        });
     }
 });
 
