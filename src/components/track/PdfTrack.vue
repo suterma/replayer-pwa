@@ -126,7 +126,6 @@
                                         placeholder="Track name"
                                         title="Track name"
                                         data-cy="track-name-input"
-                                        :focus-on-mounted="false"
                                     />
                                 </LabeledInput>
                             </div>
