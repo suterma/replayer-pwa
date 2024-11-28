@@ -1,8 +1,5 @@
 <template>
-    <fieldset
-        :disabled="disabled"
-        data-cy="cue-editor"
-    >
+    <fieldset :disabled="disabled" data-cy="cue-editor">
         <div class="level is-mobile">
             <!-- Left side -->
             <div class="level-left">
@@ -55,7 +52,7 @@
                         >
                             <input
                                 ref="cueDescription"
-                                v-focus
+                                v-focus="isCueSelected"
                                 class="input"
                                 type="text"
                                 inputmode="text"
@@ -75,14 +72,12 @@
                             title="Cue remarks"
                             class="control is-flex-grow-5 is-flex-shrink-1"
                         >
-                            <template #caption><span
-                                    v-experiment="true"
-                                    class="label"
-                                >Remarks</span></template>
-                            <LabeledInput
-                                v-experiment="true"
-                                label="Remarks"
+                            <template #caption
+                                ><span v-experiment="true" class="label"
+                                    >Remarks</span
+                                ></template
                             >
+                            <LabeledInput v-experiment="true" label="Remarks">
                                 <input
                                     ref="cueRemarks"
                                     class="input"
@@ -140,16 +135,21 @@
                                     class="control is-minimum-5-characters has-cropped-text"
                                     title="Time of this cue"
                                 >
-                                    <span class="input is-static has-opacity-half">
+                                    <span
+                                        class="input is-static has-opacity-half"
+                                    >
                                         <!-- Display the cue time, with just 1 decimal digit -->
-                                        {{ (cueTime ?? 0).toFixed(1) }}</span>
+                                        {{ (cueTime ?? 0).toFixed(1) }}</span
+                                    >
                                 </p>
                             </AdjustTimeButton>
                         </div>
                     </div>
                 </div>
                 <!-- at (keep as small as possible)-->
-                <div class="level-item is-flex-shrink-1 is-flex-grow-0 is-hidden-mobile">
+                <div
+                    class="level-item is-flex-shrink-1 is-flex-grow-0 is-hidden-mobile"
+                >
                     <p class="is-single-line">
                         <span class="has-opacity-half">at</span>
                     </p>
@@ -173,7 +173,9 @@
                             class="control"
                         >
                             <button class="button is-indicator">
-                                <MeasureDisplay :model-value="cueTime"></MeasureDisplay>
+                                <MeasureDisplay
+                                    :model-value="cueTime"
+                                ></MeasureDisplay>
                             </button>
                         </div>
                         <div
@@ -219,7 +221,9 @@
                         class="level-item is-flex-shrink-1"
                     >
                         <button class="button is-indicator">
-                            <MeasureDifferenceDisplay :model-value="cue.Duration"></MeasureDifferenceDisplay>
+                            <MeasureDifferenceDisplay
+                                :model-value="cue.Duration"
+                            ></MeasureDifferenceDisplay>
                         </button>
                     </div>
                     <!-- A rather slim input for the shortcut (a short mnemonic) -->
@@ -276,14 +280,8 @@
                     </CueContextMenu>
                 </div>
                 <div class="field is-hidden-mobile">
-                    <p
-                        class="control"
-                        title="Trash this cue"
-                    >
-                        <button
-                            class="button"
-                            @click="deleteThisCue()"
-                        >
+                    <p class="control" title="Trash this cue">
+                        <button class="button" @click="deleteThisCue()">
                             <!-- NOTE: For performance reasons, this icon is implemented inline, not using the BaseIcon SFC -->
                             <i class="icon mdi">
                                 <svg viewBox="0 0 24 24">
@@ -302,10 +300,7 @@
     </fieldset>
 </template>
 
-<script
-    setup
-    lang="ts"
->
+<script setup lang="ts">
 /** An Editor for for a single cue
  * @remarks Shows a cue button with an inline progress bar, plus input fields for all properties
  * @devdoc Input value binding is not implemented with a two-way v-model binding because the incoming values are taken
@@ -516,10 +511,7 @@ function updateOmitFadeIn(omit: boolean) {
     app.updateCueOmitFadeIn(cueId, omit);
 }
 </script>
-<style
-    lang="scss"
-    scoped
->
+<style lang="scss" scoped>
 /*************************************************************
  * Specific Cue edit level layout
 **************************************************************
@@ -572,9 +564,16 @@ function updateOmitFadeIn(omit: boolean) {
 }
 
 /** Modifies a component with addons, when the addons are hidden on mobile viewport width (using .has-addons-except-mobile) */
-.field.has-addons.has-addons-except-mobile .control:first-child:not(:only-child) .button,
-.field.has-addons.has-addons-except-mobile .control:first-child:not(:only-child) .input,
-.field.has-addons.has-addons-except-mobile .control:first-child:not(:only-child) .select select {
+.field.has-addons.has-addons-except-mobile
+    .control:first-child:not(:only-child)
+    .button,
+.field.has-addons.has-addons-except-mobile
+    .control:first-child:not(:only-child)
+    .input,
+.field.has-addons.has-addons-except-mobile
+    .control:first-child:not(:only-child)
+    .select
+    select {
     border-bottom-right-radius: 4px;
     border-top-right-radius: 4px;
 }
@@ -613,7 +612,6 @@ input[type='text'] {
 
 /* fullhd */
 @media screen and (min-width: 1408px) {
-
     /* minimum input width for shortcuts */
     input[type='text'] {
         min-width: 8ch;
