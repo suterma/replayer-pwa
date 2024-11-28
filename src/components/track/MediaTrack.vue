@@ -1,8 +1,7 @@
 <template>
     <!-- Have some more margin to keep the editing track separate from the other, listed tracks -->
     <div
-        ref="media-track"
-        v-scroll.visible="isActiveTrack"
+        v-scroll.top="isActiveTrack"
         class="track is-together-print"
         :class="{
             'is-active-track': isActiveTrack,
@@ -748,7 +747,6 @@ import {
     watchEffect,
     onBeforeUnmount,
     onUnmounted,
-    useTemplateRef,
 } from 'vue';
 import OnYouTubeConsent from '@/components/dialogs/OnYouTubeConsent.vue';
 import CueLevelEditors from '@/components/CueLevelEditors.vue';
@@ -804,7 +802,6 @@ import useLog from '@/composables/LogComposable';
 import { useTrackStore } from '@/store/track/index';
 import MeterDisplay from '@/components/displays/MeterDisplay.vue';
 import ArtistDisplay from '@/components/displays/ArtistDisplay.vue';
-import { useElementScroll } from '@/composables/ElementScrollComposable';
 
 const { log } = useLog();
 const emit = defineEmits([
@@ -1577,20 +1574,6 @@ watchEffect(() => {
             }
             mediaHandler.value?.looper?.RemoveLoop();
             break;
-    }
-});
-
-// --- scrolling ---
-const mediaTrack = ref<HTMLDivElement>();
-const { scroll } = useElementScroll(mediaTrack);
-
-/** When the view changes, the active track should be visually tracked
- * @remarks Implements #155
- */
-watch(isTrackEditable, () => {
-    if (isActiveTrack.value) {
-        log.debug('scrolling to track element id: ', props.trackId);
-        scroll();
     }
 });
 

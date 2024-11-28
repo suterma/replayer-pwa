@@ -18,6 +18,9 @@ import {
     useWindowScroll,
     type MaybeComputedElementRef,
 } from '@vueuse/core';
+import useLog from '@/composables/LogComposable';
+
+const { log } = useLog();
 
 export interface UseScrollElementOptions {
     /**
@@ -45,29 +48,21 @@ export function useElementScroll(
 ) {
     const { immediate = false, onlyInvisible = false } = options;
 
-    const targetIsVisible = useElementVisibility(target);
-
     /** Scrolls to the target element */
     function scroll() {
+        const targetIsVisible = useElementVisibility(target);
         if (!onlyInvisible || !targetIsVisible) {
-            console.log('taget', target);
-
             const { y: windowVerticalPosition } = useWindowScroll({
                 behavior: 'smooth',
             });
-            //const currentWindowVerticalPositionValue = windowVerticalPosition.value;
-            //console.log("currentWindowVerticalPositionValue: ", currentWindowVerticalPositionValue);
-
             const { top: elementVerticalPosition } = useElementBounding(target);
-            //const currentElementVerticalPositionValue = elementVerticalPosition.value;
-            //console.log("currentElementVerticalPositionValue: ", currentElementVerticalPositionValue);
-
             const targetVerticalPosition =
                 windowVerticalPosition.value + elementVerticalPosition.value;
-
-            //console.log("targetVerticalPosition: ", targetVerticalPosition);
-
             windowVerticalPosition.value = targetVerticalPosition;
+
+            log.debug(
+                `scrolled to vertical position:${targetVerticalPosition}`,
+            );
         }
     }
 

@@ -194,7 +194,6 @@ import {
     watch,
     readonly,
     onUnmounted,
-    nextTick,
 } from 'vue';
 import { useAppStore } from '@/store/app';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
@@ -219,10 +218,7 @@ import { PlaybackState } from '@/code/media/PlaybackState';
 import { useTrackStore } from '@/store/track/index';
 import FileHandler from '@/store/filehandler';
 import { useElementScroll } from '@/composables/ElementScrollComposable';
-import useLog from '@/composables/LogComposable';
 import { unrefElement } from '@vueuse/core';
-
-const { log } = useLog();
 
 const props = defineProps({
     /** The id of the track to handle
@@ -307,18 +303,14 @@ function acceptedMedia() {
 
 const pdfContainer = ref();
 
-/** When the view changes, the active track should be visually tracked
- * @remarks Implements #155
+/** When the PDF view expands, it should scroll to the top to "auto-fit"
+ * @remarks Implements #156
  */
 watch(isExpanded, (isExpanded) => {
     if (isExpanded === true) {
-        // let the expanding layout settle first, before scrolling,
-        // Otherwise, the last elements in the viewport can not be scrolled properly
-        nextTick(() => {
-            const pdf = unrefElement(pdfContainer);
-            const { scroll } = useElementScroll(pdf);
-            scroll();
-        });
+        const pdf = unrefElement(pdfContainer);
+        const { scroll } = useElementScroll(pdf);
+        scroll();
     }
 });
 

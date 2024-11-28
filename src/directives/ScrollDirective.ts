@@ -12,7 +12,7 @@
  */
 
 import { useElementScroll } from '@/composables/ElementScrollComposable';
-import { type DirectiveBinding } from 'vue';
+import { nextTick, type DirectiveBinding } from 'vue';
 
 /** A directive that vertically scrolls to the component's root element,
  * after it has been mounted
@@ -27,9 +27,28 @@ export function ScrollDirective(
     // Handle the active/inactive state (active by default)
     const isActive = (binding.value as unknown as boolean | null) ?? true;
 
-    const { scroll } = useElementScroll(el, { onlyInvisible: (binding.modifiers.visible === true) });
+    const { scroll } = useElementScroll(el, {
+        onlyInvisible: binding.modifiers.visible === true,
+    });
 
     if (isActive) {
-        scroll();
+        /* Scrolling only occurrs on nextTick and a timeout,
+         * to let the possibly changing layout settle first, before scrolling.
+         * Otherwise, the (last) elements in the viewport can not be scrolled properly
+         * */
+        nextTick(() => {
+            setTimeout(
+                () => {
+                    scroll();
+                },
+                90,
+                /* This is an empiric value, 
+                   to make sure, scrolling only takes place after the routing 
+                   has at least started.
+                   It should be longer than the iBusy-Routing timeout, but
+                   shorter than the general app-animation duration
+                   */
+            );
+        });
     }
 }
