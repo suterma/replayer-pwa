@@ -1044,6 +1044,9 @@ function updatePlaybackState(state: PlaybackState) {
 
 /** Releases a used media handler for this track */
 function releaseMediaHandler() {
+    // The track can no longer play
+    updatePlaybackState(PlaybackState.Unavailable);
+
     const handler = mediaHandler.value;
     log.debug('MediaTrack::releaseMediaHandler:id', handler?.id);
 
