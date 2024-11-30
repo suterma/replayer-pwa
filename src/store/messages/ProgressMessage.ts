@@ -16,13 +16,29 @@
  */
 export class ProgressMessage {
     Message = '';
-    Percentage = 0;
+    Percentage = null as null | number;
+    Display = ProgressDisplayKind.Circular;
 
     /** Creates a new progress message.
      * @param [percentage=0] The value is rounded to the nearest integer.
+     * @param [display=Circular] The display progres display style. Default is circular.
      */
-    constructor(message: string, percentage: number = 0) {
+    constructor(
+        message: string,
+        percentage: number | null = null,
+        display = ProgressDisplayKind.Circular,
+    ) {
         this.Message = message;
-        this.Percentage = Math.round(percentage);
+        if (percentage !== null) {
+            this.Percentage = Math.round(percentage);
+        }
+        this.Display = display;
     }
+}
+/** The kind of progress display */
+export enum ProgressDisplayKind {
+    /** A linear progress display */
+    Linear = 'LINEAR',
+    /** A circular progress display */
+    Circular = 'CIRCULAR',
 }
