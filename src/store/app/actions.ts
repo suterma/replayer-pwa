@@ -34,7 +34,7 @@ import { useMessageStore } from '../messages';
 import type { IMeter } from '@/code/music/IMeter';
 import { Meter } from '@/code/music/Meter';
 import {
-    ProgressDisplayType,
+    ProgressDisplayKind,
     ProgressMessage,
 } from '@/store/messages/ProgressMessage';
 import { getters } from './getters';
@@ -541,7 +541,7 @@ export const actions = {
                                         new ProgressMessage(
                                             loadingMessage,
                                             progress,
-                                            ProgressDisplayType.Linear,
+                                            ProgressDisplayKind.Linear,
                                         ),
                                     );
                                 },

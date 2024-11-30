@@ -22,8 +22,8 @@ const { log } = useLog();
  */
 export default class FileHandler {
     /** Returns the response content as a promise that resolves with a file
-     * @remarks This mimicks the Response.blob() function, but additionally
-     * provides some progress information.
+     * @remarks This works similar to the the Response.blob() function,
+     * but returns a file and additionally provides some progress information.
      * @param {Response} response - the response to read the content from.
      * The body and headers, especially the content length, are expected to be available
      * @param {(progress: number) => void} update - the callback function to
@@ -39,7 +39,7 @@ export default class FileHandler {
             responseUrl,
             response,
         );
-        if (!FileHandler.isSupportedMimeType(contentType)) {
+        if (!(contentType && FileHandler.isSupportedMimeType(contentType))) {
             return Promise.reject(
                 `Content MIME type '${contentType}' is not supported`,
             );
@@ -76,19 +76,10 @@ export default class FileHandler {
             }
         }
 
-        // concatenate chunks into single Uint8Array
-        const chunksAll = new Uint8Array(receivedLength);
-        let position = 0;
-        for (const chunk of chunks) {
-            chunksAll.set(chunk, position);
-            position += chunk.length;
-        }
-
-        // return as blob
-        const blob = new Blob([chunksAll]);
+        // return as file
         const localResourceName = FileHandler.getLocalResourceName(responseUrl);
-        const file = new File([blob], localResourceName /* as name */, {
-            type: contentType ?? undefined,
+        const file = new File(chunks, localResourceName /* as name */, {
+            type: contentType,
         });
         return file;
     }

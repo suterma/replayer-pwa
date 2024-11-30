@@ -281,7 +281,7 @@
                         new ProgressMessage(
                             'Short percentage-value with linear progress',
                             50,
-                            ProgressDisplayType.Linear,
+                            ProgressDisplayKind.Linear,
                         ),
                     );
                 "
@@ -399,7 +399,7 @@ import { storeToRefs } from 'pinia';
 import CollapsiblePanel from '@/components/CollapsiblePanel.vue';
 import { useMessageStore } from '@/store/messages';
 import {
-    ProgressDisplayType,
+    ProgressDisplayKind,
     ProgressMessage,
 } from '@/store/messages/ProgressMessage';
 import PlaybackIndicator from '@/components/indicators/PlaybackIndicator.vue';
