@@ -73,15 +73,22 @@
     <!-- display area for progress display -->
     <div :class="{ modal: true, 'is-active': hasProgressMessage }">
         <div class="modal-background"></div>
-        <div class="modal-card">
+        <div class="modal-card is-shadowless">
             <section class="modal-card-body has-background-transparent">
                 <template
                     v-for="progressMessage in progressMessages"
                     :key="progressMessage.Message"
                 >
-                    <!-- Show a level with circular indicator for progess with percentage -->
-                    <template v-if="progressMessage.Percentage">
+                    <!-- Show a level with circular indicator if appropriate -->
+                    <template
+                        v-if="
+                            progressMessage.Percentage !== null &&
+                            progressMessage.Display ==
+                                ProgressDisplayKind.Circular
+                        "
+                    >
                         <div class="level is-mobile has-cropped-text mb-0">
+                            <!-- message on the left -->
                             <div
                                 class="level-left"
                                 style="max-width: calc(100% - 1.5em)"
@@ -90,7 +97,7 @@
                                     <span>{{ progressMessage.Message }}</span>
                                 </div>
                             </div>
-
+                            <!-- circular progress on the right -->
                             <div class="level-right">
                                 <div class="level-item">
                                     <CircularProgress
@@ -101,12 +108,25 @@
                             </div>
                         </div>
                     </template>
-                    <!-- For text-only progress show a line and separate marquee -->
+                    <!-- Show just a line and separate marquee or progress below -->
                     <template v-else>
                         <div class="has-cropped-text">
                             <span>{{ progressMessage.Message }}</span>
                         </div>
+                        <!-- linear progress -->
                         <progress
+                            v-if="
+                                progressMessage.Percentage !== null &&
+                                progressMessage.Display ===
+                                    ProgressDisplayKind.Linear
+                            "
+                            class="progress is-indicator"
+                            max="100"
+                            :value="progressMessage.Percentage"
+                        ></progress>
+                        <!-- marquee -->
+                        <progress
+                            v-else
                             class="progress is-indicator"
                             max="100"
                         ></progress>
@@ -134,6 +154,7 @@
 import { storeToRefs } from 'pinia';
 import { useMessageStore } from '@/store/messages';
 import CircularProgress from '@/components/indicators/CircularProgress.vue';
+import { ProgressDisplayKind } from '@/store/messages/ProgressMessage';
 
 const message = useMessageStore();
 const {
