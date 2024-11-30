@@ -21,6 +21,78 @@ const { log } = useLog();
  * originating both from the local file system or an online resource.
  */
 export default class FileHandler {
+    /** Returns the response content as a promise that resolves with a file
+     * @remarks This mimicks the Response.blob() function, but additionally
+     * provides some progress information.
+     * @param {Response} response - the response to read the content from.
+     * The body and headers, especially the content length, are expected to be available
+     * @param {(progress: number) => void} update - the callback function to
+     * use for periodic update. The progress is reported as percentage.
+     */
+    static async getFileWithProgress(
+        response: Response,
+        update: (progress: number) => void,
+    ): Promise<File> {
+        //Check whether MIME Type is supported
+        const responseUrl = new URL(response.url);
+        const contentType = FileHandler.getResponseMimeType(
+            responseUrl,
+            response,
+        );
+        if (!FileHandler.isSupportedMimeType(contentType)) {
+            return Promise.reject(
+                `Content MIME type '${contentType}' is not supported`,
+            );
+        }
+
+        if (!response.body) {
+            return Promise.reject('Response body is missing');
+        }
+        const reader = response.body.getReader();
+
+        // get total length
+        const contentLength =
+            parseInt(response.headers.get('Content-Length') ?? '') ??
+            Number.NaN;
+
+        // read the data
+        let receivedLength = 0; // received that many bytes at the moment
+        const chunks = []; // array of received binary chunks (comprises the body)
+        // eslint-disable-next-line no-constant-condition
+        while (true) {
+            const { done, value } = await reader.read();
+
+            if (done) {
+                break;
+            }
+
+            chunks.push(value);
+            receivedLength += value.length;
+
+            // report progress in percent
+            if (contentLength > 0) {
+                const progress = (receivedLength / contentLength) * 100;
+                update(progress);
+            }
+        }
+
+        // concatenate chunks into single Uint8Array
+        const chunksAll = new Uint8Array(receivedLength);
+        let position = 0;
+        for (const chunk of chunks) {
+            chunksAll.set(chunk, position);
+            position += chunk.length;
+        }
+
+        // return as blob
+        const blob = new Blob([chunksAll]);
+        const localResourceName = FileHandler.getLocalResourceName(responseUrl);
+        const file = new File([blob], localResourceName /* as name */, {
+            type: contentType ?? undefined,
+        });
+        return file;
+    }
+
     /** Get the size in MB, rounded to one decimal place */
     static AsMegabytes(sizeInBytes: number | null): number | null {
         if (sizeInBytes === 0) {
@@ -276,7 +348,7 @@ export default class FileHandler {
 
     /** Returns whether the given MIME type is any of the supported types by Replayer
      */
-    static isSupportedMimeType(type: string | undefined): boolean {
+    static isSupportedMimeType(type: string | undefined | null): boolean {
         if (
             this.isSupportedPackageMimeType(type) ||
             this.isSupportedCompilationMimeType(type) ||
@@ -479,39 +551,43 @@ export default class FileHandler {
     /** Returns whether the given MIME type is a supported package MIME type by Replayer
      * @devdoc See https://stackoverflow.com/a/72232884/79485 about mime types
      */
-    static isSupportedPackageMimeType(type: string | undefined): boolean {
+    static isSupportedPackageMimeType(
+        type: string | undefined | null,
+    ): boolean {
         return !!type && FileHandler.supportedPackageMimeTypes.includes(type);
     }
 
     /** Returns whether the given MIME type is a supported compilation MIME type by Replayer
      * @remarks XML data is always considered a Compilation in this context
      */
-    static isSupportedCompilationMimeType(type: string | undefined): boolean {
+    static isSupportedCompilationMimeType(
+        type: string | undefined | null,
+    ): boolean {
         return !!type && FileHandler.supportedXmlMimeTypes.includes(type);
     }
 
     /** Returns whether the given MIME type is a supported XML compilation MIME type by Replayer
      */
-    static isXmlMimeType(type: string | undefined): boolean {
+    static isXmlMimeType(type: string | undefined | null): boolean {
         return !!type && FileHandler.supportedXmlMimeTypes.includes(type);
     }
 
     /** Returns whether the given MIME type is a supported text file MIME type by Replayer
      */
-    static isTextMimeType(type: string | undefined): boolean {
+    static isTextMimeType(type: string | undefined | null): boolean {
         return !!type && FileHandler.supportedTextMimeTypes.includes(type);
     }
 
     /** Returns whether the given MIME type is a supported PDF file MIME type by Replayer
      */
-    static isPdfMimeType(type: string | undefined): boolean {
+    static isPdfMimeType(type: string | undefined | null): boolean {
         return !!type && FileHandler.supportedPdfMimeTypes.includes(type);
     }
 
     /** Returns whether the given MIME type is a supported media MIME type by Replayer
      * @remarks Currently, MIME types for various audio, video, plus plain text and PDF, are supported.
      */
-    static isSupportedMediaMimeType(type: string | undefined): boolean {
+    static isSupportedMediaMimeType(type: string | undefined | null): boolean {
         //Check for supported MIME types (see https://stackoverflow.com/a/29672957)
         return !!type && FileHandler.supportedMediaMimeTypes.includes(type);
     }
@@ -519,12 +595,9 @@ export default class FileHandler {
     /** Gets the content MIME type from a fetch response
      * @remarks Applies some educated guess in case the content type is not available from the response headers
      */
-    static getResponseMimeType(
-        url: URL,
-        response: Response,
-    ): string | undefined {
+    static getResponseMimeType(url: URL, response: Response): string | null {
         const contentType = response.headers.get('Content-Type');
-        let mimeType = undefined;
+        let mimeType = null;
         //Try to get the MIME type from the content type
         if (contentType) {
             log.debug('FileHandler::getMimeType:contentType', contentType);
@@ -548,13 +621,13 @@ export default class FileHandler {
     /** Gets a guessed MIME type from a filename, using an expected extension
      * @remarks Applies some educated guess
      */
-    static getFileMimeType(fileName: string): string | undefined {
+    static getFileMimeType(fileName: string): string | null {
         const fileExtension = this.getFileExtension(fileName);
         log.debug(
             'CompilationParser::getFileMimeType:fileExtension',
             fileExtension,
         );
-        let mimeType = undefined;
+        let mimeType = null;
         // audio
         if (fileExtension == 'mp3') {
             mimeType = ZipMimeTypes.AUDIO_MPEG /*mp3*/;
@@ -635,7 +708,7 @@ export default class FileHandler {
     ): MediaBlob {
         log.debug('CompilationParser::handleAsMediaContent');
         const blob = new Blob([content], {
-            type: FileHandler.getFileMimeType(mediaFileName),
+            type: FileHandler.getFileMimeType(mediaFileName) ?? undefined,
         });
         return new MediaBlob(mediaFileName, blob);
     }

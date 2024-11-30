@@ -276,6 +276,14 @@
                             33,
                         ),
                     );
+
+                    message.pushProgressWithPercentage(
+                        new ProgressMessage(
+                            'Short percentage-value with linear progress',
+                            50,
+                            ProgressDisplayType.Linear,
+                        ),
+                    );
                 "
             >
                 Set progress percentage
@@ -390,7 +398,10 @@ import { useAppStore } from '@/store/app';
 import { storeToRefs } from 'pinia';
 import CollapsiblePanel from '@/components/CollapsiblePanel.vue';
 import { useMessageStore } from '@/store/messages';
-import { ProgressMessage } from '@/store/messages/ProgressMessage';
+import {
+    ProgressDisplayType,
+    ProgressMessage,
+} from '@/store/messages/ProgressMessage';
 import PlaybackIndicator from '@/components/indicators/PlaybackIndicator.vue';
 import { PlaybackState } from '@/code/media/PlaybackState';
 import FadeInSwitch from '@/components/buttons/FadeInSwitch.vue';

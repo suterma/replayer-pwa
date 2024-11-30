@@ -33,7 +33,10 @@ import CompilationParser from '../../code/xml/XmlCompilationParser';
 import { useMessageStore } from '../messages';
 import type { IMeter } from '@/code/music/IMeter';
 import { Meter } from '@/code/music/Meter';
-import { ProgressMessage } from '@/store/messages/ProgressMessage';
+import {
+    ProgressDisplayType,
+    ProgressMessage,
+} from '@/store/messages/ProgressMessage';
 import { getters } from './getters';
 import useLog from '@/composables/LogComposable';
 
@@ -170,7 +173,6 @@ export const actions = {
     addCue(trackId: string, cue: ICue): void {
         const matchingTrack = getters.getTrackById(trackId);
         if (matchingTrack) {
-
             matchingTrack.Cues.push(cue);
 
             //Sort the resulting set by time
@@ -419,7 +421,8 @@ export const actions = {
         const matchingFile = state.mediaUrls.value.get(mediaUrl.resourceName);
         if (matchingFile) {
             log.debug(
-                `actions::addMediaUrl:removing matching item for key:${mediaUrl.resourceName
+                `actions::addMediaUrl:removing matching item for key:${
+                    mediaUrl.resourceName
                 }, normalized: ${mediaUrl.resourceName.normalize()}`,
             );
             ObjectUrlHandler.revokeObjectURL(matchingFile.url);
@@ -480,8 +483,8 @@ export const actions = {
         PersistentStorage.storeMediaBlob(mediaBlob);
     },
 
-    /** Loads a single file or package from an URL
-     * @remarks The content might be a package or single file of any supported content.
+    /** Loads a single file (media or package file) from an URL
+     * @remarks The file content might be of any supported content.
      * This method can be called multiple times, each resource gets appropriately added to the current compilation
      * The resource is expected to support appropriate CORS Headers
      * @param url - The URL to load the file from
@@ -497,9 +500,9 @@ export const actions = {
                 reject(`Provided input is not a valid URL: '${url}'`);
             }
 
-            const loadingUrlMessage = `Loading URL '${url}'...`;
+            const connectingUrlMessage = `Connecting to '${url}'...`;
             message
-                .pushProgress(loadingUrlMessage)
+                .pushProgress(connectingUrlMessage)
                 .then(() => {
                     // HINT: Replayer expects CORS to be allowed here (no no-cors).
                     // If the origin server doesn’t include the suitable
@@ -507,69 +510,50 @@ export const actions = {
                     fetch(url, {
                         method: 'GET',
                     })
-                        .then((response) => {
+                        .then(async (response) => {
                             //Use the final (possibly redirected URL)
                             if (response.redirected) {
                                 log.debug(
                                     `The GET request was redirected from fetch URL '${url}' to response URL '${response.url}'`,
                                 );
                             }
-                            const LoadingDataMessage = `Loading data from response URL '${response.url}'...`;
-                            message.pushProgress(LoadingDataMessage);
 
                             if (
                                 response.status ===
                                 0 /* opaque response, in case no-cors would have been used */
                             ) {
-                                message.popProgress(LoadingDataMessage);
                                 reject(
                                     `Fetch has failed for URL: '${response.url}' due to disallowed CORS by the server. Please manually download the resource and load it from the file system.`,
                                 );
                             } else if (!response.ok) {
-                                message.popProgress(LoadingDataMessage);
                                 reject(
                                     `Network response while fetching URL '${response.url}' was not 200 OK, but: '${response.status} ${response.statusText}'`,
                                 );
                             }
 
-                            response
-                                .blob()
-                                .then((blob) => {
-                                    const responseUrl = new URL(response.url);
-                                    const mimeType =
-                                        FileHandler.getResponseMimeType(
-                                            responseUrl,
-                                            response,
-                                        );
-
-                                    //Check whether MIME Type is supported
-                                    if (
-                                        !FileHandler.isSupportedMimeType(
-                                            mimeType,
-                                        )
-                                    ) {
-                                        reject(
-                                            `Content MIME type '${mimeType}' is not supported`,
-                                        );
-                                    }
-                                    const localResourceName =
-                                        FileHandler.getLocalResourceName(
-                                            responseUrl,
-                                        );
-                                    const file = new File(
-                                        [blob],
-                                        localResourceName /* as name */,
-                                        {
-                                            type: mimeType ?? undefined,
-                                        },
+                            // Wait for, then process, the response content
+                            const loadingMessage = `Loading from '${response.url}'...`;
+                            message.pushProgress(loadingMessage);
+                            FileHandler.getFileWithProgress(
+                                response,
+                                (progress) => {
+                                    message.pushProgressWithPercentage(
+                                        new ProgressMessage(
+                                            loadingMessage,
+                                            progress,
+                                            ProgressDisplayType.Linear,
+                                        ),
                                     );
+                                },
+                            )
+                                .then((file) => {
                                     this.loadFromFile(file)
                                         .then(() => {
-                                            resolve(localResourceName);
+                                            resolve(file.name);
                                         })
                                         .catch((errorMessage: string) =>
                                             reject(
-                                                `Loading from the received resource file has failed for URL: '${responseUrl}' with the message: '${errorMessage}'`,
+                                                `Loading from the received resource file has failed for URL: '${response.url}' with the message: '${errorMessage}'`,
                                             ),
                                         );
                                 })
@@ -579,7 +563,7 @@ export const actions = {
                                     ),
                                 )
                                 .finally(() =>
-                                    message.popProgress(LoadingDataMessage),
+                                    message.popProgress(loadingMessage),
                                 );
                         })
                         .catch((errorMessage: string) =>
@@ -587,21 +571,23 @@ export const actions = {
                                 `Fetch has failed for URL: '${url}' with the message: '${errorMessage}'. Maybe the file is too large or the server does not allow CORS. If any of this is the case, manually download the resource and load it from the file system.`,
                             ),
                         )
-                        .finally(() => message.popProgress(loadingUrlMessage));
+                        .finally(() =>
+                            message.popProgress(connectingUrlMessage),
+                        );
                 })
                 .catch((errorMessage: string) => {
                     reject(
                         `Fetching failed for URL: '${url}' with the message: '${errorMessage}'. Maybe the server is offline.`,
                     );
                     // Popped here, not in finally because the successful path leads to popping inside the fetch continuation
-                    message.popProgress(loadingUrlMessage);
+                    message.popProgress(connectingUrlMessage);
                 });
         });
     },
 
-    /** Loads a single file or package from a file
+    /** Loads a single file, of any supported content.
      * @remarks The file might have been downloaded or loaded from the local file
-     * system. I might be a package or a single file of any supported content.
+     * system. It might be a package file or a single file of any supported content.
      * This method can be called multiple times, each resource gets appropriately added to the current compilation
      * @param file - The file to use
      */
@@ -610,8 +596,9 @@ export const actions = {
         const message = useMessageStore();
 
         return new Promise((resolve, reject) => {
-            const loadingFileMessage = `Loading file '${file.name}' ${file.type
-                } (${FileHandler.AsMegabytes(file.size)}MB)`;
+            const loadingFileMessage = `Loading file '${file.name}' ${
+                file.type
+            } (${FileHandler.AsMegabytes(file.size)}MB)`;
             message.pushProgress(loadingFileMessage);
             if (FileHandler.isSupportedPackageFile(file)) {
                 log.debug(
@@ -801,7 +788,8 @@ export const actions = {
         const matchingFile = state.mediaUrls.value.get(mediaUrl.resourceName);
         if (matchingFile) {
             log.debug(
-                `actions::DISCARD_MEDIA_URL:removing matching item for key:${mediaUrl.resourceName
+                `actions::DISCARD_MEDIA_URL:removing matching item for key:${
+                    mediaUrl.resourceName
                 }, normalized: ${mediaUrl.resourceName.normalize()}`,
             );
             ObjectUrlHandler.revokeObjectURL(matchingFile.url);
