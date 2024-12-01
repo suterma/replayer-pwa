@@ -308,7 +308,15 @@
  * This approach is chosen over the ...data pattern because the shortcut values can also change from a menu entry
  * in the track's dropdown menu.
  */
-import { type PropType, computed, inject, ref, type Ref, watch } from 'vue';
+import {
+    type PropType,
+    computed,
+    inject,
+    ref,
+    type Ref,
+    watch,
+    nextTick,
+} from 'vue';
 import { storeToRefs } from 'pinia';
 import CueButton from '@/components/buttons/CueButton.vue';
 import AdjustTimeButton from '@/components/buttons/AdjustTimeButton.vue';
@@ -424,11 +432,13 @@ function updateRemarks(event: Event) {
 
 // --- focus ---
 
-/** Focus of the description follows the cue selection */
+/** Focus of the description follows the cue selection
+ * @remarks focus only works for enabled elements
+ */
 watch(
-    () => props.isCueSelected,
+    [() => props.isCueSelected, () => props.disabled],
     () => {
-        if (props.isCueSelected) {
+        if (props.isCueSelected && !props.disabled) {
             focusDescription();
         }
     },
@@ -437,10 +447,15 @@ watch(
     },
 );
 
-/** Sets the focus to the description input and sets the cursor to the start position */
+/** Sets the focus to the description input and sets the cursor to the start position
+ */
 function focusDescription() {
-    cueDescription.value?.focus();
-    cueDescription.value?.setSelectionRange(0, 0);
+    // let the DOM settle first
+    nextTick(() => {
+        const el = cueDescription.value;
+        el?.focus();
+        el?.setSelectionRange(0, 0);
+    });
 }
 
 /** Deletes the cue */
