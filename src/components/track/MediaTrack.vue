@@ -1461,10 +1461,11 @@ const { hasSingleMediaTrack } = storeToRefs(app);
  This avoids having multiple tracks playing at the same time.
 */
 watch(isActiveTrack, (isActive, wasActive) => {
-    log.debug(`MediaTrack(${name})::isActiveTrack:val:`, isActive);
+    log.debug(`MediaTrack(${name.value})::isActiveTrack:val:`, isActive);
 
     // Pause and reset this track, when it's no more the active track
     if (wasActive === true && isActive === false) {
+        log.debug(`MediaTrack(${name.value})::isActiveTrack:pausing`);
         mediaHandler.value?.pause().then(() => {
             mediaHandler.value?.seekTo(0);
         });
