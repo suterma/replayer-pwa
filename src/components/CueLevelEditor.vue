@@ -52,7 +52,6 @@
                         >
                             <input
                                 ref="cueDescription"
-                                v-focus="isCueSelected"
                                 class="input"
                                 type="text"
                                 inputmode="text"
