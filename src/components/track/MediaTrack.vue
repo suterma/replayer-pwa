@@ -701,24 +701,22 @@
                                     @click="setActiveTrack"
                                 >
                                 </TrackMediaElement>
-                                <div v-if="isYoutubeVideoTrack">
-                                    <OnYouTubeConsent>
-                                        <!-- The YouTube player must get recreated on teleportation changes, 
+                                <OnYouTubeConsent v-if="isYoutubeVideoTrack">
+                                    <!-- The YouTube player must get recreated on teleportation changes, 
                                          (happening from an to and from play view change)
                                           thus the isTrackPlayable is added to the key -->
-                                        <TrackYouTubeElement
-                                            :key="trackId + isTrackPlayable"
-                                            :title="name"
-                                            :url="mediaUrl"
-                                            :start="initialPlayheadPosition"
-                                            :track-id="trackId"
-                                            :cues="cues"
-                                            :small-video="!isFullscreen"
-                                            @click="setActiveTrack"
-                                        >
-                                        </TrackYouTubeElement>
-                                    </OnYouTubeConsent>
-                                </div>
+                                    <TrackYouTubeElement
+                                        :key="trackId + isTrackPlayable"
+                                        :title="name"
+                                        :url="mediaUrl"
+                                        :start="initialPlayheadPosition"
+                                        :track-id="trackId"
+                                        :cues="cues"
+                                        :small-video="!isFullscreen"
+                                        @click="setActiveTrack"
+                                    >
+                                    </TrackYouTubeElement>
+                                </OnYouTubeConsent>
                             </div>
                         </div>
                     </Transition>
