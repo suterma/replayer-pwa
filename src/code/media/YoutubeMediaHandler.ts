@@ -283,8 +283,16 @@ export default class YouTubeMediaHandler implements IMediaHandler {
             Number.isFinite(seconds)
         ) {
             return new Promise((resolve) => {
+                // Keep paused playback state over the seek operation.
+                // Due to unknown reasons, at the first seek after ready,
+                // the YouTube player automatically starts to play
+                // (although autoplay is disabled)
+                const wasPaused = this.paused;
                 this._player.seekTo(seconds, true);
-                // Handle the seek end at some time after on our own,
+                if (wasPaused) {
+                    this._player.pauseVideo();
+                }
+                // Handle the seek end (after some time) on our own,
                 // because there is no seek progress support in YouTube player
                 this.onSeekingChanged.emit(true);
                 setTimeout(() => {
