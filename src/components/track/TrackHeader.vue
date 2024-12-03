@@ -63,15 +63,16 @@
                         label="Title"
                         class="is-fullwidth"
                         :class="{
-                            'has-text-success': isActive,
+                            'has-text-success': isActiveTrack,
                         }"
                     >
                         <input
                             v-model="name"
+                            ref="trackTitle"
                             type="text"
                             inputmode="text"
                             class="input"
-                            :class="{ 'has-text-success': isActive }"
+                            :class="{ 'has-text-success': isActiveTrack }"
                             placeholder="Track name"
                             title="Track name"
                             data-cy="track-name-input"
@@ -240,7 +241,15 @@
 <script setup lang="ts">
 /** A header for editing "beats per minute" track metadata
  */
-import { type Ref, computed, inject, ref, watchEffect } from 'vue';
+import {
+    type Ref,
+    computed,
+    inject,
+    nextTick,
+    ref,
+    watch,
+    watchEffect,
+} from 'vue';
 import { TrackApi } from '@/code/api/TrackApi';
 import { mdiShareVariant, mdiSwapVertical, mdiTrashCanOutline } from '@mdi/js';
 import MediaDropZone from '@/components/MediaDropZone.vue';
@@ -272,13 +281,6 @@ const props = defineProps({
         type: String,
         required: true,
     },
-
-    /** Whether this track is to be considered as the active track */
-    isActive: {
-        type: Boolean,
-        required: false,
-        default: false,
-    },
     /** Whether this track is expanded */
     isExpanded: {
         type: Boolean,
@@ -303,6 +305,7 @@ const props = defineProps({
 const trackStore = useTrackStore(props.trackId);
 const {
     useMeasureNumbers,
+    isActiveTrack,
     track,
     name,
     artist,
@@ -337,7 +340,7 @@ watchEffect(() => {
     if (!props.canCollapse) {
         emit('update:isExpanded', true);
     } else {
-        if (props.isActive) {
+        if (isActiveTrack.value) {
             emit('update:isExpanded', true);
         }
     }
@@ -376,6 +379,38 @@ const mediaDropZonePanel: Ref<typeof CoveredPanel | null> = ref(null);
 
 function acceptedMedia() {
     mediaDropZonePanel.value?.cover();
+}
+
+// --- focus ---
+
+/** Focus to the title, if editable and there are no cues to focus on
+ * @remarks The title input gets focus only if there are no cues to edit
+ * This solves the scroll-tofocus-problem on mobile devices with soft-keyboard
+ * that automatically scroll to the focused input field,
+ * by focussing on an actually useful input
+ * NOTE: focus only works for enabled elements
+ */
+watch(
+    [isActiveTrack, isTrackEditable, hasCues],
+    ([isActiveTrack, isTrackEditable, hasCues]) => {
+        if (isActiveTrack && isTrackEditable && !hasCues) {
+            focusTitle();
+        }
+    },
+    {
+        immediate: true,
+    },
+);
+
+const trackTitle: Ref<InstanceType<typeof HTMLInputElement> | null> = ref(null);
+
+function focusTitle() {
+    // let the DOM settle first
+    nextTick(() => {
+        const el = trackTitle.value;
+        el?.focus();
+        el?.setSelectionRange(0, 0);
+    });
 }
 </script>
 

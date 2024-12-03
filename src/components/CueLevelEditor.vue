@@ -409,9 +409,6 @@ const app = useAppStore();
 
 const cueTime = computed(() => props.cue.Time);
 
-const cueDescription: Ref<InstanceType<typeof HTMLInputElement> | null> =
-    ref(null);
-
 /** Updates the set cue description */
 function updateDescription(event: Event) {
     const cueId = props.cue.Id;
@@ -449,6 +446,9 @@ watch(
 
 /** Sets the focus to the description input and sets the cursor to the start position
  */
+const cueDescription: Ref<InstanceType<typeof HTMLInputElement> | null> =
+    ref(null);
+
 function focusDescription() {
     // let the DOM settle first
     nextTick(() => {

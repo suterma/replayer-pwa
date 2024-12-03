@@ -38,7 +38,6 @@
                 v-model:is-expanded="isExpanded"
                 :can-collapse="!hasSingleMediaTrack"
                 :track-id="trackId"
-                :is-active="isActiveTrack"
             >
                 <template #left-start>
                     <div class="level-item is-narrow">
