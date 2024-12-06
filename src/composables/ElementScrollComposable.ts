@@ -52,17 +52,13 @@ export function useElementScroll(
     function scroll() {
         const targetIsVisible = useElementVisibility(target);
         if (!onlyInvisible || !targetIsVisible) {
-            const { y: windowVerticalPosition } = useWindowScroll({
+            const { top: elementVerticalPosition } = useElementBounding(target);
+
+            window.scrollBy({
+                top: elementVerticalPosition.value,
+                left: 0,
                 behavior: 'smooth',
             });
-            const { top: elementVerticalPosition } = useElementBounding(target);
-            const targetVerticalPosition =
-                windowVerticalPosition.value + elementVerticalPosition.value;
-            windowVerticalPosition.value = targetVerticalPosition;
-
-            log.debug(
-                `scrolled to vertical position:${targetVerticalPosition}`,
-            );
         }
     }
 
