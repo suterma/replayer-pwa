@@ -1,6 +1,6 @@
 <template>
     <div
-        v-scroll.top="isActiveTrack"
+        v-scroll.visible="isActiveTrack"
         class="track is-together-print is-inactive-track is-pdf block"
         data-cy="track-pdf"
         :class="{

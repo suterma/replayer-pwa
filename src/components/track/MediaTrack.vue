@@ -1,7 +1,7 @@
 <template>
     <!-- Have some more margin to keep the editing track separate from the other, listed tracks -->
     <div
-        v-scroll.top="isActiveTrack"
+        v-scroll.visible="isActiveTrack"
         class="track is-together-print"
         :class="{
             'is-active-track': isActiveTrack,

@@ -15,12 +15,8 @@ import {
     tryOnMounted,
     useElementBounding,
     useElementVisibility,
-    useWindowScroll,
     type MaybeComputedElementRef,
 } from '@vueuse/core';
-import useLog from '@/composables/LogComposable';
-
-const { log } = useLog();
 
 export interface UseScrollElementOptions {
     /**
