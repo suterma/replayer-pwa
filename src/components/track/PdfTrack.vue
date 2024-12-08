@@ -1,6 +1,6 @@
 <template>
     <div
-        v-scroll.visible="isActiveTrack"
+        v-scroll.top="isActiveTrack && isTrackPlayable"
         class="track is-together-print is-inactive-track is-pdf block"
         data-cy="track-pdf"
         :class="{
@@ -229,7 +229,7 @@ const props = defineProps({
 });
 
 const app = useAppStore();
-const { isTrackEditable } = storeToRefs(app);
+const { isTrackEditable, isTrackPlayable } = storeToRefs(app);
 
 const settings = useSettingsStore();
 const { showPdfInline } = storeToRefs(settings);

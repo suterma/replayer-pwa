@@ -67,8 +67,8 @@
                         }"
                     >
                         <input
-                            v-model="name"
                             ref="trackTitle"
+                            v-model="name"
                             type="text"
                             inputmode="text"
                             class="input"
