@@ -193,6 +193,7 @@ import {
     watch,
     readonly,
     onUnmounted,
+    nextTick,
 } from 'vue';
 import { useAppStore } from '@/store/app';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
@@ -217,7 +218,6 @@ import { PlaybackState } from '@/code/media/PlaybackState';
 import { useTrackStore } from '@/store/track/index';
 import FileHandler from '@/store/filehandler';
 import { useElementScroll } from '@/composables/ElementScrollComposable';
-import { unrefElement } from '@vueuse/core';
 
 const props = defineProps({
     /** The id of the track to handle
@@ -301,15 +301,18 @@ function acceptedMedia() {
 // --- scrolling ---
 
 const pdfContainer = ref();
+const { scroll: scrollToPdf } = useElementScroll(pdfContainer);
 
 /** When the PDF view expands, it should scroll to the top to "auto-fit"
  * @remarks Implements #156
+ * @devdoc Scroll only on next tick, to let the document expand to the new
+ * content height first
  */
 watch(isExpanded, (isExpanded) => {
     if (isExpanded === true) {
-        const pdf = unrefElement(pdfContainer);
-        const { scroll } = useElementScroll(pdf);
-        scroll();
+        nextTick(() => {
+            scrollToPdf();
+        });
     }
 });
 
