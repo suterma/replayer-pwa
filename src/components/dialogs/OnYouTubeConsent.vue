@@ -1,23 +1,18 @@
 <template>
-    <slot
-        v-if="youTubeConsent"
-        v-bind="$attrs"
-    ></slot>
+    <slot v-if="youTubeConsent" v-bind="$attrs"></slot>
     <template v-else>
         <button
             class="button"
             v-bind="$attrs"
             @click="getConsent"
+            data-cy="youtube-consent"
         >
             YouTube consent required...
         </button>
     </template>
 </template>
 
-<script
-    setup
-    lang="ts"
->
+<script setup lang="ts">
 /** A "gate" component that prevents usage of the slotted (YouTube) component without consent.
  *  Uses the {YouTubeConsentDialog} to aks for consent from the user
  */

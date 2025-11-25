@@ -16,10 +16,10 @@ describe('loading a YouTube video for the first time', () => {
         // ACT (load YouTube video)
         cy.load(`/#/play?media=https://www.youtube.com/watch?v=21X5lGlDOfg`);
 
-        // ASSERT (that the modal for consent is shown)
-        cy.get('[data-cy="youtube-consent"] .modal.is-active').should(
+        // ASSERT (that the button for consent is shown)
+        cy.get('button[data-cy="youtube-consent"]').should(
             'contain.text',
-            'You are about to load content from YouTube, a service from Google.',
+            'YouTube consent required',
         );
     });
 });
