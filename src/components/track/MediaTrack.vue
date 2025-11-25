@@ -349,13 +349,13 @@
                             :disabled="!canPlay"
                             :hide-stop-button="true"
                             :hide-track-navigation="true"
+                            :hide-cue-navigation="true"
                             :has-previous-track="
                                 !isFirstMediaTrack || isLoopingPlaybackMode
                             "
                             :has-next-track="
                                 !isLastMediaTrack || isLoopingPlaybackMode
                             "
-                            :hide-cue-navigation="true"
                             :playback-mode="playbackMode"
                             :is-pre-roll-enabled="isPreRollEnabled"
                             :volume="volume"
@@ -559,6 +559,7 @@
                                         <MediaControlsBar
                                             :hide-stop-button="true"
                                             :hide-track-navigation="true"
+                                            :hide-cue-navigation="true"
                                             :has-previous-track="
                                                 !isFirstMediaTrack ||
                                                 isLoopingPlaybackMode
