@@ -48,21 +48,10 @@ Run the vitest unit tests with:
 
 # Build
 
-This package currently runs best with node version 16. (node version 18 fails because of some dependencies that are not working with it.)
-
-    npm install -g n
-    n 16
+Using the node/npm CLI:
+   
     npm install
     npm run build
-
-NOTE: For node v18 on Windows, use the Workaround "Number 2" by https://sebhastian.com/error-0308010c-digital-envelope-routines-unsupported/
-
-When using VSCode, in the Terminal (Powershell) do
-
-    # Windows PowerShell:
-    $env:NODE_OPTIONS="--openssl-legacy-provider"
-
-once before building.
 
 ## Bundling
 
