@@ -59,7 +59,7 @@ export class Compilation implements ICompilation {
     /** Parses the JSON and returns new instance of this class.
      * @remarks Instead of creating an unprototyped object with JSON.parse, this creates a new object of this type
      * @param jsonCompilation - a JSON representation of a Compilation
-     * @devdoc See https://stackoverflow.com/a/5874189/79485
+     * @privateRemarks See https://stackoverflow.com/a/5874189/79485
      */
     static fromJson(jsonCompilation: string): Compilation {
         const obj = JSON.parse(jsonCompilation) as Compilation;

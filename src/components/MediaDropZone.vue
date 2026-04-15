@@ -1,7 +1,7 @@
 <template>
-    <!-- This level is designed that the two input methods can grow and shrink, 
+    <!-- This level is designed that the two input methods can grow and shrink,
         filling up the available horizontal space.
-        The URL input is wider, because it should be able to easily deal with 
+        The URL input is wider, because it should be able to easily deal with
         lengthy input values -->
     <div
         ref="dropZoneRef"
@@ -155,7 +155,7 @@ const emit = defineEmits([
 
 /** The simplified, comma-separated set of supported unique file type specifiers
  * @remarks This is to be used specifically for loading from the file system
- * @devdoc Audio and video are not individually specified,
+ * @privateRemarks Audio and video are not individually specified,
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#unique_file_type_specifiers
  * This helps mitigate file selection problems on android
  * @see https://github.com/suterma/replayer-pwa/issues/153, where the long list from supportedMimeTypes did not work.

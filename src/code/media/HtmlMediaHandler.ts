@@ -31,7 +31,7 @@ const { log } = useLog();
 /** @class Implements a playback handler for a {HTMLMediaElement}.
  * @remarks This handles transport/loop and volume operations for audio sources (HTML media elements).
  * See https://github.com/suterma/replayer-pwa/tree/main/doc/media-handling#readme
- * @devdoc Fading is handeled internally with it's own handler.
+ * @privateRemarks Fading is handeled internally with it's own handler.
  */
 export default class HtmlMediaHandler implements IMediaHandler {
     // --- internals ---
@@ -462,12 +462,12 @@ export default class HtmlMediaHandler implements IMediaHandler {
 
     /** Whether the media data has loaded (at least enough to start playback)
      * @remarks This implies that metadata also has been loaded already
-     * @devdoc see HAVE_CURRENT_DATA at https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/readyState#examples
+     * @privateRemarks see HAVE_CURRENT_DATA at https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/readyState#examples
      */
     hasLoadedData = false;
 
     /** Whether the media metadata has loaded. Duration is available now.
-     * @devdoc see HAVE_METADATA at https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/readyState#examples
+     * @privateRemarks see HAVE_METADATA at https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/readyState#examples
      */
     hasLoadedMetadata = false;
 

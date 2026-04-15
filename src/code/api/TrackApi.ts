@@ -31,7 +31,7 @@ const { log } = useLog();
  */
 export class TrackApi {
     /** Gets the timestamp of a cue as an object key
-     * @devdoc Makes sure the numeric keys are not integers, to keep a more suitable order
+     * @privateRemarks Makes sure the numeric keys are not integers, to keep a more suitable order
      * later on when creating the API query parameters
      * Javascript unfortunately orders integer object keys as first
      */
@@ -129,7 +129,7 @@ export class TrackApi {
      * @remarks Assumes that the query follows the track API definition.
      * See https://replayer.app/en/documentation/track-api
      * @param query {LocationQuery} - The URL query to parse
-     * @devdoc Currently does not support shortcuts
+     * @privateRemarks Currently does not support shortcuts
      */
     public static parseFromUrlQuery(query: LocationQuery): ITrack | undefined {
         const mediaUrl = TrackApi.getSingle(query.media);

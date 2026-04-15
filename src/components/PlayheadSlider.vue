@@ -82,7 +82,7 @@ export default defineComponent({
     components: { BaseIcon },
     props: {
         /** Whether to show the component in a disabled state
-         * @devdoc This attribute is processed with "fallthrough", to propagate the state to the inner elements.
+         * @privateRemarks This attribute is processed with "fallthrough", to propagate the state to the inner elements.
          */
         disabled: Boolean,
         /** The current time of the slider
@@ -166,8 +166,8 @@ export default defineComponent({
 </script>
 <style scoped lang="css">
 /** The color for the slider bar (Firefox)
-* @devdoc For Firefox (moz), see https://support.mozilla.org/en-US/questions/1308191 
-* These must stand separately from webkit, because otherwise they would disturb each other 
+* @privateRemarks For Firefox (moz), see https://support.mozilla.org/en-US/questions/1308191
+* These must stand separately from webkit, because otherwise they would disturb each other
 */
 input[type='range'].slider::-moz-range-track {
     background: linear-gradient(
@@ -183,9 +183,9 @@ input[type='range'].slider::-moz-range-track {
     ) !important;
 }
 
-/** The color for the slider bar (Chrome and Webkit) 
-* @devdoc For webkit, see https://css-tricks.com/html5-meter-element/ 
-* @devdoc https://developer.mozilla.org/en-US/docs/Web/CSS/::-webkit-meter-bar
+/** The color for the slider bar (Chrome and Webkit)
+* @privateRemarks For webkit, see https://css-tricks.com/html5-meter-element/
+* @privateRemarks https://developer.mozilla.org/en-US/docs/Web/CSS/::-webkit-meter-bar
 */
 input[type='range'].slider::-webkit-slider-runnable-track {
     background: linear-gradient(

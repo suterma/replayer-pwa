@@ -33,7 +33,7 @@ const { log } = useLog();
 /** @class Implements a playback handler for a YouTube IFrame player with VueYoutube.
  * @remarks This handles transport/loop and volume operations for the audio.
  * See https://github.com/suterma/replayer-pwa/tree/main/doc/media-handling#readme
- * @devdoc Fading is handeled internally with it's own handler.
+ * @privateRemarks Fading is handeled internally with it's own handler.
  */
 export default class YouTubeMediaHandler implements IMediaHandler {
     // --- internals ---
@@ -363,7 +363,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
     /** Flag, whether the player is currently playing
      * @remarks When the player was playing, any buffering event still is
      * considered as playing.
-     * @devdoc The current time is only updated, when a meaningful position
+     * @privateRemarks The current time is only updated, when a meaningful position
      * is available.
      */
     private _isPlaying = false;
@@ -424,7 +424,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
         }
     }
 
-    /** @devdoc Metadata already has loaded when this handler is created
+    /** @privateRemarks Metadata already has loaded when this handler is created
      */
     hasLoadedMetadata = true;
 

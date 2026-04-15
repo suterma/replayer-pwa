@@ -61,7 +61,7 @@ export function useTrackStore(trackId: string) {
 
         /** The (precise) playback progress in the current track, in [seconds]
          * @remarks This is used for cue event handling within the set of cues, like creating a new cue at the current position
-         * @devdoc Start with the initial playhead position, which might be non-zero already
+         * @privateRemarks Start with the initial playhead position, which might be non-zero already
          */
         const currentPosition = ref(track.PlayheadPosition ?? 0);
 

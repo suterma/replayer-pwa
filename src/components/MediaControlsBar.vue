@@ -128,13 +128,13 @@ export default defineComponent({
         },
 
         /** Whether to show the component in a disabled state
-         * @devdoc This attribute is processed with "fallthrough", to propagate the state to the inner elements.
+         * @privateRemarks This attribute is processed with "fallthrough", to propagate the state to the inner elements.
          */
         disabled: Boolean,
 
         /** The playback mode
          * @remarks Implements a two-way binding
-         * @devdoc casting the type for TypeScript, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
+         * @privateRemarks casting the type for TypeScript, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
          */
         playbackMode: {
             type: String as () => PlaybackMode,

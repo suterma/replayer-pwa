@@ -21,7 +21,7 @@ const { log } = useLog();
 
 /**
  * Configure the store
- * @devdoc This currently uses localforage for storage and retrieval, but for
+ * @privateRemarks This currently uses localforage for storage and retrieval, but for
  * compatibility with the formerly used idb-keyval, the database name and the
  * store name are configured to match those of idb-keyval */
 
@@ -35,13 +35,13 @@ localForage.config({
  * Provides simplified access to persistent storage for blobs within the Replayer app. This
  * allows to keep the media files, available over
  * web app restarts.
- * @devdoc Implements a module as described in https://www.typescriptlang.org/docs/handbook/modules.html
- * @devdoc This currently uses localforage for storage and retrieval, but for
+ * @privateRemarks Implements a module as described in https://www.typescriptlang.org/docs/handbook/modules.html
+ * @privateRemarks This currently uses localforage for storage and retrieval, but for
  * compatibility with the formerly used idb-keyval, the database name and the
  * store name are configured to match those of idb-keyval */
 export default class PersistentStorage {
     /** Persistently stores media blob data for later retrieval
-     * @devdoc The indexed db is used for blob data, as recommended for large data.
+     * @privateRemarks The indexed db is used for blob data, as recommended for large data.
      */
     static storeMediaBlob(data: { fileName: string; blob: Blob }): void {
         log.debug('PersistentStorage::storeMediaBlob:fileName', data.fileName);
@@ -57,7 +57,7 @@ export default class PersistentStorage {
     /** Retrieves media blob data from the persistent store
      * @remarks In case of an error, as many blobs as possilbe are returned, but
      * the set might also be empty.
-     * @devdoc The indexed db is used for blob data, as recommended.
+     * @privateRemarks The indexed db is used for blob data, as recommended.
      */
     static retrieveAllMediaBlobs(): Promise<MediaBlob[]> {
         log.debug('PersistentStorage::retrieveAllMediaBlobs');
@@ -75,7 +75,7 @@ export default class PersistentStorage {
     }
 
     /** Removes the given media blob data from the persistent store
-     * @devdoc The indexed db is used for blob data, as recommended.
+     * @privateRemarks The indexed db is used for blob data, as recommended.
      */
     static removeMediaBlob(fileName: string): Promise<void> {
         log.debug('PersistentStorage::removeMediaBlob');
@@ -87,7 +87,7 @@ export default class PersistentStorage {
     }
 
     /** Removes all media blob data from the persistent store
-     * @devdoc The indexed db is used for blob data, as recommended.
+     * @privateRemarks The indexed db is used for blob data, as recommended.
      */
     static removeAllMediaBlob(): Promise<void> {
         log.debug('PersistentStorage::removeAllMediaBlob');

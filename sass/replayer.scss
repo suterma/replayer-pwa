@@ -1,7 +1,7 @@
 @charset "utf-8";
 
 /** **********************************************************
- * Application-specific usage of the Bulma CSS 
+ * Application-specific usage of the Bulma CSS
 **************************************************************
 */
 
@@ -100,7 +100,7 @@ html {
 */
 
 /* Specific styles for Bulma to work neatly with pure SVG icons, with appropriate sizing
-* @devdoc See https://github.com/jgthms/bulma/issues/1867 */
+* @privateRemarks See https://github.com/jgthms/bulma/issues/1867 */
 [class*=' icon'],
 [class^='icon'] {
     display: inline-block;
@@ -134,7 +134,7 @@ html {
 }
 
 /** Scales down the element to 50% of the size, maintaining the inner component's aspect ratio,
-while also keeping the original with. 
+while also keeping the original with.
 @remarks This is useful to save (vertical) space while not altering the layout.*/
 .is-scaled-50 {
     transform: scale(0.5) translate(-50%, -50%);

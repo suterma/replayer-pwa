@@ -1,6 +1,6 @@
 <template>
     <!-- Create Cue (With Hotkey for the active track)
-                Creating a cue should also work when invoked from inside a 
+                Creating a cue should also work when invoked from inside a
                 textbox, thus explicitly no elements are excluded.-->
     <Hotkey
         v-slot="{ clickRef }"
@@ -64,7 +64,7 @@ const props = defineProps({
         required: true,
     },
     /** Whether to show the component in a disabled state
-     * @devdoc This attribute is processed with "fallthrough", to propagate the state to the inner elements.
+     * @privateRemarks This attribute is processed with "fallthrough", to propagate the state to the inner elements.
      */
     disabled: Boolean,
 });

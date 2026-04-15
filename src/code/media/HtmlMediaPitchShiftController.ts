@@ -17,7 +17,7 @@ import type { ShallowRef } from 'vue';
 import { SubEventImmediate } from './SubEventImmediate';
 
 /** @class Implements a pitch shift controller for a {HTMLMediaElement}.
- * @devdoc //NOTE This is currently only a skeleton without functionality
+ * @privateRemarks //NOTE This is currently only a skeleton without functionality
  */
 export default class HtmlMediaPitchShiftController
     implements IPitchShiftController

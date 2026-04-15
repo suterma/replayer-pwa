@@ -25,7 +25,7 @@ import useLog from '@/composables/LogComposable';
 const { log } = useLog();
 
 /** Playback actions using the the tracks from the application state with their media handlers.
- * @devdoc The actions in this specific file might later be implemented
+ * @privateRemarks The actions in this specific file might later be implemented
  * separately in their own IMediaHandler store.
  */
 export const mediaActions = {
@@ -119,7 +119,7 @@ export const mediaActions = {
      * @remarks If the track is not loaded, does nothing.
      * If the track is not yet the active track, tries to activate the track and play.
      * If it's the active track, just toggles play/pause
-     * @devdoc Conditional event registration inside the template did not work.
+     * @privateRemarks Conditional event registration inside the template did not work.
      */
     skipToPlayPause(trackId: string): void {
         const handler = useAudioStore().getMediaHandlerByTrackId(trackId);

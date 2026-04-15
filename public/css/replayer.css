@@ -1,11 +1,11 @@
 @charset "UTF-8";
 /** **********************************************************
- * Application-specific usage of the Bulma CSS 
+ * Application-specific usage of the Bulma CSS
 **************************************************************
 */
 /** Presets for the Bulma theme */
 /*************************************************************
- * Specific overrides for Bulma variables, intend to be used 
+ * Specific overrides for Bulma variables, intend to be used
  * together with the "slate" bulmaswatch theme
  * (Must be loaded before bulmaswatch)
 **************************************************************
@@ -10676,7 +10676,7 @@ button.cue.button {
 
 /* Make the selected cue visually outstanding besides the color,
  * to better help people with Achromatopsia
- * This variant uses the existing button shadow, making it permanent. 
+ * This variant uses the existing button shadow, making it permanent.
  * It is used to visually extend the button, making it to
  * appear a bit bigger and more brightly bordered.
  */
@@ -10709,7 +10709,7 @@ button.cue.button.is-scheduled {
   }
 }
 /** Allows to show elements in front of the player-progress background span
-   * @devdoc Otherwise, due to unknown reasons, these elements would be shown behind the progress shade, regardless of that they are defined after the progress shade.
+   * @privateRemarks Otherwise, due to unknown reasons, these elements would be shown behind the progress shade, regardless of that they are defined after the progress shade.
    */
 .player-timeline .foreground {
   position: relative;
@@ -10717,13 +10717,13 @@ button.cue.button.is-scheduled {
 }
 
 /*************************************************************
- * Track styles 
+ * Track styles
  * These styles are based on the slate bulmaswatch theme and borrow variables from there
 **************************************************************
 
 /** Specific styles for active tracks, to have them more visually outstanding
  * The active track should look like the bottom nav player widget
- * Because outlines can not have a radius, a hard shadow is used 
+ * Because outlines can not have a radius, a hard shadow is used
  */
 .track {
   background-color: transparent;
@@ -10732,12 +10732,12 @@ button.cue.button.is-scheduled {
   border-color: transparent;
   margin: -0.75em;
   padding: calc(0.75em - 5px);
-  /* controls the distance of the bottom border to the last element 
+  /* controls the distance of the bottom border to the last element
   (NOTE: Negative values are not allowed here) */
   padding-bottom: 0;
 }
 
-/* show a border around a track, but only in the edit mode, 
+/* show a border around a track, but only in the edit mode,
 to visually separate the many controls for different tracks.
 Not showing the border otherwise keeps the UI in non-edit modes calm */
 .track.is-editable {
@@ -10773,7 +10773,7 @@ Not showing the border otherwise keeps the UI in non-edit modes calm */
  * a navigational purpose
  * Note: These styles are based on a the "slate" bulmaswatch theme and borrow variables from there
  **************************************************************/
-/* Navigational buttons generally should have no border (like is-ghost), 
+/* Navigational buttons generally should have no border (like is-ghost),
 * but have a subtle hover background
 * Except, when focused by keyboard this should not apply (and the usual focus border should be applied)
 * to allow visual cues for keyboard navigation
@@ -10842,7 +10842,7 @@ Not showing the border otherwise keeps the UI in non-edit modes calm */
   color: #aaa;
 }
 
-/* The playback indicator specifically allows the hover pointer event to 
+/* The playback indicator specifically allows the hover pointer event to
  * enable tooltip display */
 .button.is-indicator.playback-indicator,
 .button.is-indicator.playback-indicator:hover {
@@ -10859,7 +10859,7 @@ Not showing the border otherwise keeps the UI in non-edit modes calm */
   background-color: inherit;
 }
 
-/* The navbar does not have a minimum height, effectively hiding it, 
+/* The navbar does not have a minimum height, effectively hiding it,
 when no content is shown */
 .navbar {
   min-height: 0;
@@ -10952,17 +10952,17 @@ It affects the immediate children.
 
 /*************************************************************
  * Support for button block layout (use by adding "has-gap")
- * Aligns all the buttons nicely when placed within a "block" 
+ * Aligns all the buttons nicely when placed within a "block"
  * layout with flex-grow (e.g. the cues button field)
  * Fixes the otherwise unequal gaps of right-edge buttons in a group.
- * 
+ *
  * Note: the gap CSS feature is not supported on all devices,
  * notably not on older iOS devices with Safari below 14.1
  * Thus, the gap feature is tested beforehand
 **************************************************************
 */
 @supports not ((-webkit-touch-callout: none) and (not (translate: none))) {
-  /* First, for a gapped buttons group,  
+  /* First, for a gapped buttons group,
    * remove the original bulma margin from the grouped buttons */
   .buttons.has-gap .button {
     margin-bottom: 0;
@@ -10973,7 +10973,7 @@ It affects the immediate children.
   .buttons.has-gap:last-child {
     margin-bottom: 0;
   }
-  /* Then, instead of the margin, add a consistent gap 
+  /* Then, instead of the margin, add a consistent gap
    * of the same size between the grouped buttons
    */
   .buttons.buttons.has-gap {
@@ -11039,9 +11039,9 @@ a[disabled]:hover {
 
 /*************************************************************
  * Unfortunately, the existing focus style is different for colored buttons
-   However, for Replayer, colored buttons should have the same 
+   However, for Replayer, colored buttons should have the same
    focus styles as all the other buttons.
-   Thus, this style is set here for them all the same   
+   Thus, this style is set here for them all the same
 **************************************************************/
 /* focus */
 .button:focus,
@@ -14274,8 +14274,8 @@ button.dropdown-item {
  * creating a matching visual experience for these dropdowns
 **************************************************************
 */
-/** Button styles for dropdown menu items. 
- *  This makes buttons usable as dropdown items, 
+/** Button styles for dropdown menu items.
+ *  This makes buttons usable as dropdown items,
  *  supporting proper accessibility,
  *  without visual interference of typical button styling
  */
@@ -14379,7 +14379,7 @@ visually tied to their left button */
 
 /*************************************************************
  * Styles for video container and content display
- * These styles are suitable both for HTML5 video and the 
+ * These styles are suitable both for HTML5 video and the
  * YouTube IFrame player
 **************************************************************
 */
@@ -14539,8 +14539,8 @@ visually tied to their left button */
 /**
  * Optional styling classes for printing pages with the Bulma CSS framework.
  * See https://github.com/suterma/bulma-print for documentation
- * 
- * Note: These classes follow the naming pattern from the visibility helpers, 
+ *
+ * Note: These classes follow the naming pattern from the visibility helpers,
  * as documented at https://bulma.io/documentation/helpers/visibility-helpers/
  *
  * Note: Ideas are taken from
@@ -14665,7 +14665,7 @@ visually tied to their left button */
 }
 /*************************************************************
  * Specific styles for cropping text, with the ellipsis character
- * Applies styles to force the use of the ellipsis according to 
+ * Applies styles to force the use of the ellipsis according to
  * the requirements.
  **************************************************************/
 /** Text cropping with ellipsis are difficult. Here is a solution from https://stackoverflow.com/a/66329909/79485
@@ -14696,27 +14696,27 @@ when the cropped text was used e.g. with the "title" class */
   line-height: unset;
 }
 
-/************************************************************** 
+/**************************************************************
  * Specific spacing for all viewport widths
  * @remarks The naming scheme is taken from Bulma's visibility helpers
- * @devdoc To avoid taking another dependency like bulma-helper-spacing
- * or bulma-helpers, I decide to provide the few currently used 
- * additional spacing helpers on my own here. 
+ * @privateRemarks To avoid taking another dependency like bulma-helper-spacing
+ * or bulma-helpers, I decide to provide the few currently used
+ * additional spacing helpers on my own here.
  **************************************************************/
-/** Like with columns, 
-* if you want to remove the space to a subsequent item, 
+/** Like with columns,
+* if you want to remove the space to a subsequent item,
 * add the is-gapless modifier on the level:
 */
 .level:not(:last-child).is-gapless {
   margin-bottom: inherit;
 }
 
-/************************************************************** 
+/**************************************************************
  * Specific spacing depending on breakpoints
  * @remarks The naming scheme is taken from Bulma's visibility helpers
- * @devdoc To avoid taking another dependency like bulma-helper-spacing
- * or bulma-helpers, I decide to provide the few currently used 
- * additional spacing helpers on my own here. 
+ * @privateRemarks To avoid taking another dependency like bulma-helper-spacing
+ * or bulma-helpers, I decide to provide the few currently used
+ * additional spacing helpers on my own here.
  **************************************************************/
 @media screen and (max-width: 768px) {
   .mt-4-mobile {
@@ -14746,16 +14746,16 @@ when the cropped text was used e.g. with the "title" class */
     margin-bottom: 1rem !important;
   }
 }
-/************************************************************** 
+/**************************************************************
  * Specific spacing for tracks and their content
  **************************************************************/
-/** For all blocks for and in a track, use the same small amount of margin as everywhere, 
+/** For all blocks for and in a track, use the same small amount of margin as everywhere,
 for all screen sizes. Keeps the display compact */
 .track .block:not(:last-child) {
   margin-bottom: 0.5rem;
 }
 
-/************************************************************** 
+/**************************************************************
  * Specific spacing for general layout
  **************************************************************/
 /* equal vertical spacing on top and below the footer*/
@@ -14764,7 +14764,7 @@ for all screen sizes. Keeps the display compact */
   padding-bottom: 3rem;
 }
 
-/************************************************************** 
+/**************************************************************
  * For the playback widget in the media player panel, keep the widget rows compact
  **************************************************************/
 /* keep vertical spacing/stacking between the widget rows smaller, on smaller devices */
@@ -14805,8 +14805,8 @@ for all screen sizes. Keeps the display compact */
   z-index: -1;
 }
 
-/* Leaving is done "out of layout" to not disturb the 
- * layout by having 2 items in the same place while 
+/* Leaving is done "out of layout" to not disturb the
+ * layout by having 2 items in the same place while
  * the transition is active  */
 .slide-left-leave-active.transition-in-place,
 .slide-right-leave-active.transition-in-place,
@@ -14964,17 +14964,17 @@ for all screen sizes. Keeps the display compact */
   transform: translateX(32px);
 }
 
-/* NOTE: Use .transition-in-place to 
+/* NOTE: Use .transition-in-place to
    ensure leaving items are taken out of layout flow so that moving
    animations can be calculated correctly. */
 /*************************************************************
  * Stylings for draggable content
- * Dragged items should be similar in style as a drop down menu, 
+ * Dragged items should be similar in style as a drop down menu,
  * visually appearing above the other content
  * These styles are based on a the "slate" bulmaswatch theme and borrow variables from there
 **************************************************************
 */
-/* use an invisible border around draggable items, 
+/* use an invisible border around draggable items,
 to not displace them visually when the border around the single dragged item is shown*/
 [data-draggable=true] {
   border-color: transparent;
@@ -15004,7 +15004,7 @@ to not displace them visually when the border around the single dragged item is 
 
 /*************************************************************
  * Custom Replayer tooltip
- * Basic implementation taken from 
+ * Basic implementation taken from
  * Bulma Tooltip (from https://bulma-tooltip.netlify.app/)
 **************************************************************
 */
@@ -16570,7 +16570,7 @@ span[data-tooltip].has-tooltip-danger {
 }
 
 /*************************************************************
- * Styles for elements for a track 
+ * Styles for elements for a track
  * These styles should optimize the layout for track headers
  * and other track-related elements
 **************************************************************
@@ -16593,7 +16593,7 @@ span[data-tooltip].has-tooltip-danger {
   margin-right: -0.75rem;
 }
 
-/** In tracks (but not when in the widget), 
+/** In tracks (but not when in the widget),
 keep track tags togheter as much as possible,
 and do not flex them,
 to keep them consistend with the level layout, as well
@@ -16617,7 +16617,7 @@ There have been display issues with the ellipsis when overflowing.
  * Title-related styles
 **************************************************************
 */
-/** In tracks, title text should be vertically centered and 
+/** In tracks, title text should be vertically centered and
 have a very small line height, to keep it together */
 .track .title {
   line-height: 1;
@@ -17215,7 +17215,7 @@ input[type=range].slider.is-danger .has-output-tooltip + output {
  * Bulma fixes
 **************************************************************
 */
-/** Fix the vertical alignment of the labels in a horizontal form 
+/** Fix the vertical alignment of the labels in a horizontal form
 (this is a general Bulma issue, see https://github.com/jgthms/bulma/issues/3354) */
 @media screen and (min-width: 769px), print {
   .field.is-horizontal .field-label.is-normal {
@@ -17224,14 +17224,14 @@ input[type=range].slider.is-danger .has-output-tooltip + output {
 }
 /**
 * Optimize rendering performance by not changing the z-index on hover/focus/selection
-* This causes small visual faults with the borders of grouped elements, but 
+* This causes small visual faults with the borders of grouped elements, but
 * greatly reduces repaints on hover and with playback operations
 * see https://stackoverflow.com/questions/79130607/why-does-the-bulma-css-framwork-change-the-z-index-on-hover
 */
 /* Use same z-index, regardless of state
 -none-
 :hover,
-.is-hovered 
+.is-hovered
 :focus,
 .is-focused,
 :active,
@@ -17296,7 +17296,7 @@ html {
 **************************************************************
 */
 /* Specific styles for Bulma to work neatly with pure SVG icons, with appropriate sizing
-* @devdoc See https://github.com/jgthms/bulma/issues/1867 */
+* @privateRemarks See https://github.com/jgthms/bulma/issues/1867 */
 [class*=" icon"],
 [class^=icon] {
   display: inline-block;
@@ -17329,7 +17329,7 @@ html {
 }
 
 /** Scales down the element to 50% of the size, maintaining the inner component's aspect ratio,
-while also keeping the original with. 
+while also keeping the original with.
 @remarks This is useful to save (vertical) space while not altering the layout.*/
 .is-scaled-50 {
   transform: scale(0.5) translate(-50%, -50%);

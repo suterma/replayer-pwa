@@ -80,7 +80,7 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
      * @param {number} position - the temporal position, in [seconds], to seek to
      * @returns A promise that resolves once all seek operations have been completed
      * and all track can play again.
-     * @devdoc For any currently playing media,
+     * @privateRemarks For any currently playing media,
      * internally corrects for the time passed since the origin of the method
      */
     async function seekAllToSeconds(position: number) {
@@ -107,7 +107,7 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
     }
 
     /** Forcibly synchronizes playback of all tracks
-     * @devdoc Maintains an offset to compensate for the runtime of this method
+     * @privateRemarks Maintains an offset to compensate for the runtime of this method
      */
     async function syncTracks() {
         const originTime = performance.now();
@@ -328,7 +328,7 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
     );
 
     /**
-     * @devdoc This method is optimized for early termination
+     * @privateRemarks This method is optimized for early termination
      */
     function updatePlaybackStateChanged(playbackState: PlaybackState) {
         updateCanPlayChanged();
@@ -356,7 +356,7 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
     }
 
     /**
-     * @devdoc This method is optimized for early termination
+     * @privateRemarks This method is optimized for early termination
      */
     function updateFadingChanged(fading: FadingMode) {
         if (fading === FadingMode.FadeIn || fading === FadingMode.FadeOut) {
@@ -373,7 +373,7 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
     }
 
     /**
-     * @devdoc This method is optimized for early termination
+     * @privateRemarks This method is optimized for early termination
      */
     function updateMutedChanged(muted: boolean) {
         if (muted === false) {
@@ -391,7 +391,7 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
     }
 
     /**
-     * @devdoc All handlers need to be checked every time
+     * @privateRemarks All handlers need to be checked every time
      */
     function updateSoloedChanged(soloed: boolean): void {
         // initial values will be updated in the loop anyway
@@ -414,7 +414,7 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
     }
 
     /**
-     * @devdoc All handlers need to be checked every time
+     * @privateRemarks All handlers need to be checked every time
      */
     function updateCanPlayChanged() {
         for (const media of audio.mediaHandlers) {
@@ -445,7 +445,7 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
     }
 
     /** Updates the common current time indication for all tracks.
-     * @devdoc To keep system load low, just use a simple pass-thru
+     * @privateRemarks To keep system load low, just use a simple pass-thru
      */
     function updateCurrentTimeChanged(time: number) {
         currentTime.value = time;

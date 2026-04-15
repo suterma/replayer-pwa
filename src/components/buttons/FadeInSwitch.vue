@@ -15,7 +15,7 @@
     </div>
     <!-- wider variant has two distinct styles -->
     <div v-else v-bind="$attrs" class="field has-addons mb-0">
-        <!-- On a toggle item, the active (selected) option can not be manipulated by itself, 
+        <!-- On a toggle item, the active (selected) option can not be manipulated by itself,
         so completely remove any indication of possible action
         NOTE: This style is similar to an acive dropdown item -->
         <p class="control">
@@ -52,7 +52,7 @@ import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { rCloseCircleSmall } from '@/components/icons/ReplayerIcon';
 
 /** A toggle button for the omit fade-in state. Default is false, meaning no omission
- * @devdoc
+ * @privateRemarks
  *
  */
 const model = defineModel({ type: Boolean, default: false, required: true });

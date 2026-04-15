@@ -59,7 +59,7 @@ export const currentPositionInjectionKey = Symbol() as InjectionKey<
 
 /** A symbol for providing and injecting a computed, formatted, display-only value for the playhead position.
  * @remarks This is provided readonly, and not updates are supported.
- * @devdoc Use this value for display-only purposes, for optimized performance. Removes the burden of formatting from components, and reduces render actions, when the displayed text not actually changes.
+ * @privateRemarks Use this value for display-only purposes, for optimized performance. Removes the burden of formatting from components, and reduces render actions, when the displayed text not actually changes.
  */
 export const currentPositionDisplayInjectionKey = Symbol() as InjectionKey<
     Ref<string>

@@ -111,7 +111,7 @@ onUnmounted(() => {
 
 /** Activates the wake lock (if enabled in settings)
  * @remarks Implements https://github.com/suterma/replayer-pwa/issues/26
- * @devdoc Uses a wake-lock fill in, because this feature is not yet available on all browsers
+ * @privateRemarks Uses a wake-lock fill in, because this feature is not yet available on all browsers
  */
 function activateWakeLock(): void {
     if (preventScreenTimeout) {
@@ -125,7 +125,7 @@ function activateWakeLock(): void {
     }
 }
 /** Deactivates the wake lock
- * @devdoc Uses a wake-lock fill in, because this feature is not yet available on all browsers
+ * @privateRemarks Uses a wake-lock fill in, because this feature is not yet available on all browsers
  */
 function deactivateWakeLock(): void {
     if (noSleep.isEnabled) {

@@ -33,12 +33,12 @@ import useLog from '@/composables/LogComposable';
 const { log } = useLog();
 /**
  * Provides static helper methods for parsing compilations from and to XML.
- * @devdoc Code is written to work with the xml2js module specifically
+ * @privateRemarks Code is written to work with the xml2js module specifically
  */
 export default abstract class XmlCompilationParser {
     /** Parses an XML object into an ICompilation.
      * @param xmlCompilation - An object representing the stored Compilation from an XML import.
-     * @devdoc The XML type contains all properties as arrays, even the single item ones. This is a limitation of the used XML-To-JS converter */
+     * @privateRemarks The XML type contains all properties as arrays, even the single item ones. This is a limitation of the used XML-To-JS converter */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private static parseFromXmlCompilation(xmlCompilation: any): ICompilation {
         return new Compilation(
@@ -101,7 +101,7 @@ export default abstract class XmlCompilationParser {
         return null;
     }
 
-    /** @devdoc The XML type contains all properties as arrays, even the single item ones. This is a limitation of the used XML-To-JS converter */
+    /** @privateRemarks The XML type contains all properties as arrays, even the single item ones. This is a limitation of the used XML-To-JS converter */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private static parseFromXmlTracks(xmlTracks: Array<any>): Array<ITrack> {
         const tracks = new Array<ITrack>();
@@ -148,7 +148,7 @@ export default abstract class XmlCompilationParser {
         return tracks;
     }
 
-    /** @devdoc The XML type contains all properties as arrays, even the single item ones. This is a limitation of the used XML-To-JS converter */
+    /** @privateRemarks The XML type contains all properties as arrays, even the single item ones. This is a limitation of the used XML-To-JS converter */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private static parseFromXmlCues(xmlCues: any): ICue[] {
         const cues = new Array<ICue>();

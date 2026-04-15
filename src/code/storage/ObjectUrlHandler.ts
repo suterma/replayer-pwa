@@ -18,7 +18,7 @@ const { log } = useLog();
 
 /** @class Static functions for storage handling
  * @remarks This is just a wrapper, with some logging functions, suited for better storage debugging handling
- * @devdoc This handles the webkit variant as well
+ * @privateRemarks This handles the webkit variant as well
  */
 export class ObjectUrlHandler {
     /** Creates and returns a new object URL, plus writes a log using the optional identifier */

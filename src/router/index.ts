@@ -40,7 +40,7 @@ export enum Route {
 }
 
 /** The app routes
- * @devdoc route level code-splitting is not used, because it is not supported with ES6/2015
+ * @privateRemarks route level code-splitting is not used, because it is not supported with ES6/2015
  * Also, the views in Replayer are rather small (especially those rarely used) and would not profit from this anyway.
  */
 const routes: Array<RouteRecordRaw> = [

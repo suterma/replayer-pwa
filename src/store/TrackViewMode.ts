@@ -18,7 +18,7 @@
  * edit view. This may change in the future, e.g. allowing a single track in
  * an edit track view mode, even when another route, like, e.g. the play route,
  * is active.
- * @devdoc Using a view mode instead of separated components allows for
+ * @privateRemarks Using a view mode instead of separated components allows for
  * continued playback on media tracks, when chaning the mode, which is
  * a key feature in Replayer.
  */

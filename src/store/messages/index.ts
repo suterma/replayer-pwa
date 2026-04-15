@@ -23,8 +23,8 @@ import useLog from '@/composables/LogComposable';
 const { log } = useLog();
 
 /** A store for messages, that are to be displayed.
- * @devdoc This follows the setup store syntax. See https://pinia.vuejs.org/core-concepts/#setup-stores
- * @devdoc The use of this separate store offloads the message handling from the other stores.
+ * @privateRemarks This follows the setup store syntax. See https://pinia.vuejs.org/core-concepts/#setup-stores
+ * @privateRemarks The use of this separate store offloads the message handling from the other stores.
  */
 export const useMessageStore = defineStore(Store.Messages, () => {
     /** An application work message stack, used for progress indication

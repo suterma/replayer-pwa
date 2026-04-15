@@ -302,7 +302,7 @@
 <script setup lang="ts">
 /** An Editor for for a single cue
  * @remarks Shows a cue button with an inline progress bar, plus input fields for all properties
- * @devdoc Input value binding is not implemented with a two-way v-model binding because the incoming values are taken
+ * @privateRemarks Input value binding is not implemented with a two-way v-model binding because the incoming values are taken
  * from a property (where setting of values is not permitted).
  * Instead, the values are one-way bound via :value and changes are directly stored in the state.
  * This approach is chosen over the ...data pattern because the shortcut values can also change from a menu entry
@@ -392,7 +392,7 @@ const props = defineProps({
     virtual: Boolean,
 
     /** The playback mode
-     * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
+     * @privateRemarks casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
      */
     playbackMode: {
         type: String as () => PlaybackMode,

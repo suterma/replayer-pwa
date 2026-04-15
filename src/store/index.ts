@@ -12,7 +12,7 @@
  */
 
 /** The Store names
- * @devdoc Follows the naming convention at https://www.typescriptlang.org/docs/handbook/enums.html#string-enums
+ * @privateRemarks Follows the naming convention at https://www.typescriptlang.org/docs/handbook/enums.html#string-enums
  */
 export enum Store {
     /** A store for the media blobs */

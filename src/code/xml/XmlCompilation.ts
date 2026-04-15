@@ -21,7 +21,7 @@ import { XmlTracks } from './XmlTracks';
 export class XmlCompilation {
     /** @constructor
      * @param {Compilation} compilation - The Typescript track object to represent
-     * @devdoc Sets are stored as arrays and their items will be represented as individual XML elements
+     * @privateRemarks Sets are stored as arrays and their items will be represented as individual XML elements
      */
     constructor(compilation: ICompilation | undefined) {
         if (compilation) {
@@ -46,7 +46,7 @@ export class XmlCompilation {
     Artist = '';
     Album = '';
     Tracks: XmlTracks = new XmlTracks(undefined);
-    /** @devdoc An array is used to store the set */
+    /** @privateRemarks An array is used to store the set */
     SelectedTags: string[] = new Array<string>();
     PlaybackMode: PlaybackMode = PlaybackMode.PlayTrack;
 }

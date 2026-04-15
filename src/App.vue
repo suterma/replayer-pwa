@@ -174,7 +174,7 @@ const mediaPlayerPanel = ref();
 const { height } = useElementSize(mediaPlayerPanel);
 
 /** A computed compensation height, using a fixed value as a fallback.
- * @devdoc Some devices, notably older iOS devices can not get the panel
+ * @privateRemarks Some devices, notably older iOS devices can not get the panel
  * height (equals zero), thus a useful default is assumed instead.
  */
 const mediaPlayerPanelComputedHeight = computed(() => {
@@ -185,7 +185,7 @@ const mediaPlayerPanelComputedHeight = computed(() => {
 
 /** The body height compensation for the fixed navbar.
  * @remark Debounced to prevent excess updates
- * @devdoc Debouncing also solves a update loop error
+ * @privateRemarks Debouncing also solves a update loop error
  */
 const navbarCompensationHeight = refDebounced(
     mediaPlayerPanelComputedHeight,

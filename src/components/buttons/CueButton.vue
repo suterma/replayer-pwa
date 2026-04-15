@@ -14,7 +14,7 @@
         :disabled="disabled"
     >
         <!-- Use the full width of the button for the inside content
-        This causes the icon and description to start from the left side, 
+        This causes the icon and description to start from the left side,
         representing the begin of the cue, which suits the intention -->
         <!-- Do not handle click events here; they should originate from the outer button -->
         <span style="pointer-events: none" class="player-timeline is-fullwidth">
@@ -172,12 +172,12 @@ import { PlaybackState } from '@/code/media/PlaybackState';
  * @remarks Shows playback progress with an inline progress bar
  * @remarks Supports a default, two-line display with icon, description and other indications,
  * as well as a minified, icon-only, variant.
- * @devdoc For performance reasons, the playback progress for this button is calculated outside
+ * @privateRemarks For performance reasons, the playback progress for this button is calculated outside
  * and offered as property values to this component, not using a
  * playhead position within this component. This minimizes component updates, as most of the time, the progress
  * properties of a single cue does not change. Instead, progress for a single button
  * does only change when the playhead position is within it's boundaries.
- * @devdoc Also for performance reasons, this component does not offer a slot. Test have shown
+ * @privateRemarks Also for performance reasons, this component does not offer a slot. Test have shown
  * that slot content causes surplus renderings when used in a v-for loop.
  */
 
@@ -271,7 +271,7 @@ const props = defineProps({
 
     /** The playback mode
      * @remarks This is used to indicate looping behavior to the user
-     * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
+     * @privateRemarks casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
      */
     playbackMode: {
         type: String as () => PlaybackMode,
@@ -369,7 +369,7 @@ const cueDisplayDuration = computed(() => {
 
 /** The width offset for the progress-bar
  * @remarks this allows to dynamically offset for the width of the progress bar in [em] during cue completion
- * @devdoc The width is defined in CSS
+ * @privateRemarks The width is defined in CSS
  */
 const progressBarWidthOffset = computed(() => {
     return (
@@ -379,7 +379,7 @@ const progressBarWidthOffset = computed(() => {
 });
 
 /** Returns the progress as width style, for use as a css style set, dynamically depending on the actual progress in the cue
- * @devdoc max-width makes sure, the progress bar never overflows the given space.
+ * @privateRemarks max-width makes sure, the progress bar never overflows the given space.
  * For performance reasons, the style is only effectively calculated when the cue is currently played
  */
 const progressStyle = computed(() => {

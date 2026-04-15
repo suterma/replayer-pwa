@@ -23,7 +23,7 @@ import { watch } from 'vue';
 
 /** A store for the general app state, including the currently loaded compilation
  * @remarks This implements the application store part of the main concepts, documented at https://github.com/suterma/replayer-pwa/tree/main/doc#main-concepts
- * @devdoc This follows the setup store syntax. See https://pinia.vuejs.org/core-concepts/#setup-stores
+ * @privateRemarks This follows the setup store syntax. See https://pinia.vuejs.org/core-concepts/#setup-stores
  */
 export const useAppStore = defineStore(Store.App, () => {
     PersistentStorage.retrieveAllMediaBlobs()

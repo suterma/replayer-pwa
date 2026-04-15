@@ -156,7 +156,7 @@ const props = defineProps({
     },
 
     /** Whether to show the component in a disabled state
-     * @devdoc This attribute is processed with "fallthrough", to propagate the state to the inner elements.
+     * @privateRemarks This attribute is processed with "fallthrough", to propagate the state to the inner elements.
      */
     disabled: Boolean,
 })
@@ -164,7 +164,7 @@ const props = defineProps({
 let analyser: AnalyserNode
 
 /** Whether the float time domain data can be obtained.
- * @devdoc The float time domain version is not available for Safari on iOS below version 14.5
+ * @privateRemarks The float time domain version is not available for Safari on iOS below version 14.5
  * (See https://caniuse.com/mdn-api_analysernode_getfloattimedomaindata)
  *  * The byte time domain version is available with Safari from iOS version 6.
  * (See https://caniuse.com/mdn-api_analysernode_getbytetimedomaindata)

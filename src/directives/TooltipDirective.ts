@@ -15,7 +15,7 @@ import type { DirectiveBinding } from 'vue';
 
 /** A directive that adds a formatted tooltip to a
  * component's root element
- * @devdoc This will be called for both `mounted` and `updated`
+ * @privateRemarks This will be called for both `mounted` and `updated`
  */
 export function TooltipDirective(
     el: HTMLElement,

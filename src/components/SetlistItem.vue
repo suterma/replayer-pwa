@@ -172,8 +172,8 @@ const props = defineProps({
 });
 
 /** The track's meter
- * @devdoc This value is provided to descendant components using the provide/inject pattern.
- * @devdoc Here, a ComputedRef must be used, not a ref, because the ref of the dereferenced meter
+ * @privateRemarks This value is provided to descendant components using the provide/inject pattern.
+ * @privateRemarks Here, a ComputedRef must be used, not a ref, because the ref of the dereferenced meter
  * would not be reactive.
  */
 const meter = computed(() => props.track.Meter);

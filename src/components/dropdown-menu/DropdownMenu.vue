@@ -26,7 +26,7 @@
                 data-cy="dropdown-menu-trigger"
                 @click="toggleDropdownExpanded()"
             />
-            <!-- Transition for the revealing action. 
+            <!-- Transition for the revealing action.
                 Uses an additional element to make sure that there is a single root within the transition slot -->
             <Transition
                 :name="isMenuForcedUp ? 'item-expand-up' : 'item-expand'"
@@ -112,7 +112,7 @@ const props = defineProps({
 
     /** Whether to render the closed menu
      * @remarks Set to true to handle shortcuts or other features on the closed menu / menu entries
-     * @devdoc Rendering closed menus can be expensive, depending on their content
+     * @privateRemarks Rendering closed menus can be expensive, depending on their content
      */
     renderClosed: {
         type: Boolean,

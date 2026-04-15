@@ -23,11 +23,11 @@ const { log } = useLog();
  * - independent fading operations, which internally control the actually set audio level at the YouTube player instance.
  * @remarks Currently only supports a linear fade, with a constant gradient,
  * only determined by the predefined durations for a full-scale fade.
- * @devdoc This fader implementation borrows most code from the @see AudioFader
+ * @privateRemarks This fader implementation borrows most code from the @see AudioFader
  */
 export default class YouTubeFader implements IAudioFader {
     /** This is set to a fixed value, as a tradeoff between call frequency and smoothness
-     * @devdoc This should be set to a value that produces small volume changes, that are barely audible
+     * @privateRemarks This should be set to a value that produces small volume changes, that are barely audible
      */
     stepDuration = 16;
 
@@ -305,7 +305,7 @@ export default class YouTubeFader implements IAudioFader {
 
     /** Internally sets the YouTube player volume, with the
      * level limited to the allowed audio volume range.
-     * @devdoc The YouTube player uses a range between 0 and 100
+     * @privateRemarks The YouTube player uses a range between 0 and 100
      */
     private set audioVolume(volume: number) {
         this.player.setVolume(this.limited(volume) * 100);
@@ -313,13 +313,13 @@ export default class YouTubeFader implements IAudioFader {
 
     /** Internally gets the YouTube player volume, with the
      * level limited to the allowed audio volume range.
-     * @devdoc The YouTube player uses a range between 0 and 100
+     * @privateRemarks The YouTube player uses a range between 0 and 100
      */
     private get audioVolume() {
         return this.limited(this.player.getVolume() / 100);
     }
 
-    /** @devdoc The actually applied output volume might be lower than the master volume, when a fade out is in progress. */
+    /** @privateRemarks The actually applied output volume might be lower than the master volume, when a fade out is in progress. */
     public setVolume(volume: number): number {
         const previousVolume = this.masterVolume;
         const limitedVolume = this.limited(volume);
@@ -375,7 +375,7 @@ export default class YouTubeFader implements IAudioFader {
 
     /** Returns a linear fade promise for the currently playing track
      * @param duration {number} - A non-zero duration for the fading operation
-     * @devdoc This currently only supports linear fade operations
+     * @privateRemarks This currently only supports linear fade operations
      */
     private fade(from: number, to: number, duration: number): Promise<void> {
         return new Promise((resolve, reject) => {

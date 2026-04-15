@@ -102,7 +102,7 @@ export class Track implements ITrack {
     /** Parses the JSON and returns new instance of this class.
      * @remarks Instead of creating an unprototyped object with JSON.parse, this creates a new object of this type
      * @param jsonTrack - a JSON representation of a Track
-     * @devdoc See https://stackoverflow.com/a/5874189/79485
+     * @privateRemarks See https://stackoverflow.com/a/5874189/79485
      */
     public static fromJson(jsonTrack: string): Track {
         const obj = JSON.parse(jsonTrack) as Track;

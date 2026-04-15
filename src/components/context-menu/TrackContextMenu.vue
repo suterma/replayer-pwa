@@ -29,7 +29,7 @@
             :icon-path="mdiOrderNumericAscending"
             @click="app.reassignCueShortcuts(props.track.Id)"
         />
-        <!-- Note: using disabled did not toggle the disabled state properly, 
+        <!-- Note: using disabled did not toggle the disabled state properly,
              thus a v-if is used here -->
         <a
             v-if="isDownloadable"
@@ -60,7 +60,7 @@
 
 <script setup lang="ts">
 /** A menu for a track
- * @devdoc The download menu item is only updated when the URL (the used media) changes
+ * @privateRemarks The download menu item is only updated when the URL (the used media) changes
  */
 import DropdownMenu from '@/components/dropdown-menu/DropdownMenu.vue';
 import DropdownMenuButton from '@/components/dropdown-menu/DropdownMenuButton.vue';

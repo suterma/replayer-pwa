@@ -13,7 +13,7 @@
  * A fallback is used otherwise.
  * @remarks The parent component can control the slot's fullscreen state
  * via the slot's passed props and functions
- * @devdoc Apple iPhone devices do not support the Fullscreen API.
+ * @privateRemarks Apple iPhone devices do not support the Fullscreen API.
  * See https://caniuse.com/fullscreen
  */
 import { useFullscreen } from '@vueuse/core';

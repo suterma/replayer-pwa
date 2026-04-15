@@ -262,7 +262,7 @@ const renderPdfInline = computed(() => {
 const isExpanded = ref(false);
 
 /** Indicates this track's playback state
- * @devdoc This is just provided to avoid a console warning;
+ * @privateRemarks This is just provided to avoid a console warning;
  *  PDF's can not play
  */
 const playbackState = computed(() => {
@@ -273,7 +273,7 @@ const playbackState = computed(() => {
 });
 
 /**
- * @devdoc This is just provided to avoid a console warning;
+ * @privateRemarks This is just provided to avoid a console warning;
  *  PDF's can not play
  */
 provide(playbackStateInjectionKey, readonly(playbackState));
@@ -305,7 +305,7 @@ const { scroll: scrollToPdf } = useElementScroll(pdfContainer);
 
 /** When the PDF view expands, it should scroll to the top to "auto-fit"
  * @remarks Implements #156
- * @devdoc Scroll only on next tick, to let the document expand to the new
+ * @privateRemarks Scroll only on next tick, to let the document expand to the new
  * content height first
  */
 watch(isExpanded, (isExpanded) => {
@@ -335,7 +335,7 @@ function removeTag(tag: string) {
 
     .level {
         .level-left {
-            /* 
+            /*
         The value for the basis have been empirically found to work best on
         Google Chrome, Brave and Firefox, on Ubuntu
         for the given set of playback controls
@@ -356,7 +356,7 @@ function removeTag(tag: string) {
         }
     }
 
-    /*Note: For PDF tracks, the used width is smaller than in edit mode, 
+    /*Note: For PDF tracks, the used width is smaller than in edit mode,
 since there are less buttons on the right side (no track skip, no play/pause)*/
     .level.is-editable {
         .level-left {

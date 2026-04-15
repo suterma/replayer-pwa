@@ -89,13 +89,13 @@
             @click="emit('click')"
         ></audio>
     </template>
-    <!-- NOTE: the rendering of the AudioLevelMeter _might_ affect badly the 
-         synchronous start of the multitrack playback, 
+    <!-- NOTE: the rendering of the AudioLevelMeter _might_ affect badly the
+         synchronous start of the multitrack playback,
          but only the first time after a page reload/player instantiation.
-         It's currently not consistently reproducible and goes away after a 
+         It's currently not consistently reproducible and goes away after a
          subsequent sync (e.g. after pause/play) -->
-    <!-- NOTE: Disabling the teleportation does not work currently: When the 
-         application settings change to show the meter, produces a warning. 
+    <!-- NOTE: Disabling the teleportation does not work currently: When the
+         application settings change to show the meter, produces a warning.
          The solution for this is using a v-if instead of disableing. -->
     <div
         v-if="
@@ -186,12 +186,12 @@ import useLog from '@/composables/LogComposable';
 const { log } = useLog();
 
 /** A simple vue video player element, for a single track, with associated visuals, using an {HTMLVideoElement}.
- * @devdoc Intentionally, the memory-consuming buffers from the Web Audio API are not used.
+ * @privateRemarks Intentionally, the memory-consuming buffers from the Web Audio API are not used.
  * This has some implications for looping and transport.
  * @remarks Repeatedly emits 'timeupdate' with the current playback time, during playback.
  * @remarks Emits 'durationChanged' with the track duration in seconds, once after
  * successful load of the metadata of the track's media file
- * @devdoc Autoplay after load is intentionally not supported, as this is of no use for the Replayer app.
+ * @privateRemarks Autoplay after load is intentionally not supported, as this is of no use for the Replayer app.
  */
 
 const emit = defineEmits(['click']);
@@ -232,7 +232,7 @@ const props = defineProps({
     },
 
     /** Whether to show the component in a disabled state
-     * @devdoc This attribute is processed with "fallthrough", to propagate the state to the inner elements.
+     * @privateRemarks This attribute is processed with "fallthrough", to propagate the state to the inner elements.
      */
     disabled: Boolean,
 
@@ -308,12 +308,12 @@ const isShortDuration = ref(false);
 const audio = useAudioStore();
 
 /** Audio or Video element to use
- * @devdoc Note: the element is only available after the component has been mouted
+ * @privateRemarks Note: the element is only available after the component has been mouted
  */
 const mediaElement: ShallowRef<HTMLMediaElement | null> = shallowRef(null);
 
 /** The mediaElement casted as concrete HTMLVideoElement
- * @devdoc This allows proper use in the template
+ * @privateRemarks This allows proper use in the template
  */
 const videoElement = computed(() => {
     return mediaElement?.value as HTMLVideoElement | null;
@@ -568,15 +568,15 @@ watch(
 <style lang="scss">
 .track {
     /** Match the animation duration to the fade duration
-* @devdoc NOTE: The animation is defined in _replayer-video.scss
+* @privateRemarks NOTE: The animation is defined in _replayer-video.scss
 */
     audio,
     video {
         animation-duration: v-bind('fadeInDuration');
     }
 
-    /** During fading, slowly adapt the brightness 
-* @devdoc NOTE: The animation is defined in _replayer-video.scss
+    /** During fading, slowly adapt the brightness
+* @privateRemarks NOTE: The animation is defined in _replayer-video.scss
 */
     audio.fade-out,
     video.fade-out {
