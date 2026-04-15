@@ -2,59 +2,53 @@
 <!-- Credits: https://web.replayer.app/#/about -->
 <!-- This code has been slightly adapted for the Replayer project -->
 <script setup lang="ts">
-import {
-    HALF_VIEWBOX,
-    MAX_ANGLE,
-    MIN_ANGLE,
-    RADIUS,
-    DragDirection,
-} from './constants';
+import { HALF_VIEWBOX, MAX_ANGLE, MIN_ANGLE, RADIUS, DragDirection } from './constants'
 import {
     changeToControlAngle,
     controlAngleToValue,
     degToRad,
     leadingDebounce,
     valueToControlAngle,
-} from './utils';
-import { computed, onBeforeUnmount, ref, watch } from 'vue';
+} from './utils'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
 
-const knobElement = ref<HTMLElement>(0 as unknown as HTMLElement);
-const controlAngle = ref(MIN_ANGLE);
+const knobElement = ref<HTMLElement>(0 as unknown as HTMLElement)
+const controlAngle = ref(MIN_ANGLE)
 
 interface Props {
-    modelValue: number;
+    modelValue: number
     options?: {
-        imageSize?: number;
-        minValue?: number;
-        maxValue?: number;
-        showTick?: boolean;
-        showValue?: boolean;
-        hideDefaultValue?: boolean;
-        tickLength?: number;
-        tickOffset?: number;
-        tickStroke?: number;
-        rimStroke?: number;
-        valueArchStroke?: number;
-        bgRadius?: number;
-        wheelFactor?: number;
-        keyFactor?: number;
-        tabIndex?: number;
-        ariaLabel?: string;
-        valueTextX?: number;
-        valueTextY?: number;
-        svgClass?: string;
-        bgClass?: string;
-        rimClass?: string;
-        valueArchClass?: string;
-        tickClass?: string;
-        valueTextClass?: string;
-        passiveEvents?: boolean;
+        imageSize?: number
+        minValue?: number
+        maxValue?: number
+        showTick?: boolean
+        showValue?: boolean
+        hideDefaultValue?: boolean
+        tickLength?: number
+        tickOffset?: number
+        tickStroke?: number
+        rimStroke?: number
+        valueArchStroke?: number
+        bgRadius?: number
+        wheelFactor?: number
+        keyFactor?: number
+        tabIndex?: number
+        ariaLabel?: string
+        valueTextX?: number
+        valueTextY?: number
+        svgClass?: string
+        bgClass?: string
+        rimClass?: string
+        valueArchClass?: string
+        tickClass?: string
+        valueTextClass?: string
+        passiveEvents?: boolean
         /** The used direction of the drag movement to control the value. Vertical is the default. */
-        dragDirection?: DragDirection;
-    };
+        dragDirection?: DragDirection
+    }
 }
 
-const props = defineProps<Props>();
+const props = defineProps<Props>()
 const emit = defineEmits([
     /** The model value has changed */
     'update:modelValue',
@@ -62,192 +56,163 @@ const emit = defineEmits([
      * @remarks When true: the user is manipulating the knob by a darg gesture
      */
     'update:drag',
-]);
+])
 
 const vModel = computed<number>({
     get() {
-        return props.modelValue;
+        return props.modelValue
     },
     set(value) {
-        emit('update:modelValue', value);
+        emit('update:modelValue', value)
     },
-});
+})
 
-const imageSize = props.options?.imageSize || 40;
-const knobMinValue = props.options?.minValue || 0;
-const knobMaxValue = props.options?.maxValue || 100;
-const showTick =
-    props.options?.showTick === undefined ? true : props.options?.showTick;
-const showValue =
-    props.options?.showValue === undefined ? true : props.options?.showTick;
+const imageSize = props.options?.imageSize || 40
+const knobMinValue = props.options?.minValue || 0
+const knobMaxValue = props.options?.maxValue || 100
+const showTick = props.options?.showTick === undefined ? true : props.options?.showTick
+const showValue = props.options?.showValue === undefined ? true : props.options?.showTick
 const hideDefaultValue =
-    props.options?.hideDefaultValue === undefined
-        ? true
-        : props.options?.hideDefaultValue;
-const tickLength = props.options?.tickLength || 18;
-const tickOffset = props.options?.tickOffset || 10;
-const tickStroke = props.options?.tickStroke || 3;
-const rimStroke = props.options?.rimStroke || 11;
-const valueArchStroke = props.options?.valueArchStroke || 11;
-const bgRadius = props.options?.bgRadius || 34;
-const wheelModifierFactor = props.options?.wheelFactor || 10;
-const keyModifierFactor = props.options?.keyFactor || 10;
-const tabIndex = props.options?.tabIndex || 0;
-const ariaLabel = props.options?.ariaLabel || 'Knob';
-const valueTextX = props.options?.valueTextX || 50;
-const valueTextY = props.options?.valueTextY || 62;
-const svgClass = props.options?.svgClass || 'select-none';
-const bgClass = props.options?.bgClass || 'text-[#868686]';
-const rimClass = props.options?.rimClass || 'text-[#393939]';
-const valueArchClass = props.options?.valueArchClass || 'text-[#53d769]';
-const tickClass = props.options?.tickClass || 'text-black';
+    props.options?.hideDefaultValue === undefined ? true : props.options?.hideDefaultValue
+const tickLength = props.options?.tickLength || 18
+const tickOffset = props.options?.tickOffset || 10
+const tickStroke = props.options?.tickStroke || 3
+const rimStroke = props.options?.rimStroke || 11
+const valueArchStroke = props.options?.valueArchStroke || 11
+const bgRadius = props.options?.bgRadius || 34
+const wheelModifierFactor = props.options?.wheelFactor || 10
+const keyModifierFactor = props.options?.keyFactor || 10
+const tabIndex = props.options?.tabIndex || 0
+const ariaLabel = props.options?.ariaLabel || 'Knob'
+const valueTextX = props.options?.valueTextX || 50
+const valueTextY = props.options?.valueTextY || 62
+const svgClass = props.options?.svgClass || 'select-none'
+const bgClass = props.options?.bgClass || 'text-[#868686]'
+const rimClass = props.options?.rimClass || 'text-[#393939]'
+const valueArchClass = props.options?.valueArchClass || 'text-[#53d769]'
+const tickClass = props.options?.tickClass || 'text-black'
 const valueTextClass =
-    props.options?.valueTextClass ||
-    'text-gray-50 text-[30px] font-normal font-mono';
+    props.options?.valueTextClass || 'text-gray-50 text-[30px] font-normal font-mono'
 const passiveEvents =
-    props.options?.passiveEvents === undefined
-        ? false
-        : props.options?.passiveEvents;
+    props.options?.passiveEvents === undefined ? false : props.options?.passiveEvents
 const dragDirection =
     props.options?.dragDirection === undefined
         ? DragDirection.vertical
-        : props.options?.dragDirection;
+        : props.options?.dragDirection
 
-const startValue = vModel.value;
+const startValue = vModel.value
 
 const tickStartX = computed(() => {
-    return (
-        HALF_VIEWBOX +
-        Math.cos(degToRad(controlAngle.value)) * (RADIUS - tickLength)
-    );
-});
+    return HALF_VIEWBOX + Math.cos(degToRad(controlAngle.value)) * (RADIUS - tickLength)
+})
 
 const tickStartY = computed(() => {
-    return (
-        HALF_VIEWBOX +
-        Math.sin(degToRad(controlAngle.value)) * (RADIUS - tickLength)
-    );
-});
+    return HALF_VIEWBOX + Math.sin(degToRad(controlAngle.value)) * (RADIUS - tickLength)
+})
 
 const tickEndX = computed(() => {
-    return (
-        HALF_VIEWBOX +
-        Math.cos(degToRad(controlAngle.value)) * (RADIUS - tickOffset)
-    );
-});
+    return HALF_VIEWBOX + Math.cos(degToRad(controlAngle.value)) * (RADIUS - tickOffset)
+})
 
 const tickEndY = computed(() => {
-    return (
-        HALF_VIEWBOX +
-        Math.sin(degToRad(controlAngle.value)) * (RADIUS - tickOffset)
-    );
-});
+    return HALF_VIEWBOX + Math.sin(degToRad(controlAngle.value)) * (RADIUS - tickOffset)
+})
 
-const rimStartX = HALF_VIEWBOX + -0.5 * RADIUS;
-const rimStartY = HALF_VIEWBOX + Math.sin(degToRad(120)) * RADIUS;
-const rimEndX = HALF_VIEWBOX + 0.5 * RADIUS;
-const rimEndY = HALF_VIEWBOX + Math.sin(degToRad(420)) * RADIUS;
+const rimStartX = HALF_VIEWBOX + -0.5 * RADIUS
+const rimStartY = HALF_VIEWBOX + Math.sin(degToRad(120)) * RADIUS
+const rimEndX = HALF_VIEWBOX + 0.5 * RADIUS
+const rimEndY = HALF_VIEWBOX + Math.sin(degToRad(420)) * RADIUS
 
-const startRad = degToRad(120);
-const currentValueRad = computed(() => degToRad(controlAngle.value));
-const largeArch = computed(() =>
-    Math.abs(startRad - currentValueRad.value) < Math.PI ? 0 : 1,
-);
-const sweep = ref(1);
+const startRad = degToRad(120)
+const currentValueRad = computed(() => degToRad(controlAngle.value))
+const largeArch = computed(() => (Math.abs(startRad - currentValueRad.value) < Math.PI ? 0 : 1))
+const sweep = ref(1)
 
-const valueEndX = computed(
-    () => 50 + Math.cos(degToRad(controlAngle.value)) * RADIUS,
-);
-const valueEndY = computed(
-    () => 50 + Math.sin(degToRad(controlAngle.value)) * RADIUS,
-);
+const valueEndX = computed(() => 50 + Math.cos(degToRad(controlAngle.value)) * RADIUS)
+const valueEndY = computed(() => 50 + Math.sin(degToRad(controlAngle.value)) * RADIUS)
 
-const rim = `M ${rimStartX} ${rimStartY} A ${RADIUS} ${RADIUS} 0 1 1 ${rimEndX} ${rimEndY}`;
+const rim = `M ${rimStartX} ${rimStartY} A ${RADIUS} ${RADIUS} 0 1 1 ${rimEndX} ${rimEndY}`
 const valueArch = computed(
     () =>
         `M ${rimStartX} ${rimStartY} A ${RADIUS} ${RADIUS} 0 ${largeArch.value} ${sweep.value} ${valueEndX.value} ${valueEndY.value}`,
-);
+)
 
 /** The previous y position (for vertical movement, x position for horizontal movement) */
-let prevY = 0;
+let prevY = 0
 /** The current y position (for vertical movement, x position for horizontal movement) */
-let currentY = 0;
-const mouseIsDown = ref(false);
-const mouseIsOver = ref(false);
-const mouseMoved = ref(false);
-const hasFocus = ref(false);
-const shiftModifier = ref(false);
+let currentY = 0
+const mouseIsDown = ref(false)
+const mouseIsOver = ref(false)
+const mouseMoved = ref(false)
+const hasFocus = ref(false)
+const shiftModifier = ref(false)
 
 const downListener = (event: MouseEvent | TouchEvent) => {
-    mouseIsDown.value = true;
-    mouseMoved.value = false;
-    prevY = getEventY(event);
-    preventScrolling(event);
-    emit('update:drag', mouseIsDown.value);
-};
+    mouseIsDown.value = true
+    mouseMoved.value = false
+    prevY = getEventY(event)
+    preventScrolling(event)
+    emit('update:drag', mouseIsDown.value)
+}
 
 /** Gets the y coordinate associated with the event */
 function getEventY(event: TouchEvent | MouseEvent): number {
     if (window.TouchEvent && event instanceof TouchEvent) {
         switch (dragDirection) {
             case DragDirection.vertical:
-                return event.touches[0].pageY;
+                return event.touches[0]!.pageY
             case DragDirection.horizontal:
-                return event.touches[0].pageX;
+                // noinspection JSSuspiciousNameCombination because we intentionally report back x for y on specific orientations -->
+                return event.touches[0]!.pageX
             default:
-                throw new Error(
-                    'Drag direction ' + dragDirection + ' is not supported.',
-                );
+                throw new Error('Drag direction ' + dragDirection + ' is not supported.')
         }
     } else if (event instanceof MouseEvent) {
         switch (dragDirection) {
             case DragDirection.vertical:
-                currentY = event.clientY;
-                break;
+                currentY = event.clientY
+                break
             case DragDirection.horizontal:
-                currentY = event.clientX;
-                break;
+                // noinspection JSSuspiciousNameCombination because we intentionally report back x for y on specific orientations -->
+                currentY = event.clientX
+                break
             default:
-                throw new Error(
-                    'Drag direction ' + dragDirection + ' is not supported.',
-                );
+                throw new Error('Drag direction ' + dragDirection + ' is not supported.')
         }
-        return currentY;
+        return currentY
     }
-    return 0;
+    return 0
 }
 
 function moveListener(event: TouchEvent | MouseEvent) {
-    mouseMoved.value = true;
+    mouseMoved.value = true
     if (mouseIsDown.value) {
-        handleMove(event);
+        handleMove(event)
     }
 }
 
 /** Handles a mouse or touch move by converting it into a new control angle and model value */
 function handleMove(event: TouchEvent | MouseEvent) {
-    currentY = getEventY(event);
-    let direction: 'up' | 'down';
-    let curYchange: number;
+    currentY = getEventY(event)
+    let direction: 'up' | 'down'
+    let curYchange: number
 
     switch (dragDirection) {
         case DragDirection.vertical:
-            curYchange = prevY - currentY;
-            break;
+            curYchange = prevY - currentY
+            break
         case DragDirection.horizontal:
             //flip movement direction for horizontal
-            curYchange = -prevY + currentY;
-            break;
+            curYchange = -prevY + currentY
+            break
         default:
-            throw new Error(
-                'Drag direction ' + dragDirection + ' is not supported.',
-            );
+            throw new Error('Drag direction ' + dragDirection + ' is not supported.')
     }
 
     if (curYchange < 0) {
-        direction = 'down';
+        direction = 'down'
     } else {
-        direction = 'up';
+        direction = 'up'
     }
 
     if (
@@ -255,159 +220,135 @@ function handleMove(event: TouchEvent | MouseEvent) {
         ((direction === 'up' && controlAngle.value < MAX_ANGLE) ||
             (direction === 'down' && controlAngle.value > MIN_ANGLE))
     ) {
-        const change = changeToControlAngle(
-            prevY,
-            curYchange,
-            shiftModifier.value,
-        );
+        const change = changeToControlAngle(prevY, curYchange, shiftModifier.value)
 
         if (controlAngle.value + change < MIN_ANGLE) {
-            controlAngle.value = MIN_ANGLE;
+            controlAngle.value = MIN_ANGLE
         } else if (controlAngle.value + change > MAX_ANGLE) {
-            controlAngle.value = MAX_ANGLE;
+            controlAngle.value = MAX_ANGLE
         } else {
-            controlAngle.value += change;
+            controlAngle.value += change
         }
 
-        vModel.value = controlAngleToValue(
-            knobMinValue,
-            knobMaxValue,
-            controlAngle.value,
-        );
+        vModel.value = controlAngleToValue(knobMinValue, knobMaxValue, controlAngle.value)
     }
-    prevY = currentY;
+    prevY = currentY
 }
 
-const debouncedMoveListener = leadingDebounce(moveListener);
+const debouncedMoveListener = leadingDebounce(moveListener)
 
 /** According to the chosen option, prevents propagation of the event.
  * @remarks If set, keeps page from scrolling while handling the knob
  */
-function preventScrolling(
-    event: TouchEvent | MouseEvent | KeyboardEvent,
-): void {
+function preventScrolling(event: TouchEvent | MouseEvent | KeyboardEvent): void {
     if (passiveEvents === false) {
-        event.preventDefault();
-        event.stopPropagation();
+        event.preventDefault()
+        event.stopPropagation()
     }
 }
 
 const upListener = () => {
-    mouseIsDown.value = false;
-    emit('update:drag', mouseIsDown.value);
-};
+    mouseIsDown.value = false
+    emit('update:drag', mouseIsDown.value)
+}
 
 function resetValue() {
-    controlAngle.value = MIN_ANGLE;
+    controlAngle.value = MIN_ANGLE
 }
 
 function changeValue(change: number) {
     if (change > controlAngle.value) {
         if (change < MAX_ANGLE) {
-            controlAngle.value = change;
+            controlAngle.value = change
         } else {
-            controlAngle.value = MAX_ANGLE;
+            controlAngle.value = MAX_ANGLE
         }
     }
 
     if (change < controlAngle.value) {
         if (change < controlAngle.value && change > MIN_ANGLE) {
-            controlAngle.value = change;
+            controlAngle.value = change
         } else {
-            controlAngle.value = MIN_ANGLE;
+            controlAngle.value = MIN_ANGLE
         }
     }
-    vModel.value = controlAngleToValue(
-        knobMinValue,
-        knobMaxValue,
-        controlAngle.value,
-    );
+    vModel.value = controlAngleToValue(knobMinValue, knobMaxValue, controlAngle.value)
 }
 
 function keyDownListener(event: KeyboardEvent) {
     // Update the shift modifier here already, otherwise the precise mode is not triggered properly
     if (event.key === 'Shift') {
-        shiftModifier.value = true;
+        shiftModifier.value = true
     }
 
-    if (
-        hasFocus.value &&
-        (event.key === 'ArrowUp' || event.key === 'ArrowDown')
-    ) {
-        preventScrolling(event);
+    if (hasFocus.value && (event.key === 'ArrowUp' || event.key === 'ArrowDown')) {
+        preventScrolling(event)
     }
 }
 
 function keyUpListener(event: KeyboardEvent) {
     if (event.key === 'Shift') {
-        shiftModifier.value = false;
+        shiftModifier.value = false
     }
 
-    let newValue: number;
-    const keyModifier = shiftModifier.value ? 1 : keyModifierFactor;
+    let newValue: number
+    const keyModifier = shiftModifier.value ? 1 : keyModifierFactor
     if (hasFocus.value && event.key === 'ArrowUp') {
-        newValue = controlAngle.value + 1 * keyModifier;
-        changeValue(newValue);
+        newValue = controlAngle.value + 1 * keyModifier
+        changeValue(newValue)
     }
 
     if (hasFocus.value && event.key === 'ArrowDown') {
-        newValue = controlAngle.value - 1 * keyModifier;
-        changeValue(newValue);
+        newValue = controlAngle.value - 1 * keyModifier
+        changeValue(newValue)
     }
 }
 
 function wheelListener(event: WheelEvent) {
-    let newValue: number;
-    const wheelModifier = event.shiftKey ? 1 : wheelModifierFactor;
-    if (
-        (!event.shiftKey && event.deltaY < 0) ||
-        (event.shiftKey && event.deltaX < 0)
-    ) {
-        newValue = controlAngle.value + 1 * wheelModifier;
+    let newValue: number
+    const wheelModifier = event.shiftKey ? 1 : wheelModifierFactor
+    if ((!event.shiftKey && event.deltaY < 0) || (event.shiftKey && event.deltaX < 0)) {
+        newValue = controlAngle.value + 1 * wheelModifier
     } else {
-        newValue = controlAngle.value - 1 * wheelModifier;
+        newValue = controlAngle.value - 1 * wheelModifier
     }
-    changeValue(newValue);
-    preventScrolling(event);
+    changeValue(newValue)
+    preventScrolling(event)
 }
 
 function mouseOverHandler() {
-    mouseIsOver.value = true;
+    mouseIsOver.value = true
 }
 
 function mouseOutHandler() {
-    mouseIsOver.value = false;
+    mouseIsOver.value = false
 }
 
 watch(
     () => knobElement.value,
     (element, oldElement) => {
         if (element && !oldElement) {
-            element.addEventListener('mousedown', downListener);
+            element.addEventListener('mousedown', downListener)
             element.addEventListener('touchstart', downListener, {
                 passive: passiveEvents,
-            });
+            })
             element.addEventListener('wheel', wheelListener, {
                 passive: passiveEvents,
-            });
-            element.addEventListener('mouseenter', mouseOverHandler);
-            element.addEventListener('mouseleave', mouseOutHandler);
-            document.addEventListener('mouseup', upListener);
-            document.addEventListener('touchend', upListener);
-            document.addEventListener('mousemove', debouncedMoveListener);
-            document.addEventListener('touchmove', debouncedMoveListener);
-            document.addEventListener('keydown', keyDownListener);
-            document.addEventListener('keyup', keyUpListener);
+            })
+            element.addEventListener('mouseenter', mouseOverHandler)
+            element.addEventListener('mouseleave', mouseOutHandler)
+            document.addEventListener('mouseup', upListener)
+            document.addEventListener('touchend', upListener)
+            document.addEventListener('mousemove', debouncedMoveListener)
+            document.addEventListener('touchmove', debouncedMoveListener)
+            document.addEventListener('keydown', keyDownListener)
+            document.addEventListener('keyup', keyUpListener)
 
-            const controlValue = valueToControlAngle(
-                knobMinValue,
-                knobMaxValue,
-                props.modelValue,
-            );
-            controlAngle.value = controlValue;
+            const controlValue = valueToControlAngle(knobMinValue, knobMaxValue, props.modelValue)
+            controlAngle.value = controlValue
         }
     },
-);
+)
 
 watch(
     () => props.modelValue,
@@ -418,29 +359,25 @@ watch(
             hasFocus.value === false
         ) {
             // log.info('propvalue changed for ', knobElement.value.attributes.id)
-            const controlValue = valueToControlAngle(
-                knobMinValue,
-                knobMaxValue,
-                value,
-            );
-            controlAngle.value = controlValue;
+            const controlValue = valueToControlAngle(knobMinValue, knobMaxValue, value)
+            controlAngle.value = controlValue
         }
     },
-);
+)
 
 onBeforeUnmount(() => {
-    knobElement.value.removeEventListener('mousedown', downListener);
-    knobElement.value.removeEventListener('touchstart', downListener);
-    knobElement.value.removeEventListener('wheel', wheelListener);
-    knobElement.value.removeEventListener('mouseenter', mouseOverHandler);
-    knobElement.value.removeEventListener('mouseleave', mouseOutHandler);
-    document.removeEventListener('mouseup', upListener);
-    document.removeEventListener('touchend', upListener);
-    document.removeEventListener('mousemove', debouncedMoveListener);
-    document.removeEventListener('touchmove', debouncedMoveListener);
-    document.removeEventListener('keydown', keyDownListener);
-    document.removeEventListener('keyup', keyUpListener);
-});
+    knobElement.value.removeEventListener('mousedown', downListener)
+    knobElement.value.removeEventListener('touchstart', downListener)
+    knobElement.value.removeEventListener('wheel', wheelListener)
+    knobElement.value.removeEventListener('mouseenter', mouseOverHandler)
+    knobElement.value.removeEventListener('mouseleave', mouseOutHandler)
+    document.removeEventListener('mouseup', upListener)
+    document.removeEventListener('touchend', upListener)
+    document.removeEventListener('mousemove', debouncedMoveListener)
+    document.removeEventListener('touchmove', debouncedMoveListener)
+    document.removeEventListener('keydown', keyDownListener)
+    document.removeEventListener('keyup', keyUpListener)
+})
 </script>
 <template>
     <svg
