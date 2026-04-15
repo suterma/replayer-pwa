@@ -1,8 +1,13 @@
 {
+    "extends": "@vue/tsconfig/tsconfig.dom.json",
+    "include": ["./e2e/**/*", "./support/**/*"],
+    "exclude": ["./support/component.*"],
     "compilerOptions": {
-      "target": "es5",
-      "lib": ["es5", "dom"],
-      "types": ["cypress", "node"]
-    },
-    "include": ["**/*.ts"]
-  }
+        "isolatedModules": false,
+        "types": ["cypress"],
+
+        // FIXME: Remove this when Cypress officially supports TypeScript 6.0
+        // https://github.com/cypress-io/cypress/issues/33511
+        "ignoreDeprecations": "6.0"
+    }
+}
