@@ -5,7 +5,7 @@
  * LICENSE file in the root of this projects source tree.
 -->
 <template>
-    <!-- Use the full width for a navigable channel arrangement the mix view, 
+    <!-- Use the full width for a navigable channel arrangement the mix view,
         and a more accessible narrower blog style width for all other content -->
     <div :class="{ 'container is-fullhd': router.currentRoute.value.name != 'mix' && !useWideContentWidth, }">
         <StageMark></StageMark>
@@ -18,7 +18,7 @@
         <!-- To facilitate route-specific styles, the route name is provided as it's own class -->
         <section
             class="section route"
-            :class="router.currentRoute.value.name"
+            :class="router.currentRoute.value.name?.toString()"
         >
             <router-view></router-view>
             <MessageOverlay />
@@ -30,7 +30,7 @@
         taking into account the vertical size of the media player panel.
         An additional margin is used as an additional spacer
         to make it visually clear that no more content is available below.
-        The min-height is the empirically determined minimal value.        
+        The min-height is the empirically determined minimal value.
         -->
             <div
                 class="mt-6"
