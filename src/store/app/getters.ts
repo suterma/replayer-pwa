@@ -185,7 +185,7 @@ export const getters = {
             CompilationHandler.isMediaTrack(track),
         );
         if (mediaTracks.length === 1) {
-            return mediaTracks[0].Id;
+            return mediaTracks[0]!.Id;
         }
 
         // none

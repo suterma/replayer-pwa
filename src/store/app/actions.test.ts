@@ -88,9 +88,11 @@ describe('actions.ts', () => {
         //Assert
         const actualTracks = getters.allTracks.value;
         const clonedTrack = actualTracks[1];
-        expect(clonedTrack.Tags).toHaveLength(1);
-        const iterator = clonedTrack.Tags.values();
-        expect(iterator.next().value).toBe('testTag');
+        expect(clonedTrack).toBeDefined()
+        expect(clonedTrack?.Tags).toHaveLength(1);
+        const iterator = clonedTrack?.Tags.values();
+        expect(iterator).toBeDefined()
+        expect(iterator?.next().value).toBe('testTag');
     });
 
     it('should clone a media track with an updated name', async () => {
@@ -104,6 +106,7 @@ describe('actions.ts', () => {
         //Assert
         const actualTracks = getters.allTracks.value;
         const clonedTrack = actualTracks[1];
-        expect(clonedTrack.Name).toContain('(cloned)');
+        expect(clonedTrack).toBeDefined()
+        expect(clonedTrack?.Name).toContain('(cloned)');
     });
 });
