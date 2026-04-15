@@ -39,6 +39,4 @@ export default defineConfigWithVueTs(
     ...pluginOxlint.buildFromOxlintConfigFile('.oxlintrc.json'),
 
     skipFormatting,
-
-    //TODO add license-header back from earlier config
 )
