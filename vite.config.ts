@@ -12,4 +12,9 @@ export default defineConfig({
             '@': fileURLToPath(new URL('./src', import.meta.url)),
         },
     },
+    build: {
+        license: {
+            fileName:"replayer-dependencies-licenses.md"
+        },
+    },
 })

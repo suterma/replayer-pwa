@@ -274,6 +274,38 @@
                 </Transition>
             </template>
         </CollapsiblePanel>
+
+        <hr />
+
+        <h1 class="title">License</h1>
+        <div class="content">
+            <p>
+                Replayer is licensed to you under the
+                <a href="https://github.com/suterma/replayer-pwa/blob/main/LICENSE" target="_blank"
+                    >GNU Affero General Public License v3.0</a
+                >
+
+                or any later version.
+            </p>
+            <p>
+                The source code is available on
+                <a href="https://github.com/suterma/replayer-pwa" target="_blank">GitHub</a>. To
+                report an issue or submit a feature request, use the
+                <a href="https://github.com/suterma/replayer-pwa/issues" target="_blank">issues</a>
+                page on the GitHub repository.
+            </p>
+            <p>
+                See also the complete
+                <a href="/replayer-dependencies-licenses.md" target="_blank"
+                    >list of dependencies and their licenses</a
+                >.
+            </p>
+            <p>
+                Created by
+                <a href="https://marcelsuter.ch" target="_blank">Marcel Suter</a>.
+            </p>
+        </div>
+
         <hr />
 
         <CollapsiblePanel expanded>
@@ -567,29 +599,6 @@
             </div>
         </CollapsiblePanel>
         <hr />
-
-        <h1 class="title">License</h1>
-        <div class="content">
-            <p>
-                Replayer is licensed to you under the
-                <a href="https://github.com/suterma/replayer-pwa/blob/main/LICENSE" target="_blank"
-                    >GNU Affero General Public License v3.0</a
-                >
-
-                or any later version.
-            </p>
-            <p>
-                The source code is available on
-                <a href="https://github.com/suterma/replayer-pwa" target="_blank">GitHub</a>. To
-                report an issue or submit a feature request, use the
-                <a href="https://github.com/suterma/replayer-pwa/issues" target="_blank">issues</a>
-                page on the GitHub repository.
-            </p>
-            <p>
-                Created by
-                <a href="https://marcelsuter.ch" target="_blank">Marcel Suter</a>.
-            </p>
-        </div>
     </div>
 </template>
 
