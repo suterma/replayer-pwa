@@ -1,16 +1,3 @@
-/**
- * @licstart The following is the entire license notice for the
- * JavaScript code in this page
- *
- * Copyright (c) 2024 Marcel Suter - Replayer
- *
- * This source code is licensed under the AGPL license found in the
- * LICENSE file in the root of this projects source tree.
- *
- * @licend The above is the entire license notice for the
- * JavaScript code in this page
- */
-
 import type { ITrack } from '@/store/ITrack';
 import { XmlCues } from './XmlCues';
 import { XmlMeter } from './XmlMeter';
@@ -52,6 +39,6 @@ export class XmlTrack {
     UseMeasureNumbers: boolean | null;
     Volume: number;
     Cues: XmlCues;
-    /** @devdoc An array is used to store the set */
+    /** @privateRemarks An array is used to store the set */
     Tags: string[];
 }

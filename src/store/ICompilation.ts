@@ -1,16 +1,3 @@
-/**
- * @licstart The following is the entire license notice for the
- * JavaScript code in this page
- *
- * Copyright (c) 2024 Marcel Suter - Replayer
- *
- * This source code is licensed under the AGPL license found in the
- * LICENSE file in the root of this projects source tree.
- *
- * @licend The above is the entire license notice for the
- * JavaScript code in this page
- */
-
 import type { ITrack } from './ITrack';
 
 /** @interface Defines a Replayer Compilation, consisting of a set of tracks with their cues.
@@ -37,7 +24,7 @@ export interface ICompilation {
 
     /** A unique identifier for this compilation.
      * @remarks To work correctly, this identifier must be unique among all currenlty loaded compilations. Best, to make it universally unique by using a UUID.
-     * @devdoc This identifier allows to recognise this item over multiple edits
+     * @privateRemarks This identifier allows to recognise this item over multiple edits
      */
     Id: string;
 

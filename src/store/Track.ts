@@ -1,16 +1,3 @@
-/**
- * @licstart The following is the entire license notice for the
- * JavaScript code in this page
- *
- * Copyright (c) 2024 Marcel Suter - Replayer
- *
- * This source code is licensed under the AGPL license found in the
- * LICENSE file in the root of this projects source tree.
- *
- * @licend The above is the entire license notice for the
- * JavaScript code in this page
- */
-
 import type { IMeter } from '@/code/music/IMeter';
 import type { ITrack } from './ITrack';
 import type { ICue } from './ICue';
@@ -102,7 +89,7 @@ export class Track implements ITrack {
     /** Parses the JSON and returns new instance of this class.
      * @remarks Instead of creating an unprototyped object with JSON.parse, this creates a new object of this type
      * @param jsonTrack - a JSON representation of a Track
-     * @devdoc See https://stackoverflow.com/a/5874189/79485
+     * @privateRemarks See https://stackoverflow.com/a/5874189/79485
      */
     public static fromJson(jsonTrack: string): Track {
         const obj = JSON.parse(jsonTrack) as Track;

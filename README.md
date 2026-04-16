@@ -34,24 +34,62 @@ Try the <a href="https://web.replayer.app/#demo" target="_blank">demo in the bro
 -   [Blog](https://replayer.app/blog)
 -   [Source code documentation](https://src-doc.replayer.app)
 
-# Tests
+# Development
 
-## End-to-end (with cypress)
+## Recommended Browser Setup
 
-Run the [Cypress End-To-End regression tests](/cypress/e2e/regression)
+- Chromium-based browsers (Chrome, Edge, Brave, etc.):
+    - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
+    - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
+- Firefox:
+    - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
+    - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
 
-## Unit tests
+## Project Setup
 
-Run the vitest unit tests with:
+```sh
+npm install
+```
 
-    npm run test:unit
+### Compile and Hot-Reload for Development
 
-# Build
+```sh
+npm run dev
+```
 
-Using the node/npm CLI:
-   
-    npm install
-    npm run build
+### Type-Check, Compile and Minify for Production
+
+```sh
+npm run build
+```
+
+### Run Unit Tests with [Vitest](https://vitest.dev/)
+
+```sh
+npm run test:unit
+```
+
+### Run End-to-End Tests with [Cypress](https://www.cypress.io/)
+
+```sh
+npm run test:e2e:dev
+```
+
+This runs the end-to-end tests against the Vite development server.
+It is much faster than the production build.
+
+But it's still recommended to test the production build with `test:e2e` before deploying (e.g. in CI environments):
+
+```sh
+npm run build
+npm run test:e2e
+```
+
+### Lint with [ESLint](https://eslint.org/)
+
+```sh
+npm run lint
+```
 
 ## Bundling
 

@@ -1,27 +1,27 @@
 @charset "utf-8";
 
-/************************************************************** 
+/**************************************************************
  * Specific spacing for all viewport widths
  * @remarks The naming scheme is taken from Bulma's visibility helpers
- * @devdoc To avoid taking another dependency like bulma-helper-spacing
- * or bulma-helpers, I decide to provide the few currently used 
- * additional spacing helpers on my own here. 
+ * @privateRemarks To avoid taking another dependency like bulma-helper-spacing
+ * or bulma-helpers, I decide to provide the few currently used
+ * additional spacing helpers on my own here.
  **************************************************************/
 
-/** Like with columns, 
-* if you want to remove the space to a subsequent item, 
+/** Like with columns,
+* if you want to remove the space to a subsequent item,
 * add the is-gapless modifier on the level:
 */
 .level:not(:last-child).is-gapless {
     margin-bottom: inherit;
 }
 
-/************************************************************** 
+/**************************************************************
  * Specific spacing depending on breakpoints
  * @remarks The naming scheme is taken from Bulma's visibility helpers
- * @devdoc To avoid taking another dependency like bulma-helper-spacing
- * or bulma-helpers, I decide to provide the few currently used 
- * additional spacing helpers on my own here. 
+ * @privateRemarks To avoid taking another dependency like bulma-helper-spacing
+ * or bulma-helpers, I decide to provide the few currently used
+ * additional spacing helpers on my own here.
  **************************************************************/
 
 @media screen and (max-width: 768px) {
@@ -53,17 +53,17 @@
     }
 }
 
-/************************************************************** 
+/**************************************************************
  * Specific spacing for tracks and their content
  **************************************************************/
 
-/** For all blocks for and in a track, use the same small amount of margin as everywhere, 
+/** For all blocks for and in a track, use the same small amount of margin as everywhere,
 for all screen sizes. Keeps the display compact */
 .track .block:not(:last-child) {
     margin-bottom: 0.5rem;
 }
 
-/************************************************************** 
+/**************************************************************
  * Specific spacing for general layout
  **************************************************************/
 
@@ -73,7 +73,7 @@ for all screen sizes. Keeps the display compact */
     padding-bottom: 3rem;
 }
 
-/************************************************************** 
+/**************************************************************
  * For the playback widget in the media player panel, keep the widget rows compact
  **************************************************************/
 

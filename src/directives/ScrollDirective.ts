@@ -1,16 +1,3 @@
-/**
- * @licstart The following is the entire license notice for the
- * JavaScript code in this page
- *
- * Copyright (c) 2024 Marcel Suter - Replayer
- *
- * This source code is licensed under the AGPL license found in the
- * LICENSE file in the root of this projects source tree.
- *
- * @licend The above is the entire license notice for the
- * JavaScript code in this page
- */
-
 import { useElementScroll } from '@/composables/ElementScrollComposable';
 import { nextTick, type DirectiveBinding } from 'vue';
 
@@ -42,8 +29,8 @@ export function ScrollDirective(
                     scroll();
                 },
                 90,
-                /* This is an empiric value, 
-                   to make sure, scrolling only takes place after the routing 
+                /* This is an empiric value,
+                   to make sure, scrolling only takes place after the routing
                    has at least started.
                    It should be longer than the iBusy-Routing timeout, but
                    shorter than the general app-animation duration

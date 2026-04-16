@@ -106,7 +106,7 @@ const audio = useAudioStore();
 const { showLevelMeterForEdit } = storeToRefs(settings);
 
 /*
- * @devdoc Great care has been taken to only ever create and use the audio context
+ * @privateRemarks Great care has been taken to only ever create and use the audio context
  * when required. Currently, the audio level meter is only shown with a
  * corresponding option set to true and only in edit mode.
  * Audio context handling throughout the application reflects this.

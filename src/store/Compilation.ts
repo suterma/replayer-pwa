@@ -1,16 +1,3 @@
-/**
- * @licstart The following is the entire license notice for the
- * JavaScript code in this page
- *
- * Copyright (c) 2024 Marcel Suter - Replayer
- *
- * This source code is licensed under the AGPL license found in the
- * LICENSE file in the root of this projects source tree.
- *
- * @licend The above is the entire license notice for the
- * JavaScript code in this page
- */
-
 import { v4 as uuidv4 } from 'uuid';
 import type { ITrack } from './ITrack';
 import type { ICompilation } from './ICompilation';
@@ -59,7 +46,7 @@ export class Compilation implements ICompilation {
     /** Parses the JSON and returns new instance of this class.
      * @remarks Instead of creating an unprototyped object with JSON.parse, this creates a new object of this type
      * @param jsonCompilation - a JSON representation of a Compilation
-     * @devdoc See https://stackoverflow.com/a/5874189/79485
+     * @privateRemarks See https://stackoverflow.com/a/5874189/79485
      */
     static fromJson(jsonCompilation: string): Compilation {
         const obj = JSON.parse(jsonCompilation) as Compilation;

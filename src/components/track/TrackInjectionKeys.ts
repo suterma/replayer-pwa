@@ -1,16 +1,3 @@
-/**
- * @licstart The following is the entire license notice for the
- * JavaScript code in this page
- *
- * Copyright (c) 2024 Marcel Suter - Replayer
- *
- * This source code is licensed under the AGPL license found in the
- * LICENSE file in the root of this projects source tree.
- *
- * @licend The above is the entire license notice for the
- * JavaScript code in this page
- */
-
 import type { PlaybackState } from '@/code/media/PlaybackState';
 import type { IMeter } from '@/code/music/IMeter';
 import type { InjectionKey, Ref } from 'vue';
@@ -59,7 +46,7 @@ export const currentPositionInjectionKey = Symbol() as InjectionKey<
 
 /** A symbol for providing and injecting a computed, formatted, display-only value for the playhead position.
  * @remarks This is provided readonly, and not updates are supported.
- * @devdoc Use this value for display-only purposes, for optimized performance. Removes the burden of formatting from components, and reduces render actions, when the displayed text not actually changes.
+ * @privateRemarks Use this value for display-only purposes, for optimized performance. Removes the burden of formatting from components, and reduces render actions, when the displayed text not actually changes.
  */
 export const currentPositionDisplayInjectionKey = Symbol() as InjectionKey<
     Ref<string>

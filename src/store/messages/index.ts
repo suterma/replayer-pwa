@@ -1,16 +1,3 @@
-/**
- * @licstart The following is the entire license notice for the
- * JavaScript code in this page
- *
- * Copyright (c) 2024 Marcel Suter - Replayer
- *
- * This source code is licensed under the AGPL license found in the
- * LICENSE file in the root of this projects source tree.
- *
- * @licend The above is the entire license notice for the
- * JavaScript code in this page
- */
-
 import { defineStore, storeToRefs } from 'pinia';
 import { useDebounceFn, useLocalStorage } from '@vueuse/core';
 import { type Ref, computed, ref, nextTick } from 'vue';
@@ -23,8 +10,8 @@ import useLog from '@/composables/LogComposable';
 const { log } = useLog();
 
 /** A store for messages, that are to be displayed.
- * @devdoc This follows the setup store syntax. See https://pinia.vuejs.org/core-concepts/#setup-stores
- * @devdoc The use of this separate store offloads the message handling from the other stores.
+ * @privateRemarks This follows the setup store syntax. See https://pinia.vuejs.org/core-concepts/#setup-stores
+ * @privateRemarks The use of this separate store offloads the message handling from the other stores.
  */
 export const useMessageStore = defineStore(Store.Messages, () => {
     /** An application work message stack, used for progress indication

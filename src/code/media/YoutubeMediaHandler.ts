@@ -1,16 +1,3 @@
-/**
- * @licstart The following is the entire license notice for the
- * JavaScript code in this page
- *
- * Copyright (c) 2024 Marcel Suter - Replayer
- *
- * This source code is licensed under the AGPL license found in the
- * LICENSE file in the root of this projects source tree.
- *
- * @licend The above is the entire license notice for the
- * JavaScript code in this page
- */
-
 import type { IAudioFader } from './IAudioFader';
 import type { IMediaHandler } from './IMediaHandler';
 import type { PlayerStateChangeCallback, Player } from '@vue-youtube/shared';
@@ -33,7 +20,7 @@ const { log } = useLog();
 /** @class Implements a playback handler for a YouTube IFrame player with VueYoutube.
  * @remarks This handles transport/loop and volume operations for the audio.
  * See https://github.com/suterma/replayer-pwa/tree/main/doc/media-handling#readme
- * @devdoc Fading is handeled internally with it's own handler.
+ * @privateRemarks Fading is handeled internally with it's own handler.
  */
 export default class YouTubeMediaHandler implements IMediaHandler {
     // --- internals ---
@@ -363,7 +350,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
     /** Flag, whether the player is currently playing
      * @remarks When the player was playing, any buffering event still is
      * considered as playing.
-     * @devdoc The current time is only updated, when a meaningful position
+     * @privateRemarks The current time is only updated, when a meaningful position
      * is available.
      */
     private _isPlaying = false;
@@ -424,7 +411,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
         }
     }
 
-    /** @devdoc Metadata already has loaded when this handler is created
+    /** @privateRemarks Metadata already has loaded when this handler is created
      */
     hasLoadedMetadata = true;
 

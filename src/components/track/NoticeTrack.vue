@@ -79,7 +79,7 @@ watch(
 );
 
 /** Watches the stored media URL's to spot a possible match
- * @devdoc This needs to be deep because the relevant URL is one of
+ * @privateRemarks This needs to be deep because the relevant URL is one of
  * the map of URL's.
  */
 watch(

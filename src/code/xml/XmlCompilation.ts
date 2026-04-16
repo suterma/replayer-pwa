@@ -1,16 +1,3 @@
-/**
- * @licstart The following is the entire license notice for the
- * JavaScript code in this page
- *
- * Copyright (c) 2024 Marcel Suter - Replayer
- *
- * This source code is licensed under the AGPL license found in the
- * LICENSE file in the root of this projects source tree.
- *
- * @licend The above is the entire license notice for the
- * JavaScript code in this page
- */
-
 import { type ICompilation } from '@/store/ICompilation';
 import { PlaybackMode } from '@/store/PlaybackMode';
 import { XmlTracks } from './XmlTracks';
@@ -21,7 +8,7 @@ import { XmlTracks } from './XmlTracks';
 export class XmlCompilation {
     /** @constructor
      * @param {Compilation} compilation - The Typescript track object to represent
-     * @devdoc Sets are stored as arrays and their items will be represented as individual XML elements
+     * @privateRemarks Sets are stored as arrays and their items will be represented as individual XML elements
      */
     constructor(compilation: ICompilation | undefined) {
         if (compilation) {
@@ -46,7 +33,7 @@ export class XmlCompilation {
     Artist = '';
     Album = '';
     Tracks: XmlTracks = new XmlTracks(undefined);
-    /** @devdoc An array is used to store the set */
+    /** @privateRemarks An array is used to store the set */
     SelectedTags: string[] = new Array<string>();
     PlaybackMode: PlaybackMode = PlaybackMode.PlayTrack;
 }

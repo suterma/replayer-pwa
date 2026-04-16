@@ -64,7 +64,7 @@
     lang="ts"
 >
 /** An indicator for the playback state of a track
- * @devdoc For rendering optimization for the two most switched states,
+ * @privateRemarks For rendering optimization for the two most switched states,
  * ready and playing, the transition is updating only opacity, when
  * switching between these two states. Other states are implemented separately
  * and are not optimized.
@@ -194,7 +194,7 @@ watch(
 </script>
 <style>
 /** Handling visibilty via opacity for rendering performance,
- * avoiding non-composited animations. 
+ * avoiding non-composited animations.
  */
 label.is-indicator.playback-indicator i svg.has-transition {
     transition: opacity v-bind('transitionDurationValue') linear;

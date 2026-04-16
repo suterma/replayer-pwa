@@ -11,9 +11,9 @@ import { ReplayerEvent } from '@/code/ui/ReplayerEvent';
 
 /** An event handler for Replayer events.
  * @remarks Registers/Deregisters to the global Replayer events and emits them as Vue events to the parent component.
- * @devdoc Implements the 'Separation of Concern' pattern for the Replayer global events, allowing a parent component
+ * @privateRemarks Implements the 'Separation of Concern' pattern for the Replayer global events, allowing a parent component
  * to simply use the @ shortcut to register for these events.
- * @devdoc This component handles registering and deregistering the events internally
+ * @privateRemarks This component handles registering and deregistering the events internally
  */
 export default defineComponent({
     name: 'ReplayerEventHandler',

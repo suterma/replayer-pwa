@@ -45,7 +45,7 @@ export default defineComponent({
             default: '',
         },
         /** Whether to show the component in a disabled state
-         * @devdoc This attribute is processed with "fallthrough", to propagate the state to the inner elements.
+         * @privateRemarks This attribute is processed with "fallthrough", to propagate the state to the inner elements.
          */
         disabled: Boolean,
     },

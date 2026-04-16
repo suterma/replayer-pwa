@@ -1,16 +1,3 @@
-/**
- * @licstart The following is the entire license notice for the
- * JavaScript code in this page
- *
- * Copyright (c) 2024 Marcel Suter - Replayer
- *
- * This source code is licensed under the AGPL license found in the
- * LICENSE file in the root of this projects source tree.
- *
- * @licend The above is the entire license notice for the
- * JavaScript code in this page
- */
-
 import type { IMeter } from '@/code/music/IMeter';
 import type { ICue } from './ICue';
 
@@ -31,7 +18,7 @@ export interface ITrack {
 
     /** The extracted duration of the loaded media file for this track.
      * @remarks This is only defined if there is a loaded media file for this track.
-     * @devdoc This must get calculated/reset if the track is loaded/unloaded. It must never get persisted.
+     * @privateRemarks This must get calculated/reset if the track is loaded/unloaded. It must never get persisted.
      */
     Duration: number | null;
 
@@ -79,13 +66,13 @@ export interface ITrack {
     UseMeasureNumbers: boolean | null;
 
     /** The URL or the local file name (possibly including a path) for the media file.
-     * @devdoc If it is relative, it may get made absolute using the compilation's media path.
+     * @privateRemarks If it is relative, it may get made absolute using the compilation's media path.
      */
     Url: string;
 
     /** A unique identifier for this track.
      * @remarks To work correctly, this identifier must be unique among all currenlty loaded compilations. Best, to make it universally unique by using a UUID.
-     * @devdoc This identifier allows to recognise this item over multiple edits
+     * @privateRemarks This identifier allows to recognise this item over multiple edits
      */
     Id: string;
 }

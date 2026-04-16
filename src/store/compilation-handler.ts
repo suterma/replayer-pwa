@@ -1,16 +1,3 @@
-/**
- * @licstart The following is the entire license notice for the
- * JavaScript code in this page
- *
- * Copyright (c) 2024 Marcel Suter - Replayer
- *
- * This source code is licensed under the AGPL license found in the
- * LICENSE file in the root of this projects source tree.
- *
- * @licend The above is the entire license notice for the
- * JavaScript code in this page
- */
-
 import { Cue } from './Cue';
 import {
     DefaultPitchShift,
@@ -51,7 +38,7 @@ export default class CompilationHandler {
      * JSON serilization
      * @remarks Specifically removes MediaHander objects from serialization
      * because they are circular, and not needed in the first place
-     * @devdoc Taken and simplified from
+     * @privateRemarks Taken and simplified from
      * https://bobbyhadz.com/blog/javascript-typeerror-converting-circular-structure-to-json#use-a-method-to-remove-all-circular-references-from-an-object
      */
     private static getCompilationSerializationReplacer() {
@@ -77,7 +64,7 @@ export default class CompilationHandler {
     }
 
     /** Determines whether this is a media track (audio, video, YouTube)
-     * @devdoc track types should later be determined by MIME type.
+     * @privateRemarks track types should later be determined by MIME type.
      * For this, the MIME type should become part of the (readonly) track information,
      * determined when the track URL is evaluated.
      */
@@ -93,7 +80,7 @@ export default class CompilationHandler {
      * @remarks Tracks with an URL of undefined file ending (and are not recognised otherwise) are
      * assumed to be of type audio.
      * This allows to use file sharing services, that do not offer file endings for their files.
-     * @devdoc track types should later be determined by MIME type.
+     * @privateRemarks track types should later be determined by MIME type.
      * For this, the MIME type should become part of the (readonly) track information,
      * determined when the track URL is evaluated.
      */
@@ -106,7 +93,7 @@ export default class CompilationHandler {
     }
 
     /** Determines whether this is a youtube video track
-     * @devdoc track types should later be determined by MIME type.
+     * @privateRemarks track types should later be determined by MIME type.
      * For this, the MIME type should become part of the (readonly) track information,
      * determined when the track URL is evaluated.
      */
@@ -115,7 +102,7 @@ export default class CompilationHandler {
     }
 
     /** Determines whether this is a (HTML native, not YouTube) video track
-     * @devdoc track types should later be determined by MIME type.
+     * @privateRemarks track types should later be determined by MIME type.
      * For this, the MIME type should become part of the (readonly) track information,
      * determined when the track URL is evaluated.
      */
@@ -136,7 +123,7 @@ export default class CompilationHandler {
     }
 
     /** Gets a pseudo-random order, by using the given Id and a shuffle seed
-     * @devdoc The implementation assumes a GUID as an Id. Currently
+     * @privateRemarks The implementation assumes a GUID as an Id. Currently
      * the outcome is deemed random enough for the purpose, avoiding
      * a dependency on a more sophisticated PRNG.
      * Two different char codes are used to work around the dashes in the GUID.
@@ -383,7 +370,7 @@ export default class CompilationHandler {
      * if a suitable input value is provided.
      * @param subSecondDigits - The number of digits for the sub-second precision. Should be 1, 2, or 3 (default).
      * @return The display representation or the empty string.
-     * @devdoc This variant has been created as a slightly optimized variant for performance, with regards to the hh:mm:ss.zzz option
+     * @privateRemarks This variant has been created as a slightly optimized variant for performance, with regards to the hh:mm:ss.zzz option
      */
     private static convertSecondsToDecimalSeconds(
         seconds: number | null | undefined,
@@ -849,7 +836,7 @@ export default class CompilationHandler {
     }
 
     /** An empty Id, usable for un-selecting/resetting a selection.
-     * @devdoc This avoids using null for effectively having no selection.
+     * @privateRemarks This avoids using null for effectively having no selection.
      */
     public static EmptyId = '';
 }

@@ -1,43 +1,45 @@
-.DS_Store
-node_modules
-/dist
-
-
-# local env files
-.env.local
-.env.*.local
-
-# Log files
+# Logs
+logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+.DS_Store
+dev-dist
+dist
+dist-ssr
+coverage
+*.local
 
 # Editor directories and files
+.vscode/*
+!.vscode/extensions.json
 .idea
-.vscode
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
-junit.xml
-*.~lock.store.odg#
 
-# Cypress results
-cypress/screenshots/
-cypress/videos/
-cypress/downloads/
+*.tsbuildinfo
 
-# Keep the tasks inside the .vscode hidden folder
-!.vscode/tasks.json
+.eslintcache
 
-# development build output
-/dev-dist
+# Cypress
+/cypress/videos/
+/cypress/screenshots/
+/cypress/downloads/
+
+# Vitest
+__screenshots__/
 
 # Bundling sizes of packages, useful for bundle size optimization efforts
 # stats.html
 stats.html
 
-# omit compiled config
-vite.config.ts.timestamp-*.mjs
+# Vite
+*.timestamp-*-*.mjs

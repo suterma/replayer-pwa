@@ -4,8 +4,8 @@
         <button
             class="button"
             v-bind="$attrs"
-            @click="getConsent"
             data-cy="youtube-consent"
+            @click="getConsent"
         >
             YouTube consent required...
         </button>
@@ -17,7 +17,7 @@
  *  Uses the {YouTubeConsentDialog} to aks for consent from the user
  */
 import { consentYouTube } from '@/code/ui/dialogs';
-import { useSettingsStore } from './../../store/settings';
+import { useSettingsStore } from '@/store/settings';
 import { storeToRefs } from 'pinia';
 
 const settings = useSettingsStore();

@@ -40,14 +40,14 @@ import { useMessageStore } from '@/store/messages';
  * - player actions, which get handled by the currently active player (if any)
  * @remarks Events are only handled, when a compilation is currently loaded
  * @remarks The emitted events are those from the @see Replayer enumeration
- * @devdoc The idea is to register for key presses (or other input) at the document level,
+ * @privateRemarks The idea is to register for key presses (or other input) at the document level,
  * then translate this input into custom Replayer events, and emit them
  * back at the document level. This should only be done (or handled) if a
  * compilation is loaded.
  * Using a specific Replayer event handler at the appropriate level, these
  * issued Replayer action events can then be handled properly in the suitable
  * Vue component. See also https://developer.mozilla.org/en-US/docs/Web/Events/Creating_and_triggering_events
- * @devdoc This keyboard handler is distinct from the general application hotkey
+ * @privateRemarks This keyboard handler is distinct from the general application hotkey
  * handling, which is implemented separately.
  */
 defineProps({
@@ -66,7 +66,7 @@ defineProps({
 const mnemonic = ref('');
 
 /** A timeout id, to handle timeout extensions for building up the mnemonic
- * @devdoc This implementation only supports the browser.
+ * @privateRemarks This implementation only supports the browser.
  * See https://stackoverflow.com/questions/45802988/typescript-use-correct-version-of-settimeout-node-vs-window
  */
 const keyTimeoutId = ref(0);
@@ -79,7 +79,7 @@ const { keyboardShortcutTimeout } = storeToRefs(settings);
 /** Generally handle all keydown events, by checking for recognizable events
  * @remarks Handles "Enter for play/pause", "back to cue" and "keyboard mnemonic" events
  * @remarks Skips repeated events
- * @devdoc Keydown events are used as trigger instead of the non-repetitive keyup events
+ * @privateRemarks Keydown events are used as trigger instead of the non-repetitive keyup events
  * to have a better responsiveness for the user.
  */
 function handleKey(event: KeyboardEvent) {
@@ -145,7 +145,7 @@ function handleKey(event: KeyboardEvent) {
 
 /** Toggles playback
  * @remarks Skips repeated events
- * @devdoc Keydown events are used as trigger instead of the non-repetitive keyup events
+ * @privateRemarks Keydown events are used as trigger instead of the non-repetitive keyup events
  * to have a better responsiveness for the user.
  */
 function togglePlayback(event: KeyboardEvent) {

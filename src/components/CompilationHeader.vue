@@ -163,7 +163,7 @@ const props = defineProps({
         required: true,
     },
     /** Whether this component show editable inputs for the contained data
-     * @devdoc Allows to reuse this component for more than one view mode.
+     * @privateRemarks Allows to reuse this component for more than one view mode.
      */
     isEditable: {
         type: Boolean,
@@ -196,7 +196,7 @@ function updateAlbum(album: string) {
     width: 100%;
 }
 /** Custom modification for the level in the context of a compilation.
-* @remarks Allow the title text (on the left) to break between words, 
+* @remarks Allow the title text (on the left) to break between words,
 * and keep the context items (on the right) as close as reasonably possible */
 .level {
     .level-left {

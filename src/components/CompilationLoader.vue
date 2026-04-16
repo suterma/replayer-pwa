@@ -7,7 +7,7 @@
 <script setup lang="ts">
 /** A Loader for packages or tracks, from the URL
  * @remarks Implements the Track and Package API by loading items from the URL parameters
- * @devdoc According to my current understanding this must be run
+ * @privateRemarks According to my current understanding this must be run
  * as part of a component. Otherwise the URL fragment part is not processed
  * as the query part within vue-router
  */

@@ -5,7 +5,7 @@
     >
         <div class="block">
             <!-- Each track is an item in a list and contains all the cues --><!-- Track header for editing, including artist info, expansion-toggler and adaptive spacing --><!-- NOTE: The @click handler on the header component only handles clicks on otherwise non-interactive elements --><!-- Header level with wrap for items in the left part.
-         Using flex-start on the level, to cause the left and right parts to both 
+         Using flex-start on the level, to cause the left and right parts to both
          begin at the same, upper vertical position -->
             <div class="track-header level">
                 <!-- Left side -->
@@ -223,21 +223,21 @@ const { height: mediaPlayerPanelHeight } = useElementSize(mediaPlayerPanel);
 const { height: compilationHeaderHeight } = useElementSize(compilationHeader);
 
 /** A computed compensation height, using a fixed value as a fallback.
- * @devdoc Some devices, notably older iOS devices can not get the panel
+ * @privateRemarks Some devices, notably older iOS devices can not get the panel
  * height (equals zero), thus a useful default is assumed instead.
  */
 const mediaPlayerPanelComputedHeight = computed(() => {
     return mediaPlayerPanelHeight.value && compilationHeaderHeight.value
         ? mediaPlayerPanelHeight.value +
         compilationHeaderHeight.value +
-        80 /* additional fixed spacing to compensate for various 
+        80 /* additional fixed spacing to compensate for various
               media width-related margins and paddings */
         : 205 /*empirically determined useful max height*/;
 });
 
 /** The body height compensation for the fixed navbar.
  * @remark Debounced to prevent excess updates
- * @devdoc Debouncing also solves a update loop error
+ * @privateRemarks Debouncing also solves a update loop error
  */
 const navbarCompensationHeight = refDebounced(
     mediaPlayerPanelComputedHeight,

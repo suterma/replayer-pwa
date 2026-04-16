@@ -29,7 +29,7 @@
             @click="cueClicked"
         >
         </CueButton>
-        <!-- Using the v-for on a template instead of the actual component saves unnecessary renderings. 
+        <!-- Using the v-for on a template instead of the actual component saves unnecessary renderings.
              See https://stackoverflow.com/a/76074016/79485 -->
         <template v-for="cue in cues" :key="cue.Id">
             <CueButton
@@ -170,12 +170,12 @@ const props = defineProps({
     },
 
     /** Whether to show the component in a disabled state
-     * @devdoc This attribute is processed with "fallthrough", to propagate the state to the inner elements.
+     * @privateRemarks This attribute is processed with "fallthrough", to propagate the state to the inner elements.
      */
     disabled: Boolean,
 
     /** The playback mode
-     * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
+     * @privateRemarks casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
      */
     playbackMode: {
         type: String as () => PlaybackMode,
@@ -241,7 +241,7 @@ const prefixCueButtonId = 'prefix';
 
 /** Handler for a cue clicked event
  * @remarks Emits a click event with the respective cue
- * @devdoc The cue object (or id) is intentionally not provided from inside the v-for, because using a property-based value
+ * @privateRemarks The cue object (or id) is intentionally not provided from inside the v-for, because using a property-based value
  * for an event handler in a v-for causes excess rendering operations for components inside v-for loops. See https://stackoverflow.com/a/74270334/79485
  * Instead, the respective cue id is reclaimed inside this handler only at an actual click.
  */
@@ -322,16 +322,16 @@ function percentComplete(cue: ICue): number | null {
         max-width: 14em;
     }
 
-    /** The cue add/remove buttons should be of equal width, 
+    /** The cue add/remove buttons should be of equal width,
     thus the different text is set to fixed width */
     .cue.button.is-outlined {
         min-width: 12em;
         max-width: 12em;
     }
 
-    /** The cue add/remove buttons should be slim, 
+    /** The cue add/remove buttons should be slim,
     unused elements are set invisible */
-    /** The cue add/remove buttons should be of equal width, 
+    /** The cue add/remove buttons should be of equal width,
     thus the different text is set to fixed width */
     .cue.button.is-outlined .icon.ml-2.mr-2.foreground {
         display: none;

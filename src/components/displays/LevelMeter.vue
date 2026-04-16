@@ -85,7 +85,7 @@ const props = defineProps({
 /** The styles for the meter range element are dynamically calculated to be able to
  * use a pixel-defined gradient. This makes the gradient regions visually fixed with regard to the meter scale
  * (non-dependent from the actual meter value)
- * @devdoc See https://stackoverflow.com/a/69078238/79485 for the v-bind mechanism
+ * @privateRemarks See https://stackoverflow.com/a/69078238/79485 for the v-bind mechanism
  */
 const meterWidth = ref(100);
 
@@ -116,7 +116,7 @@ const widthMinimum = computed(() => {
 meter {
     height: 1em;
     /* Required to get rid of the default background property
-   * @devdoc "background" (without -color) is additionally required for Firefox
+   * @privateRemarks "background" (without -color) is additionally required for Firefox
    */
     background-color: v-bind('backgroundColor');
     background: v-bind('backgroundColor');
@@ -128,8 +128,8 @@ meter {
 /* ------------------------------------------------------------------------- */
 
 /** The styles for the meter bar (Firefox)
-* @devdoc For Firefox (moz), see https://support.mozilla.org/en-US/questions/1308191 
-* These must stand separately from webkit, because otherwise they would disturb each other 
+* @privateRemarks For Firefox (moz), see https://support.mozilla.org/en-US/questions/1308191
+* These must stand separately from webkit, because otherwise they would disturb each other
 */
 meter::-moz-meter-bar {
     background-image: linear-gradient(
@@ -145,9 +145,9 @@ meter::-moz-meter-bar {
 
 /* ------------------------------------------------------------------------- */
 
-/** The styles for the meter bar (Chrome and Webkit) 
-* @devdoc For webkit, see https://css-tricks.com/html5-meter-element/ 
-* @devdoc https://developer.mozilla.org/en-US/docs/Web/CSS/::-webkit-meter-bar */
+/** The styles for the meter bar (Chrome and Webkit)
+* @privateRemarks For webkit, see https://css-tricks.com/html5-meter-element/
+* @privateRemarks https://developer.mozilla.org/en-US/docs/Web/CSS/::-webkit-meter-bar */
 meter::-webkit-meter-bar {
     /* Required to get rid of the default background property */
     background: none;

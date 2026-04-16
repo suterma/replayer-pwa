@@ -1,16 +1,3 @@
-/**
- * @licstart The following is the entire license notice for the
- * JavaScript code in this page
- *
- * Copyright (c) 2024 Marcel Suter - Replayer
- *
- * This source code is licensed under the AGPL license found in the
- * LICENSE file in the root of this projects source tree.
- *
- * @licend The above is the entire license notice for the
- * JavaScript code in this page
- */
-
 import { defineStore } from 'pinia';
 import {
     type ShallowRef,
@@ -29,7 +16,7 @@ const { log } = useLog();
 
 /**
  *  Defining the AudioContext
- *  @devdoc webkitAudioContext supports older versions of Safari
+ *  @privateRemarks webkitAudioContext supports older versions of Safari
  */
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 
@@ -39,13 +26,13 @@ const AudioContext = window.AudioContext || window.webkitAudioContext;
  * the same handler. */
 export const useAudioStore = defineStore(Store.Audio, () => {
     /** The audio context to use for the lifetime of the app instance
-     * @devdoc Does get destroyed only after document unload, but this is good enough I guess.
+     * @privateRemarks Does get destroyed only after document unload, but this is good enough I guess.
      */
     const audioContext: ShallowRef<AudioContext | null> = shallowRef(null);
 
     /** The media handlers the application can work with
      * @remarks Each media handler belongs to a media source in the compilation
-     * @devdoc It's not necessary to have the handlers themselves reactive, thus the
+     * @privateRemarks It's not necessary to have the handlers themselves reactive, thus the
      * set is only shallow reactive
      */
     const mediaHandlers = shallowReactive(new Set<IMediaHandler>());

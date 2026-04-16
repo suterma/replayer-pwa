@@ -1,16 +1,3 @@
-/**
- * @licstart The following is the entire license notice for the
- * JavaScript code in this page
- *
- * Copyright (c) 2024 Marcel Suter - Replayer
- *
- * This source code is licensed under the AGPL license found in the
- * LICENSE file in the root of this projects source tree.
- *
- * @licend The above is the entire license notice for the
- * JavaScript code in this page
- */
-
 import type { IMediaHandler } from './IMediaHandler';
 import { type IMediaLooper, LoopMode } from './IMediaLooper';
 import { PlaybackState } from './PlaybackState';
@@ -19,7 +6,7 @@ const { log } = useLog();
 
 /** @class Implements range looping for an {IMediaHandler}, including fading.
  * @remarks Implements optional audio fading at the loop boundaries, with the help of an {IAudioFader}.
- * @devdoc This IMediaHandler based approach (with observing of the current time on the wrapped media element)
+ * @privateRemarks This IMediaHandler based approach (with observing of the current time on the wrapped media element)
  * is used to emulate the buffer looping for the enclosed media element.
  * Replayer does intentionally not use buffered audio sources, to be able to play online media without CORS headers.
  * See https://www.w3.org/TR/webaudio/#looping-AudioBufferSourceNode for information about looping.

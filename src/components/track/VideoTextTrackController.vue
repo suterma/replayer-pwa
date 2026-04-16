@@ -97,7 +97,7 @@ const props = defineProps({
     },
 
     /** Video element to use
-     * @devdoc Note: the element is only available after the component has been mouted
+     * @privateRemarks Note: the element is only available after the component has been mouted
      */
 
     videoElement: {

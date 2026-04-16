@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /** A component that is only rendered if the given media query is currently matching
- * @devdoc Maybe later rework this for more simple use
+ * @privateRemarks Maybe later rework this for more simple use
  */
 import { useMediaQuery } from '@vueuse/core';
 

@@ -1,16 +1,3 @@
-/**
- * @licstart The following is the entire license notice for the
- * JavaScript code in this page
- *
- * Copyright (c) 2024 Marcel Suter - Replayer
- *
- * This source code is licensed under the AGPL license found in the
- * LICENSE file in the root of this projects source tree.
- *
- * @licend The above is the entire license notice for the
- * JavaScript code in this page
- */
-
 import { v4 as uuidv4 } from 'uuid';
 import { FadingMode, type IAudioFader } from './IAudioFader';
 import { SubEventImmediate } from './SubEventImmediate';
@@ -27,7 +14,7 @@ const { log } = useLog();
 export default class AudioFader implements IAudioFader {
     /** The fading step duration, in [milliseconds]. This is set to a fixed value,
      * as a tradeoff between call frequency and smoothness
-     * @devdoc This should be set to a value that produces small volume changes,
+     * @privateRemarks This should be set to a value that produces small volume changes,
      * that are barely audible
      */
     private static stepDuration = 16;
@@ -350,7 +337,7 @@ export default class AudioFader implements IAudioFader {
         return this.limited(this.audio.volume);
     }
 
-    /** @devdoc The actually applied output volume might be lower than the master volume, when a fade out is in progress. */
+    /** @privateRemarks The actually applied output volume might be lower than the master volume, when a fade out is in progress. */
     public setVolume(volume: number): number {
         const previousVolume = this.masterVolume;
         const limitedVolume = this.limited(volume);
@@ -406,7 +393,7 @@ export default class AudioFader implements IAudioFader {
 
     /** Returns a linear fade promise for the currently playing track
      * @param duration {number} - A non-zero duration for the fading operation
-     * @devdoc This currently only supports linear fade operations
+     * @privateRemarks This currently only supports linear fade operations
      */
     private fade(from: number, to: number, duration: number): Promise<void> {
         return new Promise((resolve, reject) => {

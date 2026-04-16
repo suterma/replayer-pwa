@@ -1,22 +1,11 @@
-/**
- * @licstart The following is the entire license notice for the
- * JavaScript code in this page
- *
- * Copyright (c) 2024 Marcel Suter - Replayer
- *
- * This source code is licensed under the AGPL license found in the
- * LICENSE file in the root of this projects source tree.
- *
- * @licend The above is the entire license notice for the
- * JavaScript code in this page
- */
-
-import { fileURLToPath, URL } from 'node:url';
-import { nodePolyfills } from 'vite-plugin-node-polyfills';
-import vue from '@vitejs/plugin-vue';
-import { VitePWA } from 'vite-plugin-pwa';
-import { defineConfig, type PluginOption } from 'vite';
-import { visualizer } from 'rollup-plugin-visualizer';
+import { fileURLToPath, URL } from 'node:url'
+import { defineConfig, type PluginOption } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import vueDevTools from 'vite-plugin-vue-devtools'
+import { VitePWA } from 'vite-plugin-pwa'
+import { nodePolyfills } from 'vite-plugin-node-polyfills'
+import { visualizer } from 'rollup-plugin-visualizer'
+import pkg from './package.json'
 
 //Setting the environment variables
 import child_process from 'child_process';
@@ -25,42 +14,18 @@ function git(command: string) {
         .execSync(`git ${command}`, { encoding: 'utf8' })
         .trim();
 }
-process.env.VITE_APP_VERSION = require('./package.json').version;
+process.env.VITE_APP_VERSION = pkg.version;
 process.env.VITE_APP_GIT_VERSION = git('describe --always');
 process.env.VITE_APP_GIT_AUTHOR_DATE = git('log -1 --format=%aI');
 
-// https://vitejs.dev/config/
+// https://vite.dev/config/
 export default defineConfig({
-    /** Use the modern preprocessor over the default "lecacy" one */
-    css: {
-        preprocessorOptions: {
-            scss: {
-                api: 'modern-compiler', // or "modern"
-            },
-        },
-    },
-    esbuild: {
-        /** Do not log on production, improves performnce */
-        drop:
-            process.env.NODE_ENV === 'production'
-                ? ['console', 'debugger']
-                : undefined,
-    },
-    build: {
-        // Support older browser/os versions
-        // See https://replayer.app/en/documentation/compatibility-known-issues
-        // for officially supported versions
-        target: 'es2015',
-        // Since this is FOSS anyway, improve a possible debug experience
-        sourcemap: true,
-
-        // NOTE: It seems that minification has resulted in parsing problems on iPadOS
-        minify: true,
-    },
     plugins: [
         vue(),
-        // Watch and possible reduce bundle size with this visualizer:
+        vueDevTools(),
+        // Watch and possibly reduce bundle size with this visualizer:
         // https://github.com/btd/rollup-plugin-visualizer
+        // See the report at ./stats.html
         [visualizer() as PluginOption],
         VitePWA({
             devOptions: {
@@ -68,7 +33,7 @@ export default defineConfig({
             },
             workbox: {
                 globPatterns: [
-                    /* Replayer VueJs app, including images*/
+                    /* Replayer Vue.js app, including images*/
                     /* For PdfJs, also mjs is included */
                     '**/*.{js,mjs,css,html,ico,png,webp,svg}',
                 ],
@@ -128,11 +93,7 @@ export default defineConfig({
                 start_url: '.',
                 orientation: 'any',
                 display: 'standalone',
-                display_override: [
-                    'window-controls-overlay',
-                    'standalone',
-                    'browser',
-                ],
+                display_override: ['window-controls-overlay', 'standalone', 'browser'],
                 protocol_handlers: [
                     {
                         protocol: 'web+music',
@@ -217,8 +178,7 @@ export default defineConfig({
                         name: 'Play tracks from a compilation',
                         short_name: 'Play',
                         url: '/#/play',
-                        description:
-                            'Allows to open a compilation and play tracks from it',
+                        description: 'Allows to open a compilation and play tracks from it',
                         icons: [
                             {
                                 src: '/img/icons/shortcut-play-icon-96x96.png',
@@ -243,4 +203,31 @@ export default defineConfig({
             '@': fileURLToPath(new URL('./src', import.meta.url)),
         },
     },
-});
+    build: {
+        license: {
+            fileName: 'replayer-dependencies-licenses.md',
+        },
+        rolldownOptions: {
+            output: {
+                minify:{
+                    compress: {
+                        /** Do not log on production, improves performance */
+                        dropConsole: process.env.NODE_ENV === 'production'
+                    }
+                },
+                postBanner:
+                    '/* See licenses of bundled dependencies at https://web.replayer.app/replayer-dependencies-licenses.md */',
+            },
+        },
+        // Support older browser/os versions
+        // See https://replayer.app/en/documentation/compatibility-known-issues
+        // for officially supported versions
+        target: 'es2015',
+        // Since this is FOSS anyway, improve a possible debug experience
+        sourcemap: true,
+        // Use the current minifier, Oxc. NOTE: It seems that minification (as done earlier with esbuild) has resulted in parsing problems on iPadOS
+        minify: 'oxc',
+        // Only warn if it's getting bigger
+        chunkSizeWarningLimit: 142500,
+    },
+})

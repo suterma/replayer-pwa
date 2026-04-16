@@ -1,23 +1,10 @@
-/**
- * @licstart The following is the entire license notice for the
- * JavaScript code in this page
- *
- * Copyright (c) 2024 Marcel Suter - Replayer
- *
- * This source code is licensed under the AGPL license found in the
- * LICENSE file in the root of this projects source tree.
- *
- * @licend The above is the entire license notice for the
- * JavaScript code in this page
- */
-
 import { DefaultPitchShift } from '@/store/Track';
 import type { IPitchShiftController } from './IPitchShiftController';
 import type { ShallowRef } from 'vue';
 import { SubEventImmediate } from './SubEventImmediate';
 
 /** @class Implements a pitch shift controller for a {HTMLMediaElement}.
- * @devdoc //NOTE This is currently only a skeleton without functionality
+ * @privateRemarks //NOTE This is currently only a skeleton without functionality
  */
 export default class HtmlMediaPitchShiftController
     implements IPitchShiftController

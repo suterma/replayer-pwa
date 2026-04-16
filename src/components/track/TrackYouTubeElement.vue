@@ -92,7 +92,7 @@ const { log } = useLog();
  * @remarks Repeatedly emits 'timeupdate' with the current playback time, during playback.
  * @remarks Emits 'durationChanged' with the track duration in seconds, once after
  * successful load of the video
- * @devdoc Autoplay is intentionally not supported, as this is of no use for the Replayer app.
+ * @privateRemarks Autoplay is intentionally not supported, as this is of no use for the Replayer app.
  */
 
 const emit = defineEmits(['click']);
@@ -122,7 +122,7 @@ const props = defineProps({
     },
 
     /** Whether to show the component in a disabled state
-     * @devdoc This attribute is processed with "fallthrough", to propagate the state to the inner elements.
+     * @privateRemarks This attribute is processed with "fallthrough", to propagate the state to the inner elements.
      */
     disabled: Boolean,
 
@@ -380,10 +380,10 @@ watch(
 );
 </script>
 <style>
-/** Make the YouTube IFrame player responsive 
+/** Make the YouTube IFrame player responsive
 * See https://webmasterin.net/youtube-videos-responsive-einbinden/
-* This exact padding value is required to make the 
-* video fully visible, with the aspect ratio of 16:9  
+* This exact padding value is required to make the
+* video fully visible, with the aspect ratio of 16:9
 */
 .video-container.youtube .video.youtube {
     position: relative;
@@ -417,14 +417,14 @@ watch(
 
 <style scoped>
 /** Match the animation duration to the fade duration
-* @devdoc NOTE: The animation is defined in _replayer-video.scss
+* @privateRemarks NOTE: The animation is defined in _replayer-video.scss
 */
 .video {
     animation-duration: v-bind('fadeInDuration');
 }
 
-/** During fading, slowly adapt the brightness 
-* @devdoc NOTE: The animation is defined in _replayer-video.scss
+/** During fading, slowly adapt the brightness
+* @privateRemarks NOTE: The animation is defined in _replayer-video.scss
 */
 .video.fade-out {
     animation-duration: v-bind('fadeOutDuration');
@@ -436,7 +436,7 @@ watch(
 </style>
 
 <style scoped>
-/** Handle pointer events directly on the the container, if paused, to avoid 
+/** Handle pointer events directly on the the container, if paused, to avoid
 unintended manipulation of the YouTube player behind the container overlay */
 .video-container.paused:after {
     pointer-events: all;

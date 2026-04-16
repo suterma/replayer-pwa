@@ -14,7 +14,7 @@
 /** A panel which can be dismissed either using the ESC key or by clicking outside of it.
  * @remarks Does not actually dismiss/hide it's content, but emits a dismissed event instead, which must get handled from the
  * surrounding component.
- * @devdoc Registers the "ESC" key as a hotkey and observes clicks outside of the area to emit the dismissed.
+ * @privateRemarks Registers the "ESC" key as a hotkey and observes clicks outside of the area to emit the dismissed.
  */
 import { ref } from 'vue';
 import { Hotkey } from '@simolation/vue-hotkey';

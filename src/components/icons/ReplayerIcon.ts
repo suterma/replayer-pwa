@@ -1,16 +1,3 @@
-/**
- * @licstart The following is the entire license notice for the
- * JavaScript code in this page
- *
- * Copyright (c) 2024 Marcel Suter - Replayer
- *
- * This source code is licensed under the AGPL license found in the
- * LICENSE file in the root of this projects source tree.
- *
- * @licend The above is the entire license notice for the
- * JavaScript code in this page
- */
-
 /** A set of Replayer-specific svg icon paths */
 
 export const rTrackPlay = 'm 7,17 h 10 v -3 l 4,4 -4,4 V 19 H 5 v -6 h 2';

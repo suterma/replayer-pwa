@@ -15,7 +15,7 @@
         @click="setActiveTrack()"
     >
         <!-- Handle all track-relevant events here
-        Note: A check for the active track is done in the handler methods. 
+        Note: A check for the active track is done in the handler methods.
         A v-if here would work, but would register the events not in a useful order. -->
         <ReplayerEventHandler
             @backtocue="goToSelectedCue"
@@ -126,8 +126,8 @@
                 </template>
                 <template #right-action-items>
                     <div class="level-item is-narrow mr-0 is-hidden-mobile">
-                        <!-- NOTE: In all except the mix mode, the volume button 
-                         is displayed as part of the transport/player widget area, 
+                        <!-- NOTE: In all except the mix mode, the volume button
+                         is displayed as part of the transport/player widget area,
                          not in the header -->
                         <VolumeKnob
                             v-if="isTrackMixable"
@@ -176,7 +176,7 @@
          -->
         <Transition name="item-expand">
             <div v-if="isTrackEditable && isExpanded" class="block">
-                <!-- @devdoc: MeterLevelEditor does not use the provide/inject pattern, 
+                <!-- @privateRemarks: MeterLevelEditor does not use the provide/inject pattern,
                     although it is used for the track's descendant components otherwise,
                     because I have experienced problems with the reactivity inside MeterLevelEditor.
                     A standard property/event approach is used here instead. -->
@@ -284,7 +284,7 @@
                 </CueLevelEditors>
             </div>
         </Transition>
-        <!-- 
+        <!--
                 Track playback bar (In edit mode, this contains:
                 - the play/pause-add-cue button combo
                 - a wide slider
@@ -376,7 +376,7 @@
             </nav>
         </Transition>
 
-        <!-- This outer block is always present to reserve the space for the 
+        <!-- This outer block is always present to reserve the space for the
          media player widget inside, to avoid layout shifting for non-expaded tracks -->
         <div class="block">
             <!-- The media player widget (with controls) but only once the source is available from the store
@@ -398,7 +398,7 @@
                     }"
                 >
                     <Transition :name="skipTransitionName">
-                        <!-- 
+                        <!--
                     In the play view, the player widget is only shown for the active track
                     In the edit view, the player widgets are shown for all expanded tracks
                     In the mix view a dedicated mix widget is shown (defined as separate div) -->
@@ -428,7 +428,7 @@
                                 "
                             />
 
-                            <!-- 
+                            <!--
                             Track playback bar (In play mode, this contains:
                             - a slot for the expander icon (if not the only track)
                             - The title (with artist info)
@@ -436,7 +436,7 @@
                             - a smaller slider (hiddeon on mobile for videos)
                             - a standard set of transport controls, including cue and track skipping
                          -->
-                            <!-- 
+                            <!--
                             In full screen, this level is at the top, and not visually separated from the cues -->
 
                             <div
@@ -488,7 +488,7 @@
                                                 @click="setActiveTrack()"
                                             >
                                             </TrackTitle>
-                                            <!-- On smaller screens, show the metadata, below the title 
+                                            <!-- On smaller screens, show the metadata, below the title
                                              (it's hidden within the title on smaller screens) -->
                                             <span
                                                 v-if="artist || album || meter"
@@ -702,7 +702,7 @@
                                 >
                                 </TrackMediaElement>
                                 <OnYouTubeConsent v-if="isYoutubeVideoTrack">
-                                    <!-- The YouTube player must get recreated on teleportation changes, 
+                                    <!-- The YouTube player must get recreated on teleportation changes,
                                          (happening from an to and from play view change)
                                           thus the isTrackPlayable is added to the key -->
                                     <TrackYouTubeElement
@@ -899,15 +899,15 @@ onUnmounted(() => {
 // --- metering ---
 
 /** Whether to use measure numbers for the track's cue position handling
- * @devdoc This value is provided to descendant components using the provide/inject pattern.
- * @devdoc Here, a ComputedRef must be used, not a ref, because the ref of the dereferenced meter
+ * @privateRemarks This value is provided to descendant components using the provide/inject pattern.
+ * @privateRemarks Here, a ComputedRef must be used, not a ref, because the ref of the dereferenced meter
  * would not be reactive.
  */
 provide(useMeasureNumbersInjectionKey, readonly(useMeasureNumbers));
 
 /** The track's musical meter
- * @devdoc This value is provided to descendant components using the provide/inject pattern.
- * @devdoc Here, a ComputedRef must be used, not a ref, because the ref of the dereferenced meter
+ * @privateRemarks This value is provided to descendant components using the provide/inject pattern.
+ * @privateRemarks Here, a ComputedRef must be used, not a ref, because the ref of the dereferenced meter
  * would not be reactive.
  */
 provide(meterInjectionKey, readonly(meter));
@@ -1102,7 +1102,7 @@ provide(currentPositionDisplayInjectionKey, readonly(currentPositionDisplay));
 
 /** The coarse (with 1 digit after the comma) playback progress in the current track, in [seconds]
  * @remarks This is used for the slider progress component only
- * @devdoc A coarser value is used here to avoid unneccessarily frequent slider component updates.
+ * @privateRemarks A coarser value is used here to avoid unneccessarily frequent slider component updates.
  * This is quite a micro optimisation, but still saves about 50% time when the playback is running.
  */
 const currentPositionCoarse = computed(
@@ -1375,7 +1375,7 @@ function getCuePreRollStartTime(cue: ICue): number {
 /** Handles the click of a cue button, by seeking to it and, optionally, toggling playback
  * @param cue The cue to handle
  * @param togglePlayback Whether to toggle playback. Optional, defaults to true
- * @devdoc Click invocations by the ENTER key are explicitly not handled here.
+ * @privateRemarks Click invocations by the ENTER key are explicitly not handled here.
  * These should get handled by the keyboard shortcut engine.
  */
 function cueClick(cue: ICue, togglePlayback = true) {
@@ -1582,7 +1582,7 @@ watchEffect(() => {
 // --- document title
 
 /** For an active track, show the cue (with remarks), track and app name in the document title
- * @devdoc VueUse/useTitle does unfortunately not work when only the track
+ * @privateRemarks VueUse/useTitle does unfortunately not work when only the track
  * changes from a track with cues and
  * no named cue is playing on a newly active track. The reason for this is
  * unknown.
@@ -1681,7 +1681,7 @@ function removeCueScheduling(): void {
 /*******************************************************************************
 * Specific width for track sliders depending on breakpoints
 * @remarks This allows the use of cropped text for the
-* cue description with dynamic width 
+* cue description with dynamic width
 *******************************************************************************/
 @media screen and (max-width: 768px) {
     /** in Play mode */
@@ -1708,8 +1708,8 @@ function removeCueScheduling(): void {
 }
 
 /*******************************************************************************
- * Hide the widget track slider for video content, 
- * when used in the media player panel, on mobile devices 
+ * Hide the widget track slider for video content,
+ * when used in the media player panel, on mobile devices
  ******************************************************************************/
 @media screen and (max-width: 768px) {
     #media-player-panel .widget.is-youtube-video .is-hidden-mobile-when-video,

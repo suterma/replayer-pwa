@@ -1,3 +1,6 @@
+## NEXT
+-   Updated dependencies and configs from an example project, using current scaffolding
+
 ## [2.5.0](https://github.com/suterma/replayer-pwa/compare/v2.4.0...v2.5.0) (2024-10-28)
 
 This release improves tag handling and cue display

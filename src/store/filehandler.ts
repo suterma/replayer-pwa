@@ -1,16 +1,3 @@
-/**
- * @licstart The following is the entire license notice for the
- * JavaScript code in this page
- *
- * Copyright (c) 2024 Marcel Suter - Replayer
- *
- * This source code is licensed under the AGPL license found in the
- * LICENSE file in the root of this projects source tree.
- *
- * @licend The above is the entire license notice for the
- * JavaScript code in this page
- */
-
 import type JSZip from 'jszip';
 import { MediaBlob, ZipMimeTypes } from './types';
 import useLog from '@/composables/LogComposable';
@@ -197,8 +184,8 @@ export default class FileHandler {
 
     /** Maps a URL to a locally usable file name
      * @remarks can be used to match a track URL to a stored media file
-     * @devdoc Just removes the protocol
-     * @devdoc Full URL's (with protocol) are not usable for Replayer here
+     * @privateRemarks Just removes the protocol
+     * @privateRemarks Full URL's (with protocol) are not usable for Replayer here
      *  as file names because they will be invalid as path insided a ZIP archive.
      */
     static getLocalResourceName(url: URL): string {
@@ -206,7 +193,7 @@ export default class FileHandler {
     }
 
     /** Reads the blob content as text.
-     * @devdoc This does intentionally not use Blob.text()
+     * @privateRemarks This does intentionally not use Blob.text()
      * because there is no polyfill readily available in vite.
      * At least some iPadOS devices do not have Blob.text() method implmented
      */
@@ -481,7 +468,7 @@ export default class FileHandler {
 
     /** Returns whether the given file name (by prefix/suffix) is a supported video file name by Replayer
      * @param {string} fileName - the filename to test, which also can be a full URL
-     * @devdoc track types should later be determined by MIME type.
+     * @privateRemarks track types should later be determined by MIME type.
      * For this, the MIME type should become part of the (readonly) track information,
      * determined when the track URL is evaluated.
      */
@@ -498,7 +485,7 @@ export default class FileHandler {
 
     /** Returns whether the given file name (by prefix/suffix) is a supported audio file name by Replayer
      * @param {string} fileName - the filename to test, which also can be a full URL
-     * @devdoc track types should later be determined by MIME type.
+     * @privateRemarks track types should later be determined by MIME type.
      * For this, the MIME type should become part of the (readonly) track information,
      * determined when the track URL is evaluated.
      */
@@ -519,7 +506,7 @@ export default class FileHandler {
 
     /** Returns whether the given file name (by prefix/suffix) is a supported text file name by Replayer
      * @param {string} fileName - the filename to test, which also can be a full URL
-     * @devdoc track types should later be determined by MIME type.
+     * @privateRemarks track types should later be determined by MIME type.
      * For this, the MIME type should become part of the (readonly) track information,
      * determined when the track URL is evaluated.
      */
@@ -530,7 +517,7 @@ export default class FileHandler {
 
     /** Returns whether the given file name (by prefix/suffix) is a supported PDF file name by Replayer
      * @param {string} fileName - the filename to test, which also can be a full URL
-     * @devdoc track types should later be determined by MIME type.
+     * @privateRemarks track types should later be determined by MIME type.
      * For this, the MIME type should become part of the (readonly) track information,
      * determined when the track URL is evaluated.
      */
@@ -540,7 +527,7 @@ export default class FileHandler {
     }
 
     /** Returns whether the given MIME type is a supported package MIME type by Replayer
-     * @devdoc See https://stackoverflow.com/a/72232884/79485 about mime types
+     * @privateRemarks See https://stackoverflow.com/a/72232884/79485 about mime types
      */
     static isSupportedPackageMimeType(
         type: string | undefined | null,
@@ -691,7 +678,7 @@ export default class FileHandler {
 
     /** Handles the given filename and blob as having media content and converts it into a MediaBlob
      * @remarks Guesses the MIME type from the file name extension
-     * @devdoc This is used when a file is read from the ZIP package and not yet available as blob
+     * @privateRemarks This is used when a file is read from the ZIP package and not yet available as blob
      */
     public static handleAsMediaContent(
         mediaFileName: string,

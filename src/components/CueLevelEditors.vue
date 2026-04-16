@@ -1,11 +1,11 @@
 <template>
-    <!-- Using the v-for on a template instead of the actual component usually saves unnecessary renderings. 
-         See https://stackoverflow.com/a/76074016/79485 
-         
+    <!-- Using the v-for on a template instead of the actual component usually saves unnecessary renderings.
+         See https://stackoverflow.com/a/76074016/79485
+
          NOTE: However, in this situation, with the surrounding TransitionGroup, all contained CueLevelEditor
          components still get patched and rendered, at each position time change, even if they
          are not containing the playback head, thus are not visually impacted.
-         Because of this, for simplicity, the variant without template 
+         Because of this, for simplicity, the variant without template
          is used instead, with some pause/resume for the event handling applied.
         -->
     <div ref="transitionGroup">
@@ -62,7 +62,7 @@ defineProps({
     },
 
     /** The playback mode
-     * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
+     * @privateRemarks casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
      */
     playbackMode: {
         type: String as () => PlaybackMode,
@@ -76,7 +76,7 @@ const transitionGroup = ref(null);
 const transitionGroupIsVisible = useElementVisibility(transitionGroup);
 
 /** Animate the list only when the group already is visible as a whole
- * @devdoc This mitigates some weird animation of single cue elements when
+ * @privateRemarks This mitigates some weird animation of single cue elements when
  * the outer track expansion is animated together with the scrolling to
  * the active track.
  */

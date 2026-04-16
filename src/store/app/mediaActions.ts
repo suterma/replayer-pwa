@@ -1,16 +1,3 @@
-/**
- * @licstart The following is the entire license notice for the
- * JavaScript code in this page
- *
- * Copyright (c) 2024 Marcel Suter - Replayer
- *
- * This source code is licensed under the AGPL license found in the
- * LICENSE file in the root of this projects source tree.
- *
- * @licend The above is the entire license notice for the
- * JavaScript code in this page
- */
-
 import { type ITrack } from '../ITrack';
 import CompilationHandler from '../compilation-handler';
 import { state } from './state';
@@ -25,7 +12,7 @@ import useLog from '@/composables/LogComposable';
 const { log } = useLog();
 
 /** Playback actions using the the tracks from the application state with their media handlers.
- * @devdoc The actions in this specific file might later be implemented
+ * @privateRemarks The actions in this specific file might later be implemented
  * separately in their own IMediaHandler store.
  */
 export const mediaActions = {
@@ -119,7 +106,7 @@ export const mediaActions = {
      * @remarks If the track is not loaded, does nothing.
      * If the track is not yet the active track, tries to activate the track and play.
      * If it's the active track, just toggles play/pause
-     * @devdoc Conditional event registration inside the template did not work.
+     * @privateRemarks Conditional event registration inside the template did not work.
      */
     skipToPlayPause(trackId: string): void {
         const handler = useAudioStore().getMediaHandlerByTrackId(trackId);

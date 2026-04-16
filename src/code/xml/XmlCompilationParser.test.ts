@@ -1,16 +1,3 @@
-/**
- * @licstart The following is the entire license notice for the
- * JavaScript code in this page
- *
- * Copyright (c) 2024 Marcel Suter - Replayer
- *
- * This source code is licensed under the AGPL license found in the
- * LICENSE file in the root of this projects source tree.
- *
- * @licend The above is the entire license notice for the
- * JavaScript code in this page
- */
-
 import { expect, describe, it } from 'vitest';
 import CompilationParser from './XmlCompilationParser';
 import { Compilation } from '@/store/Compilation';
@@ -142,12 +129,13 @@ describe('XmlCompilationParser.ts', () => {
         expect(compilation).toBeDefined();
         expect(compilation.Tracks).toHaveLength(2);
         const firstTrack = compilation.Tracks[0];
-        expect(firstTrack.Cues).toHaveLength(2);
-        expect(firstTrack.Artist).toBeFalsy(); // it's empty
-        expect(firstTrack.Album).toBeFalsy(); // it's empty
-        expect(firstTrack.Name).toBe('1. Party Party');
-        expect(firstTrack.Url).toBe('01.mp3');
-        const meter = firstTrack.Meter;
+        expect(firstTrack).toBeDefined();
+        expect(firstTrack?.Cues).toHaveLength(2);
+        expect(firstTrack?.Artist).toBeFalsy(); // it's empty
+        expect(firstTrack?.Album).toBeFalsy(); // it's empty
+        expect(firstTrack?.Name).toBe('1. Party Party');
+        expect(firstTrack?.Url).toBe('01.mp3');
+        const meter = firstTrack?.Meter;
         expect(meter).toBeDefined();
         expect(meter?.TimeSignature).toBeDefined();
         expect(meter?.TimeSignature?.Numerator).toBe(4);
@@ -183,7 +171,8 @@ describe('XmlCompilationParser.ts', () => {
         expect(compilation).toBeDefined();
         expect(compilation.Tracks).toHaveLength(1);
         const firstTrack = compilation.Tracks[0];
-        expect(firstTrack.PlayheadPosition).toBe(12.7);
+        expect(firstTrack).toBeDefined()
+        expect(firstTrack?.PlayheadPosition).toBe(12.7);
     });
 
     it('should parse the track tags', async () => {
@@ -215,9 +204,11 @@ describe('XmlCompilationParser.ts', () => {
         expect(compilation).toBeDefined();
         expect(compilation.Tracks).toHaveLength(1);
         const firstTrack = compilation.Tracks[0];
-        const iterator = firstTrack.Tags.values();
-        expect(iterator.next().value).toBe('first-track-tag');
-        expect(iterator.next().value).toBe('second-track-tag');
+        expect(firstTrack).toBeDefined()
+        const iterator = firstTrack?.Tags.values();
+        expect(iterator).toBeDefined()
+        expect(iterator?.next().value).toBe('first-track-tag');
+        expect(iterator?.next().value).toBe('second-track-tag');
     });
 
     it('should parse the playback rate', async () => {
@@ -262,7 +253,8 @@ describe('XmlCompilationParser.ts', () => {
         expect(compilation).toBeDefined();
         expect(compilation.Tracks).toHaveLength(1);
         const firstTrack = compilation.Tracks[0];
-        expect(firstTrack.PlaybackRate).toBe(1.25);
+        expect(firstTrack).toBeDefined()
+        expect(firstTrack?.PlaybackRate).toBe(1.25);
     });
 
     it('should store the playhead position', () => {

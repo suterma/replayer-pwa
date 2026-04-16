@@ -1,16 +1,3 @@
-/**
- * @licstart The following is the entire license notice for the
- * JavaScript code in this page
- *
- * Copyright (c) 2024 Marcel Suter - Replayer
- *
- * This source code is licensed under the AGPL license found in the
- * LICENSE file in the root of this projects source tree.
- *
- * @licend The above is the entire license notice for the
- * JavaScript code in this page
- */
-
 import {
     createRouter,
     createWebHashHistory,
@@ -40,7 +27,7 @@ export enum Route {
 }
 
 /** The app routes
- * @devdoc route level code-splitting is not used, because it is not supported with ES6/2015
+ * @privateRemarks route level code-splitting is not used, because it is not supported with ES6/2015
  * Also, the views in Replayer are rather small (especially those rarely used) and would not profit from this anyway.
  */
 const routes: Array<RouteRecordRaw> = [
