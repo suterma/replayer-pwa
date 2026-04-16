@@ -1,20 +1,20 @@
 import { fileURLToPath, URL } from 'node:url'
-
-import { defineConfig } from 'vite'
+import { defineConfig, type PluginOption } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import { VitePWA } from 'vite-plugin-pwa'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
+import { visualizer } from 'rollup-plugin-visualizer'
 
 // https://vite.dev/config/
 export default defineConfig({
     plugins: [
         vue(),
         vueDevTools(),
-        // TODO ADD later, if still available
-        // Watch and possible reduce bundle size with this visualizer:
+        // Watch and possibly reduce bundle size with this visualizer:
         // https://github.com/btd/rollup-plugin-visualizer
-        //[visualizer() as PluginOption],
+        // See the report at ./stats.html
+        [visualizer() as PluginOption],
         VitePWA({
             devOptions: {
                 enabled: true,
