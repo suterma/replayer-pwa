@@ -100,6 +100,8 @@
         "typedoc": "^0.28.19",
         "typescript": "~6.0.0",
         "vite": "^8.0.3",
+        "vite-plugin-node-polyfills": "^0.26.0",
+        "vite-plugin-pwa": "^1.2.0",
         "vite-plugin-vue-devtools": "^8.1.1",
         "vitest": "^4.1.2",
         "vue-tsc": "^3.2.6"
@@ -113,5 +115,11 @@
     "repository": {
         "type": "git",
         "url": "https://github.com/suterma/replayer-pwa.git"
+    },
+    "_comment": "Currently, the peer dependencies of vite-plugin-pwa are not including vite@8.x. But it seems to work fine with it, so we just accept it.",
+    "overrides": {
+        "vite-plugin-pwa": {
+            "vite": "$vite"
+        }
     }
 }
