@@ -36,7 +36,7 @@
     "dependencies": {
         "@mdi/js": "^7.4.47",
         "@simolation/vue-hotkey": "^2.1.2",
-        "@sindresorhus/slugify": "^2.2.1",
+        "@sindresorhus/slugify": "^3.0.0",
         "@vue-youtube/core": "^0.0.6",
         "@vueuse/components": "^10.11.1",
         "@vueuse/core": "^10.7.2",
