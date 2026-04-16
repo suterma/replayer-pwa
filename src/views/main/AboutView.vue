@@ -4,6 +4,7 @@
  * This source code is licensed under the AGPL license found in the
  * LICENSE file in the root of this projects source tree.
 -->
+<!--suppress HtmlUnknownAnchorTarget because we use the fragments for vue-routing -->
 <template v-once>
     <div>
         <div class="block">
@@ -325,11 +326,6 @@
                         team)
                     </li>
                     <li>
-                        <a href="https://github.com/zloirock/core-js" target="_blank">core-js</a>, a
-                        modular standard library for JavaScript. (Released under the MIT License, by
-                        Denis Pushkarev)
-                    </li>
-                    <li>
                         <a href="https://realfavicongenerator.net" target="_blank"
                             >RealFaviconGenerator </a
                         >Favicon Generator. For real. (free to use)
@@ -492,10 +488,6 @@
                         by Lidija Roos)
                     </li>
                     <li>
-                        Video content from the echo conference. (Released under the MIT License, by
-                        <a href="http://j.hn/">John Dyer</a> & Nathan Smith)
-                    </li>
-                    <li>
                         <a href="https://github.com/cypress-io/cypress" target="_blank"> Cypress</a
                         >, fast, easy and reliable testing for anything that runs in a browser.
                         (Released under the MIT License, by the cypress-io team).
@@ -584,11 +576,6 @@
                         <a href="https://github.com/fullstack-build/tslog" target="_blank">tslog</a
                         >, a beautiful logging experience for TypeScript and JavaScript. (Released
                         under the MIT License, by fullstack-build)
-                    </li>
-                    <li>
-                        <a href="https://github.com/sindresorhus/slugify" target="_blank">slugify</a
-                        >, useful for URLs, filenames, and IDs. (Released under the MIT License, by
-                        Sindre Sorhus)
                     </li>
                     <li>
                         <a href="https://github.com/sindresorhus/slugify" target="_blank">slugify</a

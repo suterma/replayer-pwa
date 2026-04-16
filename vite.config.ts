@@ -195,13 +195,27 @@ export default defineConfig({
         license: {
             fileName: 'replayer-dependencies-licenses.md',
         },
+        rolldownOptions: {
+            output: {
+                minify:{
+                    compress: {
+                        /** Do not log on production, improves performance */
+                        dropConsole: process.env.NODE_ENV === 'production'
+                    }
+                },
+                postBanner:
+                    '/* See licenses of bundled dependencies at https://web.replayer.app/replayer-dependencies-licenses.md */',
+            },
+        },
         // Support older browser/os versions
         // See https://replayer.app/en/documentation/compatibility-known-issues
         // for officially supported versions
         target: 'es2015',
         // Since this is FOSS anyway, improve a possible debug experience
         sourcemap: true,
-        // NOTE: It seems that minification has resulted in parsing problems on iPadOS
-        minify: true,
+        // Use the current minifier, Oxc. NOTE: It seems that minification (as done earlier with esbuild) has resulted in parsing problems on iPadOS
+        minify: 'oxc',
+        // Only warn if it's getting bigger
+        chunkSizeWarningLimit: 142500,
     },
 })
