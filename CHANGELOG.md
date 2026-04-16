@@ -1,4 +1,4 @@
-## NEXT
+## 2.6.0 (upcoming)
 -   Updated dependencies and configs from an example project, using current scaffolding
 
 ## [2.5.0](https://github.com/suterma/replayer-pwa/compare/v2.4.0...v2.5.0) (2024-10-28)

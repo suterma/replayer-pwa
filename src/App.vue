@@ -7,7 +7,11 @@
 <template>
     <!-- Use the full width for a navigable channel arrangement the mix view,
         and a more accessible narrower blog style width for all other content -->
-    <div :class="{ 'container is-fullhd': router.currentRoute.value.name != 'mix' && !useWideContentWidth, }">
+    <div
+        :class="{
+            'container is-fullhd': router.currentRoute.value.name != 'mix' && !useWideContentWidth,
+        }"
+    >
         <StageMark></StageMark>
         <!-- The app menu, on the right, without bottom margin to not alter the layout of content below -->
         <section class="section has-background-none is-hidden-print is-pulled-right pb-0">
@@ -16,10 +20,7 @@
 
         <!-- The routed view section -->
         <!-- To facilitate route-specific styles, the route name is provided as it's own class -->
-        <section
-            class="section route"
-            :class="router.currentRoute.value.name?.toString()"
-        >
+        <section class="section route" :class="router.currentRoute.value.name?.toString()">
             <router-view></router-view>
             <MessageOverlay />
             <DialogWrapper :transition-attrs="{ name: 'dialog' }" />
@@ -49,139 +50,127 @@
             ref="mediaPlayerPanel"
             :class="{
                 'container is-fullhd':
-                    router.currentRoute.value.name != 'mix' &&
-                    !useWideContentWidth,
+                    router.currentRoute.value.name != 'mix' && !useWideContentWidth,
             }"
             aria-label="media player"
         ></div>
     </nav>
 </template>
-<script
-    setup
-    lang="ts"
->
-import AppContextMenu from '@/components/context-menu/AppContextMenu.vue';
-import StageMark from '@/components/indicators/StageMark.vue';
-import MessageOverlay from '@/components/MessageOverlay.vue';
-//@ts-ignore (because the vue3-promise-dialog does not provide types)
-import { DialogWrapper } from 'vue3-promise-dialog';
-import { useSettingsStore } from '@/store/settings';
-import { useAppStore } from './store/app';
-import { acknowledgeVersion } from './code/ui/dialogs';
-import { compare } from 'compare-versions';
-import { computed, onMounted, ref, provide, readonly } from 'vue';
-import { storeToRefs } from 'pinia';
-import { refDebounced, useElementSize } from '@vueuse/core';
-import { useRouter } from 'vue-router';
-import { navbarCompensationHeightInjectionKey } from '@/AppInjectionKeys';
-import useLog from './composables/LogComposable';
+<script setup lang="ts">
+import AppContextMenu from '@/components/context-menu/AppContextMenu.vue'
+import StageMark from '@/components/indicators/StageMark.vue'
+import MessageOverlay from '@/components/MessageOverlay.vue'
+//@ts-expect-error (because the vue3-promise-dialog does not provide types)
+import { DialogWrapper } from 'vue3-promise-dialog'
+import { useSettingsStore } from '@/store/settings'
+import { useAppStore } from './store/app'
+import { acknowledgeVersion } from './code/ui/dialogs'
+import { compare } from 'compare-versions'
+import { computed, onMounted, ref, provide, readonly } from 'vue'
+import { storeToRefs } from 'pinia'
+import { refDebounced, useElementSize } from '@vueuse/core'
+import { useRouter } from 'vue-router'
+import { navbarCompensationHeightInjectionKey } from '@/AppInjectionKeys'
+import useLog from './composables/LogComposable'
 
-const { log } = useLog();
+const { log } = useLog()
 
 onMounted(() => {
-    handleAppUpdate();
-});
+    handleAppUpdate()
+})
 
-const app = useAppStore();
-const { hasCompilation } = storeToRefs(app);
-const settings = useSettingsStore();
-const { useWideContentWidth } = storeToRefs(settings);
-const router = useRouter();
+const app = useAppStore()
+const { hasCompilation } = storeToRefs(app)
+const settings = useSettingsStore()
+const { useWideContentWidth } = storeToRefs(settings)
+const router = useRouter()
 
 // --- app state ---
 
 /** Check for and handle a new version */
 function handleAppUpdate() {
     // Check for and handle a new version
-    const currentVersion = import.meta.env.VITE_APP_VERSION ?? '0.0.1';
-    const previousVersion = app.acknowledgedVersion ?? currentVersion;
+    const currentVersion = import.meta.env.VITE_APP_VERSION ?? '0.0.1'
+    const previousVersion = app.acknowledgedVersion ?? currentVersion
 
     if (currentVersion != previousVersion) {
-        log.debug(
-            `App.vue::handleAppUpdate from ${previousVersion} to ${currentVersion}`,
-        );
+        log.debug(`App.vue::handleAppUpdate from ${previousVersion} to ${currentVersion}`)
 
         // Remove stale state, when updating from old vuex state
         if (compare(previousVersion, '2.0.0', '<')) {
-            app.discardCompilation();
-            useSettingsStore().$reset();
-            localStorage.clear();
-            indexedDB.deleteDatabase('keyval-store');
+            app.discardCompilation()
+            useSettingsStore().$reset()
+            localStorage.clear()
+            indexedDB.deleteDatabase('keyval-store')
         }
 
-        let updateText = '';
+        let updateText = ''
         if (compare(previousVersion, '2.0.0', '<')) {
             updateText =
                 'New version (2.0.0): This release adds video playback, including YouTube. It shows text files in a compilation. During editing, a waveform view and a peak level meter is available. A customizable pre-roll can be set.\r\n' +
-                updateText;
+                updateText
         }
         if (compare(previousVersion, '2.0.1', '<')) {
-            updateText =
-                'Bugfix version (2.0.1): Audio related bugfixes.\r\n' +
-                updateText;
+            updateText = 'Bugfix version (2.0.1): Audio related bugfixes.\r\n' + updateText
         }
         if (compare(previousVersion, '2.0.2', '<')) {
-            updateText = 'Version 2.0.2: Minor bugfixes\r\n' + updateText;
+            updateText = 'Version 2.0.2: Minor bugfixes\r\n' + updateText
         }
         if (compare(previousVersion, '2.1.0', '<')) {
             updateText =
                 'Version 2.1.0: fullscreen mode, simplified video usage, audio level meter off by default\r\n' +
-                updateText;
+                updateText
         }
         if (compare(previousVersion, '2.2.0', '<')) {
-            updateText =
-                'Version 2.2.0: playback speed can be changed\r\n' + updateText;
+            updateText = 'Version 2.2.0: playback speed can be changed\r\n' + updateText
         }
         if (compare(previousVersion, '2.2.1', '<')) {
-            updateText = 'Version 2.2.1: minor bugfixes\r\n' + updateText;
+            updateText = 'Version 2.2.1: minor bugfixes\r\n' + updateText
         }
         if (compare(previousVersion, '2.3.0', '<')) {
             updateText =
-                'Version 2.3.0: Storage bugfixes and minor UI improvements\r\n' +
-                updateText;
+                'Version 2.3.0: Storage bugfixes and minor UI improvements\r\n' + updateText
         }
         if (compare(previousVersion, '2.4.0', '<')) {
             updateText =
                 'Version 2.4.0: PDF display, improved fade- and preroll-handling, and tag-based filtering\r\n' +
-                updateText;
+                updateText
         }
 
         if (compare(previousVersion, '2.5.0', '<')) {
-            updateText =
-                'Version 2.5.0: Improves tag handling and cue display\r\n' +
-                updateText;
+            updateText = 'Version 2.5.0: Improves tag handling and cue display\r\n' + updateText
         }
 
         if (compare(previousVersion, '2.5.1', '<')) {
-            updateText =
-                'Version 2.5.1: UI improvements\r\n' +
-                updateText;
+            updateText = 'Version 2.5.1: UI improvements\r\n' + updateText
+        }
+
+        if (compare(previousVersion, '2.6.0', '<')) {
+            updateText = 'Version 2.6.0: Technical update of dependencies. \r\n' + updateText
         }
 
         acknowledgeVersion(currentVersion, updateText).then(() => {
-            app.updateAcknowledgedVersion(currentVersion);
-        });
+            app.updateAcknowledgedVersion(currentVersion)
+        })
     } else {
-        app.updateAcknowledgedVersion(currentVersion);
+        app.updateAcknowledgedVersion(currentVersion)
     }
 
-    log.debug('App.vue::handleAppUpdate done.');
+    log.debug('App.vue::handleAppUpdate done.')
 }
 
 // --- bottom navbar spacing ---
 
-const mediaPlayerPanel = ref();
-const { height } = useElementSize(mediaPlayerPanel);
+const mediaPlayerPanel = ref()
+const { height } = useElementSize(mediaPlayerPanel)
 
 /** A computed compensation height, using a fixed value as a fallback.
  * @privateRemarks Some devices, notably older iOS devices can not get the panel
  * height (equals zero), thus a useful default is assumed instead.
  */
 const mediaPlayerPanelComputedHeight = computed(() => {
-    return height.value
-        ? height.value
-        : 205 /*empirically determined useful max height*/;
-});
+    return height.value ? height.value : 205 /*empirically determined useful max height*/
+})
 
 /** The body height compensation for the fixed navbar.
  * @remark Debounced to prevent excess updates
@@ -190,12 +179,9 @@ const mediaPlayerPanelComputedHeight = computed(() => {
 const navbarCompensationHeight = refDebounced(
     mediaPlayerPanelComputedHeight,
     300 /*replayer-transition-duration*/,
-);
+)
 
 /** Provide the debounced navbarCompensationHeight for visual adaptations in downstream components
  */
-provide(
-    navbarCompensationHeightInjectionKey,
-    readonly(navbarCompensationHeight),
-);
+provide(navbarCompensationHeightInjectionKey, readonly(navbarCompensationHeight))
 </script>
