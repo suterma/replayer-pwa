@@ -5,6 +5,18 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 import { VitePWA } from 'vite-plugin-pwa'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
 import { visualizer } from 'rollup-plugin-visualizer'
+import pkg from './package.json'
+
+//Setting the environment variables
+import child_process from 'child_process';
+function git(command: string) {
+    return child_process
+        .execSync(`git ${command}`, { encoding: 'utf8' })
+        .trim();
+}
+process.env.VITE_APP_VERSION = pkg.version;
+process.env.VITE_APP_GIT_VERSION = git('describe --always');
+process.env.VITE_APP_GIT_AUTHOR_DATE = git('log -1 --format=%aI');
 
 // https://vite.dev/config/
 export default defineConfig({
