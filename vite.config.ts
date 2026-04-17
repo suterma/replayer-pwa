@@ -36,9 +36,11 @@ export default defineConfig({
             },
             workbox: {
                 globPatterns: [
-                    /* Replayer Vue.js app, including images*/
-                    /* For PdfJs, also mjs is included */
-                    '**/*.{js,mjs,css,html,ico,png,webp,svg}',
+                    /* Replayer Vue.js app, including images */
+                    '**/*.{js,css,html,ico,png,webp,svg}',
+                    /* Serving other static assets */
+                    'robots.txt',
+                    'replayer-dependencies-licenses.md',
                 ],
                 /** PdfJs: using the large pdfjs/build/pdf.worker.mjs with precache */
                 maximumFileSizeToCacheInBytes: 2500000,
@@ -212,11 +214,11 @@ export default defineConfig({
         },
         rolldownOptions: {
             output: {
-                minify:{
+                minify: {
                     compress: {
                         /** Do not log on production, improves performance */
-                        dropConsole: process.env.NODE_ENV === 'production'
-                    }
+                        dropConsole: process.env.NODE_ENV === 'production',
+                    },
                 },
                 postBanner:
                     '/* See licenses of bundled dependencies at https://web.replayer.app/replayer-dependencies-licenses.md */',
