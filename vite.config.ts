@@ -1,7 +1,7 @@
 import { fileURLToPath, URL } from 'node:url'
 import { defineConfig, type PluginOption } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import vueDevTools from 'vite-plugin-vue-devtools'
+// import vueDevTools from 'vite-plugin-vue-devtools'
 import { VitePWA } from 'vite-plugin-pwa'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
 import { visualizer } from 'rollup-plugin-visualizer'
@@ -22,7 +22,10 @@ process.env.VITE_APP_GIT_AUTHOR_DATE = git('log -1 --format=%aI');
 export default defineConfig({
     plugins: [
         vue(),
-        vueDevTools(),
+        // Optionally, Vue DevTool can now be used from within the app window.
+        // However, I currently still like the Browser Plugin more, because it can  be placed outside the browser window.
+        // vueDevTools(),
+
         // Watch and possibly reduce bundle size with this visualizer:
         // https://github.com/btd/rollup-plugin-visualizer
         // See the report at ./stats.html
