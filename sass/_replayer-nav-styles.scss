@@ -7,7 +7,7 @@
  * Note: These styles are based on a the "slate" bulmaswatch theme and borrow variables from there
  **************************************************************/
 
-/* Navigational buttons generally should have no border (like is-ghost), 
+/* Navigational buttons generally should have no border (like is-ghost),
 * but have a subtle hover background
 * Except, when focused by keyboard this should not apply (and the usual focus border should be applied)
 * to allow visual cues for keyboard navigation
@@ -75,14 +75,16 @@
     background: none;
     border-color: transparent;
     pointer-events: none;
+    cursor: help;
     color: $text;
 }
 
-/* The playback indicator specifically allows the hover pointer event to 
+/* The playback indicator specifically allows the hover pointer event to
  * enable tooltip display */
 .button.is-indicator.playback-indicator,
 .button.is-indicator.playback-indicator:hover {
     pointer-events: all;
+    cursor: help;
 }
 
 /*************************************************************
@@ -100,7 +102,7 @@
     }
 }
 
-/* The navbar does not have a minimum height, effectively hiding it, 
+/* The navbar does not have a minimum height, effectively hiding it,
 when no content is shown */
 .navbar {
     min-height: 0;

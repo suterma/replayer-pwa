@@ -99,12 +99,7 @@
                             v-if="!isTrackEditable"
                             tags
                             class="is-flex-shrink-1 ml-3"
-                            :class="{
-                                'is-clickable': canPlay,
-                                'has-cursor-not-allowed': !canPlay,
-                            }"
                             :track-id="trackId"
-                            @click="setAsActiveTrack()"
                         ></TrackTitle>
                     </div>
                 </template>
@@ -478,14 +473,8 @@
                                             <TrackTitle
                                                 tags
                                                 class="is-flex-shrink-1"
-                                                :class="{
-                                                    'is-clickable': canPlay,
-                                                    'has-cursor-not-allowed':
-                                                        !canPlay,
-                                                }"
                                                 :track-id="trackId"
                                                 :small="!isFullscreen"
-                                                @click="setAsActiveTrack()"
                                             >
                                             </TrackTitle>
                                             <!-- On smaller screens, show the metadata, below the title
