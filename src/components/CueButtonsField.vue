@@ -2,7 +2,7 @@
     <div class="notranslate cue-buttons-field buttons has-gap is-fullwidth">
         <!-- A virtual cue button as prefix, when the first cue is not at the zero position -->
         <CueButton
-            v-if="(prefixCue.Duration ?? 0 > 0) && showInitialZeroTimeCue"
+            v-if="(prefixCue.Duration ?? 0 > 0) && showInitialCue"
             :id="prefixCue.Id"
             class="is-flex-grow-1 is-flex-shrink-5"
             :class="{
@@ -277,7 +277,7 @@ const prefixCue = computed(() => {
 });
 
 const settings = useSettingsStore();
-const { showInitialZeroTimeCue, showAddCueButtonInPlayView } =
+const { showInitialCue, showAddCueButtonInPlayView } =
     storeToRefs(settings);
 
 const app = useAppStore();
