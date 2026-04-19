@@ -244,7 +244,7 @@
                                                 v-model="currentPosition"
                                                 @update:model-value="
                                                     (position) =>
-                                                        seekToSeconds(position)
+                                                        seekTo(position)
                                                 "
                                             >
                                             </MetricalEditor>
@@ -273,7 +273,7 @@
                     @seek="
                         (cue: ICue) => {
                             if (cue.Time) {
-                                seekToSeconds(
+                                seekTo(
                                     cue.Time,
                                     true /* omit fade-in when editing*/,
                                 );
@@ -315,7 +315,7 @@
                         :model-value="currentPositionCoarse"
                         :track-duration="duration"
                         @update:model-value="
-                            (position) => seekToSeconds(position)
+                            (position) => seekTo(position)
                         "
                         @seek="(seconds) => seek(seconds)"
                     >
@@ -520,7 +520,7 @@
                                             :disabled="!canPlay"
                                             @update:model-value="
                                                 (position) =>
-                                                    seekToSeconds(position)
+                                                    seekTo(position)
                                             "
                                             @seek="(seconds) => seek(seconds)"
                                         >
@@ -797,7 +797,7 @@ import MessageOverlay from '@/components/MessageOverlay.vue';
 import { Subscription } from 'sub-events';
 import { PlaybackState } from '@/code/media/PlaybackState';
 import useLog from '@/composables/LogComposable';
-import { useTrackStore } from '@/store/track/index';
+import { useTrackStore } from '@/store/track';
 import MeterDisplay from '@/components/displays/MeterDisplay.vue';
 import ArtistDisplay from '@/components/displays/ArtistDisplay.vue';
 
@@ -1217,14 +1217,21 @@ function toNextCue() {
     document.dispatchEvent(new Event(ReplayerEvent.TO_NEXT_CUE));
 }
 
-/** Sets this track as the active track
+/** Sets this track as the active track, if it is not already the active track.
  * @remarks If the track is not ready to play, does nothing.
- * @remarks NOTE: This does not control the playback itself. It is intended for display and handling purposes.
+ * @remarks If required, applies the seek for the AutoSeekToFirstCue feature.
  */
 function setAsActiveTrack(): void {
-    if (playbackState.value === PlaybackState.Ready) {
-        //TODO Should we possibly Apply AutoSeekToFirstCue here?
-        trackStore.setAsActiveTrack();
+    log.info(`MediaTrack(${name.value})::setAsActiveTrack(playbackState:=${playbackState.value})`);
+    if (playbackState.value === PlaybackState.Ready && !isActiveTrack.value) {
+        const firstCue = trackStore.setAsActiveTrack();
+        if (firstCue && firstCue.Time != null && settings.autoSeekToFirstCue) {
+            log.debug('Auto-Seeking in newly active track to: ', firstCue.Time);
+            seekTo(firstCue.Time, firstCue.OmitFadeIn)
+        }
+        else {
+            seekTo(0, true /* do not by default fade at the beginning of tracks */)
+        }
     }
 }
 
@@ -1286,16 +1293,17 @@ function forward() {
     }
 }
 
-/** Seeks forward or backward, for the given amount of seconds */
+/** Seeks forward or backward, for the given number of seconds */
 function seek(seconds: number): void {
     mediaHandler.value?.seek(seconds);
 }
 
-/** Seeks to the position, in [seconds], with emitting an event
+/** Seeks to the position, in [seconds], with omitting fade-in, if set.
  * @param {boolean} [omitNextFadeIn=false] - When set, omits the fade-in at a subsequent playback start. Default is false.
+ * @param {number} position - the temporal position, in [seconds] from the track start, to seek to.
  */
-function seekToSeconds(seconds: number, omitNextFadeIn?: boolean): void {
-    mediaHandler.value?.seekTo(seconds).then(() => {
+function seekTo(position: number, omitNextFadeIn: boolean = false): void {
+    mediaHandler.value?.seekTo(position).then(() => {
         if (omitNextFadeIn) {
             mediaHandler.value?.omitNextFadeIn();
         }
@@ -1332,7 +1340,7 @@ function goToSelectedCue() {
             sequences might cause actions on non-active tracks too.*/
     if (isActiveTrack.value) {
         const cue = selectedCue.value;
-        log.debug(`MediaTrack(${name})::goToSelectedCue:cue:`, cue);
+        log.debug(`MediaTrack(${name.value})::goToSelectedCue:cue:`, cue);
         if (cue) {
             const startTime = getCuePreRollStartTime(selectedCue.value);
 
@@ -1341,7 +1349,7 @@ function goToSelectedCue() {
             if (playbackState.value === PlaybackState.Playing) {
                 mediaHandler.value?.pauseAndSeekTo(startTime, cue.OmitFadeIn);
             } else {
-                seekToSeconds(startTime, cue.OmitFadeIn);
+                seekTo(startTime, cue.OmitFadeIn);
             }
         }
     }
@@ -1439,7 +1447,7 @@ function cueClick(cue: ICue, togglePlayback = true) {
                         mediaHandler.value?.playFrom(startTime, cue.OmitFadeIn);
                     }
                 } else {
-                    seekToSeconds(startTime, cue.OmitFadeIn);
+                    seekTo(startTime, cue.OmitFadeIn);
                 }
             }
         }

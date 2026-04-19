@@ -1,7 +1,6 @@
-import { defineStore } from 'pinia';
+import { defineStore, storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
 import { useAppStore } from '../app';
-import { storeToRefs } from 'pinia';
 import { useAudioStore } from '../audio';
 import CompilationHandler from '../compilation-handler';
 import FileHandler from '../filehandler';
@@ -132,11 +131,10 @@ export function useTrackStore(trackId: string) {
             }
 
             // Get the corresponding object url from the stored blobs
-            const url = CompilationHandler.getMatchingPackageMediaUrl(
+            return CompilationHandler.getMatchingPackageMediaUrl(
                 track.Url,
                 app.mediaUrls,
             )?.url;
-            return url;
         });
 
         /** Whether all required values for the use of the measure number as
@@ -168,13 +166,13 @@ export function useTrackStore(trackId: string) {
          * @remarks If the track is not yet the active track,
          * this track is selected as the active track.
          * @remarks NOTE: This does not control the playback itself. It is intended for display and handling purposes.
-         * @return The first cue of the newly selected track, or undefined, if not available.
+         * @return The first cue of the track, or undefined, if not available.
          * */
         function setAsActiveTrack(): ICue | undefined {
             if (!isActiveTrack.value) {
-                return app.updateSelectedTrackId(trackId);
+                app.updateSelectedTrackId(trackId);
             }
-            return undefined;
+            return cues.value[0];
         }
 
         /** The description of the current cue (by position).

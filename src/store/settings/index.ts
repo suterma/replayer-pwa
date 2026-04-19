@@ -40,9 +40,15 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         false,
     );
 
-    /** Whether to show an initial cue at the beginning of a track  */
-    const showInitialZeroTimeCue = useLocalStorage(
-        'showInitialZeroTimeCue',
+    /** Whether to show an initial cue at the beginning of a track.  */
+    const showInitialCue = useLocalStorage(
+        'showInitialCue',
+        true,
+    );
+
+    /** Whether a newly active track automatically seeks to the first cue, if any.  */
+    const autoSeekToFirstCue = useLocalStorage(
+        'autoSeekToFirstCue',
         true,
     );
 
@@ -196,7 +202,8 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
     function $reset() {
         showPdfInline.value = true;
         levelMeterSizeIsLarge.value = false;
-        showInitialZeroTimeCue.value = true;
+        showInitialCue.value = true;
+        autoSeekToFirstCue.value = true;
         showAddCueButtonInPlayView.value = true;
         preventScreenTimeout.value = true;
         useWideContentWidth.value = false;
@@ -228,7 +235,10 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
          * @remarks Inline rendering does not work on older mobile devices*/
         showPdfInline,
         levelMeterSizeIsLarge,
-        showInitialZeroTimeCue,
+        /** Whether to show an initial cue at the beginning of a track.  */
+        showInitialCue,
+        /** Whether a newly active track automatically seeks to the first cue, if any.  */
+        autoSeekToFirstCue,
         showAddCueButtonInPlayView,
         preventScreenTimeout,
         useWideContentWidth,

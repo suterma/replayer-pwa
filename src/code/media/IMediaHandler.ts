@@ -147,6 +147,14 @@ export interface IMediaHandler {
      */
     playFrom(position: number, omitNextFadeIn: boolean): void;
 
+    /** Starts playback from the given temporal position.
+     * @remarks This first seeks to the position, then starts playing (with a possible fade-in).
+     * @param {number} position - The temporal position, in [seconds] from the track start.
+     * @privateRemarks This is a shorthand for playFrom(position, false).
+     * This is an overlay to provide the signature for the default value for the omitNextFadeIn parameter.
+     */
+    playFrom(position: number): void;
+
     /** Starts playback from the current temporal position
      * @remarks Applies a possible fade-in.
      */
