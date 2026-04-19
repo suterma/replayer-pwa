@@ -12,7 +12,7 @@
             'is-youtube-video': isYoutubeVideoTrack,
         }"
         data-cy="track-media"
-        @click="setActiveTrack()"
+        @click="setAsActiveTrack()"
     >
         <!-- Handle all track-relevant events here
         Note: A check for the active track is done in the handler methods.
@@ -50,7 +50,7 @@
                                 :disabled="!canPlay"
                                 :is-selected="isActiveTrack"
                                 data-cy="select"
-                                @click="setActiveTrack()"
+                                @click="setAsActiveTrack()"
                                 ><span
                                     :class="{
                                         'is-invisible': !hasCues,
@@ -99,12 +99,7 @@
                             v-if="!isTrackEditable"
                             tags
                             class="is-flex-shrink-1 ml-3"
-                            :class="{
-                                'is-clickable': canPlay,
-                                'has-cursor-not-allowed': !canPlay,
-                            }"
                             :track-id="trackId"
-                            @click="setActiveTrack()"
                         ></TrackTitle>
                     </div>
                 </template>
@@ -244,7 +239,7 @@
                                                 v-model="currentPosition"
                                                 @update:model-value="
                                                     (position) =>
-                                                        seekToSeconds(position)
+                                                        seekTo(position)
                                                 "
                                             >
                                             </MetricalEditor>
@@ -273,7 +268,7 @@
                     @seek="
                         (cue: ICue) => {
                             if (cue.Time) {
-                                seekToSeconds(
+                                seekTo(
                                     cue.Time,
                                     true /* omit fade-in when editing*/,
                                 );
@@ -315,7 +310,7 @@
                         :model-value="currentPositionCoarse"
                         :track-duration="duration"
                         @update:model-value="
-                            (position) => seekToSeconds(position)
+                            (position) => seekTo(position)
                         "
                         @seek="(seconds) => seek(seconds)"
                     >
@@ -478,14 +473,8 @@
                                             <TrackTitle
                                                 tags
                                                 class="is-flex-shrink-1"
-                                                :class="{
-                                                    'is-clickable': canPlay,
-                                                    'has-cursor-not-allowed':
-                                                        !canPlay,
-                                                }"
                                                 :track-id="trackId"
                                                 :small="!isFullscreen"
-                                                @click="setActiveTrack()"
                                             >
                                             </TrackTitle>
                                             <!-- On smaller screens, show the metadata, below the title
@@ -520,7 +509,7 @@
                                             :disabled="!canPlay"
                                             @update:model-value="
                                                 (position) =>
-                                                    seekToSeconds(position)
+                                                    seekTo(position)
                                             "
                                             @seek="(seconds) => seek(seconds)"
                                         >
@@ -698,7 +687,7 @@
                                         levelMeterSizeIsLarge
                                     "
                                     :small-video="!isFullscreen"
-                                    @click="setActiveTrack"
+                                    @click="setAsActiveTrack"
                                 >
                                 </TrackMediaElement>
                                 <OnYouTubeConsent v-if="isYoutubeVideoTrack">
@@ -713,7 +702,7 @@
                                         :track-id="trackId"
                                         :cues="cues"
                                         :small-video="!isFullscreen"
-                                        @click="setActiveTrack"
+                                        @click="setAsActiveTrack"
                                     >
                                     </TrackYouTubeElement>
                                 </OnYouTubeConsent>
@@ -797,7 +786,7 @@ import MessageOverlay from '@/components/MessageOverlay.vue';
 import { Subscription } from 'sub-events';
 import { PlaybackState } from '@/code/media/PlaybackState';
 import useLog from '@/composables/LogComposable';
-import { useTrackStore } from '@/store/track/index';
+import { useTrackStore } from '@/store/track';
 import MeterDisplay from '@/components/displays/MeterDisplay.vue';
 import ArtistDisplay from '@/components/displays/ArtistDisplay.vue';
 
@@ -817,7 +806,7 @@ const emit = defineEmits([
      */
     'seekToSeconds',
 
-    /** Occurs, when the end of the track has been reached and playback has ended.
+    /** Occurs when the end of the track has been reached and playback has ended.
      * @remarks This is not triggered when the track or one of it's cue is looping.
      * @remarks Allows to select the next track in "play all" and "shuffle" mode.
      */
@@ -1217,12 +1206,21 @@ function toNextCue() {
     document.dispatchEvent(new Event(ReplayerEvent.TO_NEXT_CUE));
 }
 
-/** Sets this track as the active track
+/** Sets this track as the active track, if it is not already the active track.
  * @remarks If the track is not ready to play, does nothing.
+ * @remarks If required, applies the seek for the AutoSeekToFirstCue feature.
  */
-function setActiveTrack(): void {
-    if (playbackState.value === PlaybackState.Ready) {
-        trackStore.setActiveTrack();
+function setAsActiveTrack(): void {
+    log.info(`MediaTrack(${name.value})::setAsActiveTrack(playbackState:=${playbackState.value})`);
+    if (playbackState.value === PlaybackState.Ready && !isActiveTrack.value) {
+        const firstCue = trackStore.setAsActiveTrack();
+        if (firstCue && firstCue.Time != null && settings.autoSeekToFirstCue) {
+            log.debug('Auto-Seeking in newly active track to: ', firstCue.Time);
+            seekTo(firstCue.Time, firstCue.OmitFadeIn)
+        }
+        else {
+            seekTo(0, true /* do not by default fade at the beginning of tracks */)
+        }
     }
 }
 
@@ -1284,16 +1282,17 @@ function forward() {
     }
 }
 
-/** Seeks forward or backward, for the given amount of seconds */
+/** Seeks forward or backward, for the given number of seconds */
 function seek(seconds: number): void {
     mediaHandler.value?.seek(seconds);
 }
 
-/** Seeks to the position, in [seconds], with emitting an event
+/** Seeks to the position, in [seconds], with omitting fade-in, if set.
  * @param {boolean} [omitNextFadeIn=false] - When set, omits the fade-in at a subsequent playback start. Default is false.
+ * @param {number} position - the temporal position, in [seconds] from the track start, to seek to.
  */
-function seekToSeconds(seconds: number, omitNextFadeIn?: boolean): void {
-    mediaHandler.value?.seekTo(seconds).then(() => {
+function seekTo(position: number, omitNextFadeIn: boolean = false): void {
+    mediaHandler.value?.seekTo(position).then(() => {
         if (omitNextFadeIn) {
             mediaHandler.value?.omitNextFadeIn();
         }
@@ -1321,7 +1320,7 @@ function updateVolume(newVolume: number) {
 }
 
 /** Pauses playback and seeks to the currently selected cue's start position, but only
- * if this track is the active track (i.e. the selected cue is within this track)
+ * if this track is the active track (i.e., the selected cue is within this track).
  * @remarks Applies the effective start time for this cue, accounting for all
  * possibly set pre-roll options.
  */
@@ -1330,7 +1329,7 @@ function goToSelectedCue() {
             sequences might cause actions on non-active tracks too.*/
     if (isActiveTrack.value) {
         const cue = selectedCue.value;
-        log.debug(`MediaTrack(${name})::goToSelectedCue:cue:`, cue);
+        log.debug(`MediaTrack(${name.value})::goToSelectedCue:cue:`, cue);
         if (cue) {
             const startTime = getCuePreRollStartTime(selectedCue.value);
 
@@ -1339,7 +1338,7 @@ function goToSelectedCue() {
             if (playbackState.value === PlaybackState.Playing) {
                 mediaHandler.value?.pauseAndSeekTo(startTime, cue.OmitFadeIn);
             } else {
-                seekToSeconds(startTime, cue.OmitFadeIn);
+                seekTo(startTime, cue.OmitFadeIn);
             }
         }
     }
@@ -1347,7 +1346,7 @@ function goToSelectedCue() {
 
 // --- playback ---
 
-/** Toggles the playback state, if this is the active track */
+/** Toggles the playback state if this is the active track */
 function togglePlayback() {
     if (isActiveTrack.value) {
         mediaHandler.value?.togglePlayback();
@@ -1437,18 +1436,18 @@ function cueClick(cue: ICue, togglePlayback = true) {
                         mediaHandler.value?.playFrom(startTime, cue.OmitFadeIn);
                     }
                 } else {
-                    seekToSeconds(startTime, cue.OmitFadeIn);
+                    seekTo(startTime, cue.OmitFadeIn);
                 }
             }
         }
     }
 }
 
-/** Provide the pre-roll duration [in secods] to use for this track
+/** Provide the pre-roll duration [in seconds] to use for this track
  */
 provide(trackPreRollDurationInjectionKey, readonly(preRollDuration));
 
-/** Provide the fade-in duration [in secods] to use for this track
+/** Provide the fade-in duration [in seconds] to use for this track
  */
 provide(trackFadeInDurationInjectionKey, readonly(fadeInDuration));
 
@@ -1464,7 +1463,7 @@ watch(isActiveTrack, (isActive, wasActive) => {
     log.debug(`MediaTrack(${name.value})::isActiveTrack:val:`, isActive);
 
     // Pause and reset this track, when it's no more the active track
-    if (wasActive === true && isActive === false) {
+    if (wasActive && !isActive) {
         log.debug(`MediaTrack(${name.value})::isActiveTrack:pausing`);
         mediaHandler.value?.pause().then(() => {
             mediaHandler.value?.seekTo(0);
@@ -1474,8 +1473,8 @@ watch(isActiveTrack, (isActive, wasActive) => {
 
 /** Handles active track id changes.
  * @remarks Used to determine the requested player widget transition effect.
- * In edit mode, keep the default transition, as no horizontal slides are used
- * In other modes, slide according to the track index
+ * In edit mode, keep the default transition, as no horizontal slides are used.
+ * In other modes, slide according to the track index.
  */
 watch(
     [activeTrackId, isTrackEditable],
@@ -1515,7 +1514,7 @@ watch(
 
 const fullscreenPanel = ref(null);
 
-/** Forces the fullscreen exit when this is no more the active track */
+/** Forces the fullscreen exit when this is no more the active track. */
 watch(
     isActiveTrack,
     (isActiveTrack) => {

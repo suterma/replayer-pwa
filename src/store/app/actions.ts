@@ -10,7 +10,6 @@ import { state } from './state';
 import { v4 as uuidv4 } from 'uuid';
 
 import { ObjectUrlHandler } from '@/code/storage/ObjectUrlHandler';
-//@ts-ignore (because the file-saver does not provide types)
 import FileSaver from 'file-saver';
 import PersistentStorage from '../persistent-storage';
 import JSZip from 'jszip';
@@ -38,19 +37,20 @@ export const actions = {
         state.selectedCueId.value = cueId;
     },
 
-    /** Updates the scheduled cue Id, for application-wide handling
+    /** Updates the scheduled cue ID, for application-wide handling
      * @remarks This does not control the playback itself. It is intended for display and handling purposes.
      */
     updateScheduledCueId(cueId: string): void {
         state.scheduledCueId.value = cueId;
     },
 
-    /** Updates the currently selected track Id, for application-wide handling
-     * @remarks This does not control the playback itself. It is intended for display and handling purposes.
-     * Removes any previous cue id selection, then selects the first cue of this track, if available.
-     * Removes any previous next cue id selection.
+    /** Updates the currently selected track ID, for application-wide handling.
+     * @remarks Removes any existing cue id selection, then selects the first cue of this track, if available.
+     * Removes any existing scheduled cue ID.
+     * @remarks NOTE: This does not control the playback itself. It is intended for display and handling purposes.
+     * @return The first cue of the newly selected track, or undefined, if not available.
      */
-    updateSelectedTrackId(trackId: string): void {
+    updateSelectedTrackId(trackId: string): ICue | undefined {
         state.selectedCueId.value = CompilationHandler.EmptyId;
         state.scheduledCueId.value = CompilationHandler.EmptyId;
         state.selectedTrackId.value = trackId;
@@ -60,6 +60,7 @@ export const actions = {
         if (firstCue) {
             state.selectedCueId.value = firstCue.Id;
         }
+        return firstCue;
     },
 
     /** Selects the matching cue, by the given mnemonic, if any. Cues from the active track are considered first. */

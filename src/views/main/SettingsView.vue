@@ -107,7 +107,7 @@
             <div class="field">
                 <div class="control">
                     <LabeledCheckbox
-                        v-model="showInitialZeroTimeCue"
+                        v-model="showInitialCue"
                         label="Show an initial cue at the beginning of a track"
                         hint="Helps initial navigating to the start of a track"
                     ></LabeledCheckbox>
@@ -126,7 +126,17 @@
         </div>
 
         <div class="box">
-            <h3 class="subtitle">Audio</h3>
+            <h3 class="subtitle">Transport</h3>
+
+            <div class="field">
+                <div class="control">
+                    <LabeledCheckbox
+                        v-model="autoSeekToFirstCue"
+                        label="Auto-seek to first cue"
+                        hint="Whether a newly active track automatically seeks to the first cue, if any."
+                    ></LabeledCheckbox>
+                </div>
+            </div>
 
             <!-- Default pre-roll duration -->
             <div class="columns">
@@ -428,7 +438,8 @@ const settings = useSettingsStore();
 const {
     showPdfInline,
     levelMeterSizeIsLarge,
-    showInitialZeroTimeCue,
+    showInitialCue,
+    autoSeekToFirstCue,
     showAddCueButtonInPlayView,
     preventScreenTimeout,
     useWideContentWidth,

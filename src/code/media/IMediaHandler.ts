@@ -6,9 +6,10 @@ import type { IPitchShiftController } from './IPitchShiftController';
 import type { PlaybackState } from './PlaybackState';
 import { SubEventImmediate } from './SubEventImmediate';
 
-/** @interface Defines a media handler.
- * This defines transport, loop and volume operations for media sources
- * like e.g. HTML media elements or the YouTube IFrame player.
+/**  Defines a media handler.
+ * @interface IMediaHandler
+ * @remarks This defines transport, loop, and volume operations for media sources
+ * like e.g., HTML media elements or the YouTube IFrame player.
  */
 export interface IMediaHandler {
     // --- configuration and update ---
@@ -19,7 +20,7 @@ export interface IMediaHandler {
      */
     readonly id: string;
 
-    /** Destroys the instance by releasing it's resources.
+    /** Destroys the instance by releasing its resources.
      */
     destroy(): void;
 
@@ -74,7 +75,7 @@ export interface IMediaHandler {
      */
     readonly onSeekingChanged: SubEvent<boolean>;
 
-    /** Emits an ocurred seek operation.
+    /** Emits an occurred seek operation.
      * @param {number} targetTime - the target time of the seek operation
      */
     readonly onSeeked: SubEvent<number>;
@@ -102,7 +103,7 @@ export interface IMediaHandler {
      */
     readonly currentTime: number;
 
-    /** Seeks forward or backward, for the given amount of seconds, if the media is loaded and the position is valid.
+    /** Seeks forward or backward, for the given number of seconds, if the media is loaded and the position is valid.
      * @param {number} seconds - amount of time, in [seconds], to seek
      * @returns {Promise<void>} Promise - resolves when the seek operation has finished
      */
@@ -110,20 +111,20 @@ export interface IMediaHandler {
 
     /** Seeks to the given time position, if the media is loaded and the position is valid.
      * @remarks Immediately also advertises the new temporal position
-     * @param {number} seconds - the temporal position, in [seconds], to seek to
+     * @param {number} position - the temporal position, in [seconds] from the track start, to seek to.
      * @param {boolean} waitOnCanPlay - optionally, whether the promise only resolves when the
      * media can play, instead of already when the seek operation completed.
      * Default is false, only to wait for the seek.
      * @returns {Promise<void>} Promise - resolves when the seek operation completed.
      */
-    seekTo(seconds: number, waitOnCanPlay: boolean): Promise<void>;
+    seekTo(position: number, waitOnCanPlay: boolean): Promise<void>;
 
-    /** Seeks to the given time position, if the media is loaded and the position is valid.
+    /** Seeks to the given temporal position, if the media is loaded and the position is valid.
      * @remarks Immediately also advertises the new temporal position
-     * @param {number} seconds - the temporal position, in [seconds], to seek to
+     * @param {number} position - the temporal position, in [seconds] from the track start, to seek to.
      * @returns {Promise<void>} Promise - resolves when the seek operation completed.
      */
-    seekTo(seconds: number): Promise<void>;
+    seekTo(position: number): Promise<void>;
 
     /** Initiates a possible fade-out operation, then sets the state to paused
      * @returns {Promise<void>} Promise - resolves when the possible fade-out operation completed.
@@ -139,23 +140,33 @@ export interface IMediaHandler {
      */
     onEnded: SubEvent<void>;
 
-    /** Starts playback from the given temporal position
-     * @remarks This first seeks to the position, then starts playing (with a possible fade-in)
+    /** Starts playback from the given temporal position.
+     * @remarks This first seeks to the position, then starts playing (with a possible fade-in).
+     * @param {number} position - The temporal position, in [seconds] from the track start.
      * @param {boolean} [omitNextFadeIn=false] - When set, omits the fade-in at playback start. Default is false.
      */
     playFrom(position: number, omitNextFadeIn: boolean): void;
 
+    /** Starts playback from the given temporal position.
+     * @remarks This first seeks to the position, then starts playing (with a possible fade-in).
+     * @param {number} position - The temporal position, in [seconds] from the track start.
+     * @privateRemarks This is a shorthand for playFrom(position, false).
+     * This is an overlay to provide the signature for the default value for the omitNextFadeIn parameter.
+     */
+    playFrom(position: number): void;
+
     /** Starts playback from the current temporal position
-     * @remarks Applies a possible fade-in
+     * @remarks Applies a possible fade-in.
      */
     play(): void;
 
     /** Toggles the playback state
-     * @remarks Applies a possible fade-in
+     * @remarks Applies a possible fade-in.
      */
     togglePlayback(): void;
 
-    /** Pauses playback (with a possible fade-out), then seeks to the given position
+    /** Pauses playback (with a possible fade-out), then seeks to the given position.
+     * @param {number} position - The temporal position, in [seconds] from the track start.
      * @param {boolean} [omitNextFadeIn=false] - When set, omits the fade-in at a subsequent playback start. Default is false.
      */
     pauseAndSeekTo(position: number, omitNextFadeIn?: boolean): void;

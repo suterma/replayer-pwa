@@ -6,7 +6,7 @@
         <!-- Note: Do not crop the (non-existing) text in virtual cue buttons
              Also, leave the existing flex-grow, to allow them to fill single lines, but allow to shrink -->
         <CueButton
-            v-if="(prefixCue.Duration ?? 0 > 0) && showInitialZeroTimeCue"
+            v-if="(prefixCue.Duration ?? 0 > 0) && showInitialCue"
             :id="prefixCue.Id"
             class="is-flex-grow-1 is-flex-shrink-5"
             :class="{
@@ -144,7 +144,7 @@ const prefixCue = computed(() => {
 });
 
 const settings = useSettingsStore();
-const { showInitialZeroTimeCue } = storeToRefs(settings);
+const { showInitialCue } = storeToRefs(settings);
 
 const app = useAppStore();
 const { selectedCueId, scheduledCueId } = storeToRefs(app);

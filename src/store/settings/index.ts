@@ -24,7 +24,7 @@ export enum TimeFormat {
      * @remarks See https://en.wikipedia.org/wiki/ISO_8601#Times
      */
     Iso8601Extended = 1,
-    /** Represents time as decimal value of seconds
+    /** Represents time as a decimal value of seconds
      */
     DecimalSeconds = 2,
 }
@@ -40,13 +40,19 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         false,
     );
 
-    /** Whether to show an initial cue at the beginning of a track  */
-    const showInitialZeroTimeCue = useLocalStorage(
-        'showInitialZeroTimeCue',
-        false,
+    /** Whether to show an initial cue at the beginning of a track.  */
+    const showInitialCue = useLocalStorage(
+        'showInitialCue',
+        true,
     );
 
-    /** Whether to show an add cue button in the play view (in full screen mode)  */
+    /** Whether a newly active track automatically seeks to the first cue, if any.  */
+    const autoSeekToFirstCue = useLocalStorage(
+        'autoSeekToFirstCue',
+        true,
+    );
+
+    /** Whether to show an add cue button in the play view (in the full-screen mode)  */
     const showAddCueButtonInPlayView = useLocalStorage(
         'showAddCueButtonInPlayView',
         true,
@@ -185,7 +191,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         false,
     );
 
-    /** EXPERIMENTAL: Whether to show the remarks editors
+    /** EXPERIMENTAL: Whether to show the remark editor
      */
     const experimentalShowRemarksEditors = useLocalStorage(
         'experimentalShowRemarksEditors',
@@ -196,7 +202,8 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
     function $reset() {
         showPdfInline.value = true;
         levelMeterSizeIsLarge.value = false;
-        showInitialZeroTimeCue.value = false;
+        showInitialCue.value = true;
+        autoSeekToFirstCue.value = true;
         showAddCueButtonInPlayView.value = true;
         preventScreenTimeout.value = true;
         useWideContentWidth.value = false;
@@ -228,7 +235,10 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
          * @remarks Inline rendering does not work on older mobile devices*/
         showPdfInline,
         levelMeterSizeIsLarge,
-        showInitialZeroTimeCue,
+        /** Whether to show an initial cue at the beginning of a track.  */
+        showInitialCue,
+        /** Whether a newly active track automatically seeks to the first cue, if any.  */
+        autoSeekToFirstCue,
         showAddCueButtonInPlayView,
         preventScreenTimeout,
         useWideContentWidth,

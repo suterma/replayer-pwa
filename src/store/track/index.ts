@@ -1,13 +1,13 @@
-import { defineStore } from 'pinia';
+import { defineStore, storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
 import { useAppStore } from '../app';
-import { storeToRefs } from 'pinia';
 import { useAudioStore } from '../audio';
 import CompilationHandler from '../compilation-handler';
 import FileHandler from '../filehandler';
 import { Meter } from '@/code/music/Meter';
 import { useSettingsStore } from '../settings';
 import { Store } from '..';
+import type { ICue } from '@/store/ICue.ts';
 
 /** A factory function for a single track store */
 export function useTrackStore(trackId: string) {
@@ -54,8 +54,8 @@ export function useTrackStore(trackId: string) {
 
         /** Sets the track duration. Using the track duration and the existing cues,
          * calculates the durations of all cues, including the last one.
-         * @remarks No ordering is done with this operation
-         * The calculated durations are only valid as long as the cues, their times, and the track does not change
+         * @remarks No ordering is done with this operation.
+         * The calculated durations are only valid as long as the cues, their times, and the track does not change.
          * @param {number} trackDuration - the track duratin in [seconds]. Could be NaN or infinity, depending on the source.
          */
         function updateDurations(trackDuration: number): void {
@@ -131,11 +131,10 @@ export function useTrackStore(trackId: string) {
             }
 
             // Get the corresponding object url from the stored blobs
-            const url = CompilationHandler.getMatchingPackageMediaUrl(
+            return CompilationHandler.getMatchingPackageMediaUrl(
                 track.Url,
                 app.mediaUrls,
             )?.url;
-            return url;
         });
 
         /** Whether all required values for the use of the measure number as
@@ -163,17 +162,20 @@ export function useTrackStore(trackId: string) {
             return trackId === activeTrackId.value;
         });
 
-        /** Sets this track as the active track
+        /** Sets this track as the active track.
          * @remarks If the track is not yet the active track,
          * this track is selected as the active track.
-         */
-        function setActiveTrack(): void {
+         * @remarks NOTE: This does not control the playback itself. It is intended for display and handling purposes.
+         * @return The first cue of the track, or undefined, if not available.
+         * */
+        function setAsActiveTrack(): ICue | undefined {
             if (!isActiveTrack.value) {
                 app.updateSelectedTrackId(trackId);
             }
+            return cues.value[0];
         }
 
-        /** The description of the current cue (by position)
+        /** The description of the current cue (by position).
          */
         const playingCueDescription = computed(() => {
             return playingCue.value?.Description;
@@ -262,15 +264,9 @@ export function useTrackStore(trackId: string) {
         /** Whether this is the last track in the set of media tracks */
         const isLastMediaTrack = computed(() => app.isLastMediaTrack(track));
 
-        const isAudioTrack = computed(() =>
-            CompilationHandler.isAudioTrack(track),
-        );
-        const isVideoTrack = computed(() =>
-            CompilationHandler.isVideoTrack(track),
-        );
-        const isYoutubeVideoTrack = computed(() =>
-            CompilationHandler.isYoutubeVideoTrack(track),
-        );
+        const isAudioTrack = computed(() => CompilationHandler.isAudioTrack(track));
+        const isVideoTrack = computed(() => CompilationHandler.isVideoTrack(track));
+        const isYoutubeVideoTrack = computed(() => CompilationHandler.isYoutubeVideoTrack(track));
 
         // --- track manipulation ---
 
@@ -278,10 +274,7 @@ export function useTrackStore(trackId: string) {
         function createNewCue(): void {
             if (currentPosition.value != null) {
                 app.addCueAtTime(trackId, currentPosition.value);
-            } else
-                throw new Error(
-                    'currentPosition must be available for adding a cue',
-                );
+            } else throw new Error('currentPosition must be available for adding a cue');
         }
 
         /** Persists the running playhead position
@@ -433,7 +426,7 @@ export function useTrackStore(trackId: string) {
             /** Persists the running playhead position */
             persistPlayheadPosition,
 
-            setActiveTrack,
+            setAsActiveTrack,
 
             /** Sets the track duration. Using the track duration and the existing cues,
              * calculates the durations of all cues, including the last one.

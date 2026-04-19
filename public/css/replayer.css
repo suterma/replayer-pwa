@@ -1459,11 +1459,11 @@ a.box:active {
   border-color: transparent;
   color: rgb(184.8397790055, 23.6685082873, 19.1602209945);
 }
-.button.is-small {
-  font-size: 0.85rem;
-}
 .button.is-small:not(.is-rounded) {
   border-radius: 2px;
+}
+.button.is-small {
+  font-size: 0.85rem;
 }
 .button.is-normal {
   font-size: 1rem;
@@ -1525,11 +1525,11 @@ a.box:active {
 .buttons:not(:last-child) {
   margin-bottom: 1rem;
 }
-.buttons.are-small .button:not(.is-normal):not(.is-medium):not(.is-large) {
-  font-size: 0.85rem;
-}
 .buttons.are-small .button:not(.is-normal):not(.is-medium):not(.is-large):not(.is-rounded) {
   border-radius: 2px;
+}
+.buttons.are-small .button:not(.is-normal):not(.is-medium):not(.is-large) {
+  font-size: 0.85rem;
 }
 .buttons.are-medium .button:not(.is-small):not(.is-normal):not(.is-large) {
   font-size: 1.25rem;
@@ -10839,6 +10839,7 @@ Not showing the border otherwise keeps the UI in non-edit modes calm */
   background: none;
   border-color: transparent;
   pointer-events: none;
+  cursor: help;
   color: #aaa;
 }
 
@@ -10847,6 +10848,7 @@ Not showing the border otherwise keeps the UI in non-edit modes calm */
 .button.is-indicator.playback-indicator,
 .button.is-indicator.playback-indicator:hover {
   pointer-events: all;
+  cursor: help;
 }
 
 /*************************************************************
