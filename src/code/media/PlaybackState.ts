@@ -5,7 +5,7 @@ export enum PlaybackState {
     /** Track is not loaded (but available) */
     Unloaded = 'UNLOADED',
 
-    /** Track is loaded and ready to play (e.g. paused)
+    /** Track is loaded and ready to play (e.g., paused)
      * @remarks This is emitted for the first time when the media element has
      * loaded enough data to actually start playback.
      * Note that the underlying implementation might handle it in a special way,

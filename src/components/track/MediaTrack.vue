@@ -12,7 +12,7 @@
             'is-youtube-video': isYoutubeVideoTrack,
         }"
         data-cy="track-media"
-        @click="setActiveTrack()"
+        @click="setAsActiveTrack()"
     >
         <!-- Handle all track-relevant events here
         Note: A check for the active track is done in the handler methods.
@@ -50,7 +50,7 @@
                                 :disabled="!canPlay"
                                 :is-selected="isActiveTrack"
                                 data-cy="select"
-                                @click="setActiveTrack()"
+                                @click="setAsActiveTrack()"
                                 ><span
                                     :class="{
                                         'is-invisible': !hasCues,
@@ -104,7 +104,7 @@
                                 'has-cursor-not-allowed': !canPlay,
                             }"
                             :track-id="trackId"
-                            @click="setActiveTrack()"
+                            @click="setAsActiveTrack()"
                         ></TrackTitle>
                     </div>
                 </template>
@@ -485,7 +485,7 @@
                                                 }"
                                                 :track-id="trackId"
                                                 :small="!isFullscreen"
-                                                @click="setActiveTrack()"
+                                                @click="setAsActiveTrack()"
                                             >
                                             </TrackTitle>
                                             <!-- On smaller screens, show the metadata, below the title
@@ -698,7 +698,7 @@
                                         levelMeterSizeIsLarge
                                     "
                                     :small-video="!isFullscreen"
-                                    @click="setActiveTrack"
+                                    @click="setAsActiveTrack"
                                 >
                                 </TrackMediaElement>
                                 <OnYouTubeConsent v-if="isYoutubeVideoTrack">
@@ -713,7 +713,7 @@
                                         :track-id="trackId"
                                         :cues="cues"
                                         :small-video="!isFullscreen"
-                                        @click="setActiveTrack"
+                                        @click="setAsActiveTrack"
                                     >
                                     </TrackYouTubeElement>
                                 </OnYouTubeConsent>
@@ -817,7 +817,7 @@ const emit = defineEmits([
      */
     'seekToSeconds',
 
-    /** Occurs, when the end of the track has been reached and playback has ended.
+    /** Occurs when the end of the track has been reached and playback has ended.
      * @remarks This is not triggered when the track or one of it's cue is looping.
      * @remarks Allows to select the next track in "play all" and "shuffle" mode.
      */
@@ -1219,10 +1219,12 @@ function toNextCue() {
 
 /** Sets this track as the active track
  * @remarks If the track is not ready to play, does nothing.
+ * @remarks NOTE: This does not control the playback itself. It is intended for display and handling purposes.
  */
-function setActiveTrack(): void {
+function setAsActiveTrack(): void {
     if (playbackState.value === PlaybackState.Ready) {
-        trackStore.setActiveTrack();
+        //TODO Should we possibly Apply AutoSeekToFirstCue here?
+        trackStore.setAsActiveTrack();
     }
 }
 
@@ -1321,7 +1323,7 @@ function updateVolume(newVolume: number) {
 }
 
 /** Pauses playback and seeks to the currently selected cue's start position, but only
- * if this track is the active track (i.e. the selected cue is within this track)
+ * if this track is the active track (i.e., the selected cue is within this track).
  * @remarks Applies the effective start time for this cue, accounting for all
  * possibly set pre-roll options.
  */
@@ -1347,7 +1349,7 @@ function goToSelectedCue() {
 
 // --- playback ---
 
-/** Toggles the playback state, if this is the active track */
+/** Toggles the playback state if this is the active track */
 function togglePlayback() {
     if (isActiveTrack.value) {
         mediaHandler.value?.togglePlayback();
@@ -1444,11 +1446,11 @@ function cueClick(cue: ICue, togglePlayback = true) {
     }
 }
 
-/** Provide the pre-roll duration [in secods] to use for this track
+/** Provide the pre-roll duration [in seconds] to use for this track
  */
 provide(trackPreRollDurationInjectionKey, readonly(preRollDuration));
 
-/** Provide the fade-in duration [in secods] to use for this track
+/** Provide the fade-in duration [in seconds] to use for this track
  */
 provide(trackFadeInDurationInjectionKey, readonly(fadeInDuration));
 
@@ -1464,7 +1466,7 @@ watch(isActiveTrack, (isActive, wasActive) => {
     log.debug(`MediaTrack(${name.value})::isActiveTrack:val:`, isActive);
 
     // Pause and reset this track, when it's no more the active track
-    if (wasActive === true && isActive === false) {
+    if (wasActive && !isActive) {
         log.debug(`MediaTrack(${name.value})::isActiveTrack:pausing`);
         mediaHandler.value?.pause().then(() => {
             mediaHandler.value?.seekTo(0);
@@ -1474,8 +1476,8 @@ watch(isActiveTrack, (isActive, wasActive) => {
 
 /** Handles active track id changes.
  * @remarks Used to determine the requested player widget transition effect.
- * In edit mode, keep the default transition, as no horizontal slides are used
- * In other modes, slide according to the track index
+ * In edit mode, keep the default transition, as no horizontal slides are used.
+ * In other modes, slide according to the track index.
  */
 watch(
     [activeTrackId, isTrackEditable],
@@ -1515,7 +1517,7 @@ watch(
 
 const fullscreenPanel = ref(null);
 
-/** Forces the fullscreen exit when this is no more the active track */
+/** Forces the fullscreen exit when this is no more the active track. */
 watch(
     isActiveTrack,
     (isActiveTrack) => {
