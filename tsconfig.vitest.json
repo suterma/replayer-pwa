@@ -4,7 +4,10 @@
     // Override to include only test files and clear exclusions.
     // Application code imported in tests is automatically included via module resolution.
     "include": ["src/**/__tests__/*", "env.d.ts"],
-    "exclude": [],
+    "exclude": [
+      // Do not compile the statistics
+      "stats.html"
+    ],
 
     "compilerOptions": {
         // Vitest runs in a different environment than the application code.

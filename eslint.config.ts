@@ -17,8 +17,12 @@ export default defineConfigWithVueTs(
         files: ['**/*.{vue,ts,mts,tsx}'],
     },
 
-    /** Additionally, Exclude all pdfjs files from linting */
-    globalIgnores(['**/dist/**', '**/dist-ssr/**', '**/coverage/**', '**/pdfjs/*']),
+    globalIgnores([
+        /** Additionally, Exclude all pdfjs files from linting */
+        '**/dist/**', '**/dist-ssr/**', '**/coverage/**', '**/pdfjs/*',
+        // Do not process the statistics output
+        'stats.html',
+    ]),
 
     ...pluginVue.configs['flat/essential'],
     vueTsConfigs.recommended,
