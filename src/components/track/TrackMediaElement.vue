@@ -519,7 +519,7 @@ watch(
         isTrackEditable,
     ]) => {
         if (showLevelMeterForEdit) {
-            // Metering is only used in edit or mix mode
+            // Metering is only used in edit mode
             if (isTrackEditable) {
                 if (audioContext.value && isContextRunning.value) {
                     // Create the level meter and associated routing only when requested, and only for local files

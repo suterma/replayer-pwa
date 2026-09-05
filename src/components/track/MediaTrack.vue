@@ -356,8 +356,7 @@
                     <Transition :name="skipTransitionName">
                         <!--
                     In the play view, the player widget is only shown for the active track
-                    In the edit view, the player widgets are shown for all expanded tracks
-                    In the mix view a dedicated mix widget is shown (defined as separate div) -->
+                    In the edit view, the player widgets are shown for all expanded tracks -->
                         <!-- NOTE: A v-show is used instead of a v-if to keep the media players permanently in the DOM. -->
                         <div
                             v-show="
@@ -1161,12 +1160,13 @@ function setAsActiveTrack(): void {
     }
 }
 
-// --- mute/solo ---
+// --- mute ---
 
 /** Toggles the muted state of this track
  * @remarks If the track is not loaded, does nothing.
  * @param mute - If null or not given, toggles the muted state. When given, sets to the specified state.
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function toggleMute(mute: boolean | null = null): void {
     if (canPlay.value) {
         if (mediaHandler.value) {

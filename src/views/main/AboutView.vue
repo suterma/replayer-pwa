@@ -164,15 +164,6 @@
                                     </li>
                                     <li>
                                         <a
-                                            href="./#/play?media=https://previews.cambridge-mt.com/ImAlright_Full_Preview.mp3&title=I'm+Allright&album='Mixing+Secrets'+Free+Multitrack+Download+Library+by+Mike+Senior&artist=Angels+in+Amplifiers"
-                                            target="_blank"
-                                        >
-                                            Angels In Amplifiers, Full Preview Mix</a
-                                        >, from the 'Mixing Secrets' Free Multitrack Download
-                                        Library by Mike Senior - has no CORS headers
-                                    </li>
-                                    <li>
-                                        <a
                                             href="./#/play?media=https://lib.replayer.app/demo/Lidja%20Roos%20-%20Not%20For%20Sale%20-%20Booklet.pdf&title=Not%20for%20Sale%20Booklet"
                                             target="_blank"
                                         >
