@@ -45,7 +45,6 @@
                             v-if="isYoutubeVideoTrack"
                         ></OnYouTubeConsent>
                         <PlayPauseButton
-                            v-else
                             :disabled="!canPlay"
                             :class="{
                                 'is-success': isActiveTrack,
