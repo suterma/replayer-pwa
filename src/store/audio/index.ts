@@ -82,18 +82,6 @@ export const useAudioStore = defineStore(Store.Audio, () => {
     }
 
     //TODO expose this and consume from withing the mediaActions
-    /** Gets the matching handler, if any, by it's media source.
-     * @param url - The media URL
-     * */
-    // function getMediaHandlerByUrl(url: string): IMediaHandler | undefined {
-    //     const trackMediaHandlerId = 'handler-' + url;
-    //     const existingHandler = [...mediaHandlers].find(
-    //         (h) => h.id == trackMediaHandlerId,
-    //     ) as IMediaHandler;
-    //     return existingHandler;
-    // }
-
-    //TODO expose this and consume from withing the mediaActions
     /** Gets the matching handler, if any, using the track id.
      * @param trackId - The Id of the track, whole media handler should be returned
      * */

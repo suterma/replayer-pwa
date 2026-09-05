@@ -89,17 +89,12 @@
             @click="emit('click')"
         ></audio>
     </template>
-    <!-- NOTE: the rendering of the AudioLevelMeter _might_ affect badly the
-         synchronous start of the multitrack playback,
-         but only the first time after a page reload/player instantiation.
-         It's currently not consistently reproducible and goes away after a
-         subsequent sync (e.g. after pause/play) -->
     <!-- NOTE: Disabling the teleportation does not work currently: When the
          application settings change to show the meter, produces a warning.
          The solution for this is using a v-if instead of disableing. -->
     <div
         v-if="
-            ((isTrackEditable && showLevelMeterForEdit) || isTrackMixable) &&
+            ((isTrackEditable && showLevelMeterForEdit)) &&
             audioSource &&
             audioContext &&
             isContextRunning &&
@@ -282,7 +277,7 @@ log.debug(
 );
 
 const app = useAppStore();
-const { isTrackEditable, isTrackMixable } = storeToRefs(app);
+const { isTrackEditable } = storeToRefs(app);
 
 // --- visibility ---
 
@@ -514,7 +509,6 @@ watch(
         () => props.mediaUrl,
         () => mediaElement.value,
         () => isTrackEditable.value,
-        () => isTrackMixable.value,
         () => isPaused.value /* only used as trigger */,
         () => isContextRunning.value /* only used as trigger */,
     ],
@@ -523,11 +517,10 @@ watch(
         mediaUrl,
         newMediaElement,
         isTrackEditable,
-        isTrackMixable,
     ]) => {
         if (showLevelMeterForEdit) {
-            // Metering is only used in edit or mix mode
-            if (isTrackEditable || isTrackMixable) {
+            // Metering is only used in edit mode
+            if (isTrackEditable) {
                 if (audioContext.value && isContextRunning.value) {
                     // Create the level meter and associated routing only when requested, and only for local files
                     if (

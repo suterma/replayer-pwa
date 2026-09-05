@@ -1,7 +1,11 @@
 {
     "extends": "@vue/tsconfig/tsconfig.dom.json",
     "include": ["./e2e/**/*", "./support/**/*"],
-    "exclude": ["./support/component.*"],
+    "exclude": [
+      "./support/component.*",
+      // Do not compile the statistics
+      "stats.html"
+    ],
     "compilerOptions": {
         "isolatedModules": false,
         "types": ["cypress"],

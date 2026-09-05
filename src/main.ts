@@ -2,7 +2,6 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import { createPinia } from 'pinia';
 import router from './router';
-//@ts-ignore (because vue3-promise-dialog does not provide types)
 import { PromiseDialog } from 'vue3-promise-dialog';
 import { useMessageStore } from './store/messages';
 import { createManager } from '@vue-youtube/core';
@@ -14,7 +13,6 @@ import { useAppStore } from './store/app';
 import { useAudioStore } from './store/audio';
 import useLog from '@/composables/LogComposable';
 import { useSettingsStore } from './store/settings';
-import { useMultitrackStore } from './store/multitrack';
 
 const { log } = useLog();
 log.info(`Replayer app version: ${import.meta.env.VITE_APP_VERSION}`);
@@ -67,15 +65,6 @@ app.onUnmount(() => {
     log.debug('Replayer app cleanUp...');
 
     // Destroy higher-up stores first
-
-    // Destroy Multitrack store only if the exist at all
-    const hasMultitrackStore =
-        pinia.state.value.MULTITRACK; /* Store.Multitrack */
-    if (hasMultitrackStore) {
-        const multitrack = useMultitrackStore();
-        // NOTE: This gives warning "cannot run an inactive effect scope." due to unknown reasons
-        multitrack.$dispose();
-    }
 
     const audio = useAudioStore();
     audio.closeContext();

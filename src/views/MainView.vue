@@ -72,8 +72,7 @@ const routedToPlayback = computed(() => {
     return (
         routedToRehearse.value ||
         routedToPlay.value ||
-        routedToEdit.value ||
-        routedToMix.value
+        routedToEdit.value
     );
 });
 
@@ -86,10 +85,6 @@ const routedToPlay = computed(() => {
 const routedToEdit = computed(() => {
     return router.currentRoute.value.name === Route.Edit;
 });
-const routedToMix = computed(() => {
-    return router.currentRoute.value.name === Route.Mix;
-});
-
 const routedToSetlist = computed(() => {
     return router.currentRoute.value.name === Route.Setlist;
 });

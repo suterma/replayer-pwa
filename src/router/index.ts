@@ -17,7 +17,6 @@ export enum Route {
     Rehearse = 'rehearse',
     Play = 'play',
     Edit = 'edit',
-    Mix = 'mix',
     Setlist = 'setlist',
     Settings = 'settings',
     Reset = 'reset',
@@ -58,15 +57,6 @@ const routes: Array<RouteRecordRaw> = [
          */
         path: '/edit',
         name: Route.Edit,
-        component: MainView,
-    },
-    {
-        /** The route to the mix mode
-         * @remarks The /mix route serves as some form of alias, and supports the reuse of the playback view for mixing, too.
-         * A real routing alias is not used to distinguish the menu entries for these routes
-         */
-        path: '/mix',
-        name: Route.Mix,
         component: MainView,
     },
     {

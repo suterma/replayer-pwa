@@ -1,11 +1,10 @@
 import type { SubEventImmediate } from './SubEventImmediate';
 
-/** @interface Defines an audio fader with fade-in/out operations, for use during playback,
- * including a muted and soloed state. Soloing only
- * works in a multitrack context.
+/** @interface IAudioFader Defines an audio fader with fade-in/out operations, for use during playback,
+ * including a muted state.
  * This fader supports two concepts:
  * - a master volume, that emulates a an overall audio level
- * - independent fading, mute and solo operations, which internally
+ * - independent fading and mute operations, which internally
  * control the actually set audio level on the media player.
  * @remarks The goal is to free the actual player from fading handling.
  * Using this promise-based approach especially frees the using code from
@@ -29,11 +28,8 @@ export interface IAudioFader {
      * @param {boolean} addFadeInPreRoll - Whether to apply an additional seek offset before fade-in operations, to compensate the fading duration. (Default: true)
      */
     updateSettings(
-        // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         fadeInDuration: number,
-        // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         fadeOutDuration: number,
-        // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         addFadeInPreRoll: boolean,
     ): void;
 
@@ -84,24 +80,6 @@ export interface IAudioFader {
      */
     set muted(value: boolean);
 
-    /** Gets the soloed state.
-     */
-    get soloed(): boolean;
-
-    /** Sets the soloed state.
-     */
-    set soloed(value: boolean);
-
-    /** Gets the overall solo state in a multitrack context.
-     * @remarks When any is soloed, but not this track, this is effectively muted.
-     */
-    get anySoloed(): boolean;
-
-    /** Sets the overall solo state in a multitrack context.
-     * @remarks When any is soloed, but not this track, this is effectively muted.
-     */
-    set anySoloed(value: boolean);
-
     /** Sets the master audio volume.
      * @remarks The new value is only applied if it actually changes, after limitation.
      * The 'onMasterVolumeChange' is also only emitted on actual changes.
@@ -133,11 +111,6 @@ export interface IAudioFader {
      * @param {boolean} muted - the changed muted state
      */
     readonly onMutedChanged: SubEventImmediate<boolean>;
-
-    /** Emits a changed soloed state.
-     * @param {boolean} soloed - the changed soloed state
-     */
-    readonly onSoloedChanged: SubEventImmediate<boolean>;
 
     /** Emits a changed fading state.
      * @param {FadingMode} fading - kind of fading operation that is currently ongoing

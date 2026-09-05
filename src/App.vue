@@ -5,11 +5,11 @@
  * LICENSE file in the root of this projects source tree.
 -->
 <template>
-    <!-- Use the full width for a navigable channel arrangement the mix view,
-        and a more accessible narrower blog style width for all other content -->
+    <!-- Use the full width to better use the space according to the setting, or a
+     more accessible narrower blog style width otherwise -->
     <div
         :class="{
-            'container is-fullhd': router.currentRoute.value.name != 'mix' && !useWideContentWidth,
+            'container is-fullhd': !useWideContentWidth,
         }"
     >
         <StageMark></StageMark>
@@ -49,8 +49,7 @@
             id="media-player-panel"
             ref="mediaPlayerPanel"
             :class="{
-                'container is-fullhd':
-                    router.currentRoute.value.name != 'mix' && !useWideContentWidth,
+                'container is-fullhd': !useWideContentWidth,
             }"
             aria-label="media player"
         ></div>
@@ -60,7 +59,6 @@
 import AppContextMenu from '@/components/context-menu/AppContextMenu.vue'
 import StageMark from '@/components/indicators/StageMark.vue'
 import MessageOverlay from '@/components/MessageOverlay.vue'
-//@ts-expect-error (because the vue3-promise-dialog does not provide types)
 import { DialogWrapper } from 'vue3-promise-dialog'
 import { useSettingsStore } from '@/store/settings'
 import { useAppStore } from './store/app'

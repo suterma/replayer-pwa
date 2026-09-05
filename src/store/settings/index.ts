@@ -119,14 +119,6 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         false,
     );
 
-    /** EXPERIMENTAL: Whether to show a menu for the multitrack view
-     * @remarks Default is false
-     */
-    const experimentalMultitrack = useLocalStorage(
-        'experimentalMultitrack',
-        false,
-    );
-
     /** EXPERIMENTAL: Whether to show a menu for the rehearse view
      * @remarks Default is false
      */
@@ -220,7 +212,6 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         youTubeConsent.value = false;
         extraVideoControls.value = false;
         experimentalShowEverythingEverywhereAllAtOnce.value = false;
-        experimentalMultitrack.value = false;
         experimentalRehearse.value = false;
         experimentalPitchShift.value = false;
         experimentalUseQueueCueMode.value = false;
@@ -257,7 +248,6 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         youTubeConsent,
         extraVideoControls,
         experimentalShowEverythingEverywhereAllAtOnce,
-        experimentalMultitrack,
         experimentalRehearse,
         experimentalPitchShift,
         experimentalUseQueueCueMode,

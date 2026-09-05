@@ -206,8 +206,6 @@ export const getters = {
                 return TrackViewMode.Edit;
             case Route.Play:
                 return TrackViewMode.Play;
-            case Route.Mix:
-                return TrackViewMode.Mix;
             default:
                 return TrackViewMode.Edit;
         }
@@ -226,11 +224,6 @@ export const getters = {
     /** Whether the track is shown optimized for playback */
     isTrackPlayable: computed((): boolean => {
         return getters.trackViewMode.value == TrackViewMode.Play;
-    }),
-
-    /** Whether the track is shown optimized for multi-track/mixer playback */
-    isTrackMixable: computed((): boolean => {
-        return getters.trackViewMode.value == TrackViewMode.Mix;
     }),
 
     // --- playback mode ---

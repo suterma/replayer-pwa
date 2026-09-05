@@ -1489,7 +1489,6 @@ a.box:active {
   pointer-events: none;
 }
 .button.is-loading::after {
-  position: absolute;
   left: calc(50% - 1em * 0.5);
   top: calc(50% - 1em * 0.5);
   position: absolute !important;
@@ -11088,13 +11087,6 @@ a[disabled]:hover {
 /** A colorless button should also have the default appearance (including similar brightness) except the coloring */
 .button.is-colorless {
   filter: grayscale(100%) !important;
-}
-
-/*************************************************************
- * "Yellow" Buttons for Soloing
-**************************************************************/
-.button.is-warning.is-yellow {
-  filter: hue-rotate(20deg) !important;
 }
 
 /*************************************************************

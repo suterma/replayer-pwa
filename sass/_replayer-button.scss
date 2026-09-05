@@ -21,10 +21,10 @@
 
 /*************************************************************
  * Support for button block layout (use by adding "has-gap")
- * Aligns all the buttons nicely when placed within a "block" 
+ * Aligns all the buttons nicely when placed within a "block"
  * layout with flex-grow (e.g. the cues button field)
  * Fixes the otherwise unequal gaps of right-edge buttons in a group.
- * 
+ *
  * Note: the gap CSS feature is not supported on all devices,
  * notably not on older iOS devices with Safari below 14.1
  * Thus, the gap feature is tested beforehand
@@ -35,7 +35,7 @@
 // the gap for flex and the gap for grid are not distinguishable from their name
 // See: https://ppuzio.medium.com/flexbox-gap-workaround-for-safari-on-ios-14-13-and-lower-ffcae589eb69
 @supports not ((-webkit-touch-callout: none) and (not (translate: none))) {
-    /* First, for a gapped buttons group,  
+    /* First, for a gapped buttons group,
      * remove the original bulma margin from the grouped buttons */
     .buttons.has-gap .button {
         margin-bottom: 0;
@@ -47,7 +47,7 @@
         margin-bottom: 0;
     }
 
-    /* Then, instead of the margin, add a consistent gap 
+    /* Then, instead of the margin, add a consistent gap
      * of the same size between the grouped buttons
      */
     .buttons.buttons.has-gap {
@@ -119,9 +119,9 @@ a[disabled]:hover {
 
 /*************************************************************
  * Unfortunately, the existing focus style is different for colored buttons
-   However, for Replayer, colored buttons should have the same 
+   However, for Replayer, colored buttons should have the same
    focus styles as all the other buttons.
-   Thus, this style is set here for them all the same   
+   Thus, this style is set here for them all the same
 **************************************************************/
 
 /* focus */
@@ -172,14 +172,6 @@ a[disabled]:hover {
 /** A colorless button should also have the default appearance (including similar brightness) except the coloring */
 .button.is-colorless {
     filter: grayscale(100%) !important;
-}
-
-/*************************************************************
- * "Yellow" Buttons for Soloing
-**************************************************************/
-
-.button.is-warning.is-yellow {
-    filter: hue-rotate(20deg) !important;
 }
 
 /*************************************************************
