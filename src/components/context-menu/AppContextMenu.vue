@@ -12,6 +12,7 @@
         <div class="dropdown-item is-hidden-mobile">
             <p class="menu-label">View</p>
         </div>
+        <!--suppress VueUnrecognizedDirective -->
         <div v-if="experimentalRehearse" v-experiment="experimentalRehearse">
             <DropdownMenuRouterLink
                 to="/rehearse"
@@ -32,17 +33,6 @@
                 :keys="['f3']"
                 :icon-path="mdiPlay"
             />
-            <div
-                v-if="experimentalMultitrack"
-                v-experiment="experimentalMultitrack"
-            >
-                <DropdownMenuRouterLink
-                    to="/mix"
-                    title="Mix"
-                    :keys="['f6']"
-                    :icon-path="mdiTuneVertical"
-                />
-            </div>
             <DropdownMenuRouterLink
                 to="/setlist"
                 title="Set list"
@@ -87,8 +77,7 @@ import {
     mdiPencil,
     mdiListBoxOutline,
     mdiCogOutline,
-    mdiInformationOutline,
-    mdiTuneVertical,
+    mdiInformationOutline
 } from '@mdi/js';
 import { storeToRefs } from 'pinia';
 import { useSettingsStore } from '@/store/settings';
@@ -104,5 +93,5 @@ defineProps({
 });
 
 const settings = useSettingsStore();
-const { experimentalMultitrack, experimentalRehearse } = storeToRefs(settings);
+const { experimentalRehearse } = storeToRefs(settings);
 </script>

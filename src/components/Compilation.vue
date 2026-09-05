@@ -53,15 +53,6 @@
                 </PdfTrack>
             </template>
         </div>
-        <!-- Multi-track-Controller -->
-        <Teleport to="#media-player-panel">
-            <div
-                v-if="isTrackMixable"
-                class="section has-background-grey-dark pb-0"
-            >
-                <MasterTrack></MasterTrack>
-            </div>
-        </Teleport>
     </div>
 </template>
 
@@ -72,7 +63,6 @@
  */
 import { onMounted, onUnmounted } from 'vue';
 import MediaTrack from '@/components/track/MediaTrack.vue';
-import MasterTrack from '@/components/track/MasterTrack.vue';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 import NoticeTrack from '@/components/track/NoticeTrack.vue';
 import PdfTrack from '@/components/track/PdfTrack.vue';
@@ -88,7 +78,7 @@ import { useMessageStore } from '@/store/messages';
 const { log } = useLog();
 
 const app = useAppStore();
-const { allTracks, getAllTags, isTrackEditable, isTrackMixable, compilation } =
+const { allTracks, getAllTags, isTrackEditable, compilation } =
     storeToRefs(app);
 
 /** The wake lock fill-in that can prevent screen timeout */

@@ -24,7 +24,7 @@ A media handler instance (e.g. class `HtmlMediaHandler` of `IMediaHandler`) impl
 -   Looping
 -   Seeking
 -   Current position
--   Mute/Solo state
+-   Mute state
 -   Volume
 -   Fading handling
 -   Detune/pitch shift handing (planned)

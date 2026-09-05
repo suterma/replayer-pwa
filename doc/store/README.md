@@ -34,16 +34,13 @@ The **AUDIO** store represents the **audio environment**, consisting of the [Web
 ### Track store
 The dynamic **TRACK** store represents a single track, for easier access to the properties of this track. It is maintained by an instance of the track vue component, and has no persistence by itself.
 
-### Multitrack store
-The **MULTITRACK** store represents the set of all ```IMediaHandler``` from the audio store, plus aggregate functions for handling multitrack playback.
-
 ### BLOB store
 
 The set of local **media files**, as BLOBs, for playback with the compilation's tracks are persisted individually. Because of their size, they are stored in the _IndexedDB_, with the key referencing a track's media URL.
 
 ### Store access
 
-Most components typically do not access the store directly, following the [dumb component pattern](https://namingconvention.org/vuejs/smart-dumb-naming.html). The "smart" components are the App, the various views, plus the compilation and the tracks (e.g. ```PdfTrack```, ```MediaTrack``` and ```MasterTrack```), including their possible header components.
+Most components typically do not access the store directly, following the [dumb component pattern](https://namingconvention.org/vuejs/smart-dumb-naming.html). The "smart" components are the App, the various views, plus the compilation and the tracks (e.g. ```PdfTrack``` and ```MediaTrack```), including their possible header components.
 
 The following picture gives an overview:
 

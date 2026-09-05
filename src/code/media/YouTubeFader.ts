@@ -86,7 +86,7 @@ export default class YouTubeFader implements IAudioFader {
     addFadeInPreRoll = true;
 
     /** The master volume level
-     * @remarks The master volume emulates an expected volume that is output from the fader, without any mute/solo/fading taken into account.
+     * @remarks The master volume emulates an expected volume that is output from the fader, without any mute/fading taken into account.
      */
     private masterVolume = 1;
 
@@ -190,7 +190,7 @@ export default class YouTubeFader implements IAudioFader {
         }
     }
 
-    // --- mute/solo ---
+    // --- mute ---
 
     onMutedChanged: SubEventImmediate<boolean> = new SubEventImmediate();
 
@@ -213,47 +213,6 @@ export default class YouTubeFader implements IAudioFader {
         this.onMutedChanged.emit(value);
     }
 
-    onSoloedChanged: SubEventImmediate<boolean> = new SubEventImmediate();
-
-    /** The soloed state */
-    private _soloed = false;
-
-    /** @inheritdoc
-     */
-    get soloed(): boolean {
-        return this._soloed;
-    }
-
-    /** @inheritdoc
-     */
-    set soloed(value: boolean) {
-        log.debug(`AudioFader::soloed:value:${value}`);
-
-        this._soloed = value;
-        if (value) {
-            this.anySoloed = true;
-        }
-        this.audioVolume = this.getVolume();
-        this.onSoloedChanged.emit(value);
-    }
-
-    /** The any soloed state */
-    private _anySoloed = false;
-
-    /** @inheritdoc
-     */
-    get anySoloed(): boolean {
-        return this._anySoloed;
-    }
-
-    /** @inheritdoc
-     */
-    set anySoloed(value: boolean) {
-        log.debug(`YouTubeFader::anySoloed:value:${value}`);
-        this._anySoloed = value;
-        this.audioVolume = this.getVolume();
-    }
-
     // --- volume ---
 
     volumeDown(): number {
@@ -261,6 +220,7 @@ export default class YouTubeFader implements IAudioFader {
             Math.max(this.masterVolume * 0.71, YouTubeFader.audioVolumeMin),
         );
     }
+
     volumeUp(): number {
         return this.setVolume(
             Math.max(
@@ -270,12 +230,12 @@ export default class YouTubeFader implements IAudioFader {
         );
     }
 
-    /** Gets the master audio volume, with the possible muted and soloed state (but not a possibly ongoing fade-in/fade-out) observed
-     * @remarks A muted state returns the min volume. A non-soloed and any-(other)-soloed state returns the min volume.
+    /** Gets the master audio volume, with the possible muted state (but not a possibly ongoing fade-in/fade-out) observed
+     * @remarks A muted state returns the min volume.
      * @returns A value between 0 (zero) and 1 (representing full scale), while observing the muted state.
      */
     private getVolume(): number {
-        if (!this.muted && (this.soloed || !this.anySoloed)) {
+        if (!this.muted) {
             return this.masterVolume;
         } else {
             return YouTubeFader.audioVolumeMin;

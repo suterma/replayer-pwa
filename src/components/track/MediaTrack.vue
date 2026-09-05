@@ -44,34 +44,6 @@
                         <OnYouTubeConsent
                             v-if="isYoutubeVideoTrack"
                         ></OnYouTubeConsent>
-                        <!-- Routing controls only when mixable -->
-                        <template v-if="isTrackMixable">
-                            <SelectButton
-                                :disabled="!canPlay"
-                                :is-selected="isActiveTrack"
-                                data-cy="select"
-                                @click="setAsActiveTrack()"
-                                ><span
-                                    :class="{
-                                        'is-invisible': !hasCues,
-                                    }"
-                                    class="has-text-warning"
-                                    >{{ cuesCount }}</span
-                                ></SelectButton
-                            >
-                            <SoloButton
-                                :disabled="!canPlay"
-                                :is-soloed="isSoloed"
-                                data-cy="solo"
-                                @click="toggleSolo()"
-                            />
-                            <MuteButton
-                                :disabled="!canPlay"
-                                :is-muted="isMuted"
-                                data-cy="mute"
-                                @click="toggleMute()"
-                            />
-                        </template>
                         <PlayPauseButton
                             v-else
                             :disabled="!canPlay"
@@ -120,17 +92,6 @@
                     </div>
                 </template>
                 <template #right-action-items>
-                    <div class="level-item is-narrow mr-0 is-hidden-mobile">
-                        <!-- NOTE: In all except the mix mode, the volume button
-                         is displayed as part of the transport/player widget area,
-                         not in the header -->
-                        <VolumeKnob
-                            v-if="isTrackMixable"
-                            :disabled="!canPlay"
-                            :volume="volume"
-                            @update:volume="updateVolume"
-                        />
-                    </div>
                     <div class="level-item is-narrow mr-0">
                         <PlaybackIndicator
                             :fade-in-duration="fadeInDuration"
@@ -400,16 +361,14 @@
                         <!-- NOTE: A v-show is used instead of a v-if to keep the media players permanently in the DOM. -->
                         <div
                             v-show="
-                                (isTrackMixable && isActiveTrack) ||
                                 (isTrackPlayable && isActiveTrack) ||
                                 (isTrackEditable && isExpanded)
                             "
                             :key="trackId"
                             :class="{
-                                section: isTrackPlayable || isTrackMixable,
+                                section: isTrackPlayable,
                                 'transition-in-place':
-                                    isTrackPlayable ||
-                                    isTrackMixable /* because in playback  or mix view, the players are replaced in place, not expanded */,
+                                    isTrackPlayable /* because in playback view, the players are replaced in place, not expanded */,
                                 'has-background-grey-dark': !isFullscreen,
                                 'is-fullscreen': isFullscreen,
                                 'is-single-media-track': hasSingleMediaTrack,
@@ -643,8 +602,7 @@
                                     v-if="
                                         (!hasSingleMediaTrack &&
                                             !isFullscreen &&
-                                            isTrackPlayable) ||
-                                        (!isFullscreen && isTrackMixable)
+                                            isTrackPlayable)
                                     "
                                 >
                                     <CueButtonsBar
@@ -750,14 +708,10 @@ import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
 import CreateCueButton from '@/components/buttons/CreateCueButton.vue';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import FullscreenToggler from '@/components/buttons/FullscreenToggler.vue';
-import MuteButton from '@/components/buttons/MuteButton.vue';
-import SoloButton from '@/components/buttons/SoloButton.vue';
-import SelectButton from '@/components/buttons/SelectButton.vue';
 import MeasureDisplay from '@/components/MeasureDisplay.vue';
 import MetricalEditor from '@/components/editor/MetricalEditor.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import PlayheadSlider from '@/components/PlayheadSlider.vue';
-import VolumeKnob from '@/components/controls/VolumeKnob.vue';
 import PlaybackIndicator from '@/components/indicators/PlaybackIndicator.vue';
 import FullscreenPanel from '@/components/FullscreenPanel.vue';
 import TrackTitle from '@/components/track/TrackTitle.vue';
@@ -820,22 +774,12 @@ const props = defineProps({
         type: String,
         required: true,
     },
-
-    /** Whether any track (including this one) in the compilation is currently soloed.
-     * This is required to determine the muting of non-soloed tracks.
-     */
-    isAnySoloed: {
-        type: Boolean,
-        required: false,
-        default: false,
-    },
 });
 
 const app = useAppStore();
 const {
     isTrackEditable,
     isTrackPlayable,
-    isTrackMixable,
     playbackMode,
     isLoopingPlaybackMode,
     isPreRollEnabled,
@@ -916,7 +860,6 @@ let onSeekingChangedSubscription: Subscription;
 let onFadingChangedSubscription: Subscription;
 let onVolumeChangedSubscription: Subscription;
 let onMutedChangedSubscription: Subscription;
-let onSoloedChangedSubscription: Subscription;
 let onPlaybackRateChangedSubscription: Subscription;
 let onPitchShiftChangedSubscription: Subscription;
 
@@ -994,11 +937,6 @@ function assumeMediaHandler(handler: IMediaHandler) {
             isMuted.value = muted;
         });
 
-    onSoloedChangedSubscription =
-        handler.fader.onSoloedChanged.subscribeImmediate((soloed: boolean) => {
-            isSoloed.value = soloed;
-        });
-
     onPlaybackRateChangedSubscription =
         handler.playbackRateController.onPlaybackRateChanged.subscribeImmediate(
             (rate: number) => {
@@ -1047,7 +985,6 @@ function releaseMediaHandler() {
     onFadingChangedSubscription?.cancel;
     onVolumeChangedSubscription?.cancel;
     onMutedChangedSubscription?.cancel;
-    onSoloedChangedSubscription?.cancel;
     onPlaybackRateChangedSubscription?.cancel;
     onPitchShiftChangedSubscription?.cancel;
 
@@ -1245,26 +1182,6 @@ function toggleMute(mute: boolean | null = null): void {
 
 /** Whether this track is muted */
 const isMuted = ref(false);
-
-/** Toggles the solo state of this track
- * @remarks If the track is not loaded, does nothing.
- * @param solo - If null or not given, toggles the soloed state. When given, sets to the specified state.
- */
-function toggleSolo(solo: boolean | null = null): void {
-    if (canPlay.value) {
-        if (mediaHandler.value) {
-            if (solo === null) {
-                mediaHandler.value.fader.soloed =
-                    !mediaHandler.value?.fader.soloed;
-            } else {
-                mediaHandler.value.fader.soloed = solo;
-            }
-        }
-    }
-}
-
-/** Whether this track is soloed */
-const isSoloed = ref(false);
 
 // --- transport ---
 
