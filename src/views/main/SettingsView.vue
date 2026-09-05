@@ -73,7 +73,9 @@
                         hint="Uses more more resources"
                     ></LabeledCheckbox>
                 </div>
-                <div class="control ml-4">
+            </div>
+            <div class="field">
+            <div class="control ml-4">
                     <LabeledCheckbox
                         v-model="showOverviewWaveformOnEdit"
                         :disabled="!showWaveformsOnEdit"
@@ -90,7 +92,8 @@
                         hint="Uses more resources, not working on some devices"
                     ></LabeledCheckbox>
                 </div>
-
+            </div>
+            <div class="field">
                 <div class="control ml-4">
                     <LabeledCheckbox
                         v-model="levelMeterSizeIsLarge"
@@ -309,6 +312,15 @@
                     </div>
                 </div>
             </div>
+            <div class="field">
+                <div class="control">
+                    <LabeledCheckbox
+                        v-model="useMediaSessionEvents"
+                        label="Use media session events"
+                        hint="Allows control from dedicated media buttons on keyboards, headsets etc..."
+                    ></LabeledCheckbox>
+                </div>
+            </div>
         </div>
 
         <div class="box">
@@ -440,6 +452,7 @@ const {
     defaultPreRollDuration,
     showLevelMeterForEdit,
     keyboardShortcutTimeout,
+    useMediaSessionEvents,
     timeFormat,
     showWaveformsOnEdit,
     showOverviewWaveformOnEdit,

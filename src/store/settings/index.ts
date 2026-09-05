@@ -103,6 +103,11 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         1000,
     );
 
+    /** Whether to handle media session events (e.g. hardware media keys, headset buttons)
+     * @remarks Default is true
+     */
+    const useMediaSessionEvents = useLocalStorage('useMediaSessionEvents', true);
+
     /** The time format to use for display
      * @remarks Default is true
      */
@@ -205,6 +210,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         defaultPreRollDuration.value = 0;
         showLevelMeterForEdit.value = false;
         keyboardShortcutTimeout.value = 1000;
+        useMediaSessionEvents.value = true;
         timeFormat.value = TimeFormat.Iso8601Extended;
         showWaveformsOnEdit.value = true;
         showOverviewWaveformOnEdit.value = false;
@@ -241,6 +247,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         defaultPreRollDuration,
         showLevelMeterForEdit,
         keyboardShortcutTimeout,
+        useMediaSessionEvents,
         timeFormat,
         showWaveformsOnEdit,
         showOverviewWaveformOnEdit,
