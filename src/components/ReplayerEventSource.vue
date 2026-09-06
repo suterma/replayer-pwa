@@ -1,6 +1,6 @@
 <template>
     <div>
-        <!-- ReplayerEventHandler -->
+        <!-- ReplayerEventSource -->
         <!-- this should get removed, but empty templates are not allowed -->
     </div>
 </template>
@@ -9,19 +9,21 @@
 import { defineComponent } from 'vue';
 import { ReplayerEvent } from '@/code/ui/ReplayerEvent';
 
-/** An event handler for Replayer events.
+/** An event source for Replayer events.
  * @remarks Registers/Deregisters to the global Replayer events and emits them as Vue events to the parent component.
  * @privateRemarks Implements the 'Separation of Concern' pattern for the Replayer global events, allowing a parent component
  * to simply use the @ shortcut to register for these events.
  * @privateRemarks This component handles registering and deregistering the events internally
  */
 export default defineComponent({
-    name: 'ReplayerEventHandler',
+    name: 'ReplayerEventSource',
     emits: [
         ReplayerEvent.BACK_TO_CUE,
         ReplayerEvent.TO_NEXT_CUE,
         ReplayerEvent.TO_PREV_CUE,
         ReplayerEvent.TO_MNEMONIC_CUE,
+        ReplayerEvent.PLAY,
+        ReplayerEvent.PAUSE,
         ReplayerEvent.TOGGLE_PLAYBACK,
         ReplayerEvent.REWIND,
         ReplayerEvent.FORWARD,
@@ -30,60 +32,74 @@ export default defineComponent({
     ],
     mounted: function (): void {
         //Register to the global events
-        document.addEventListener(ReplayerEvent.BACK_TO_CUE, this.backToCue);
-        document.addEventListener(ReplayerEvent.TO_NEXT_CUE, this.toNextCue);
-        document.addEventListener(
+        window.addEventListener(ReplayerEvent.BACK_TO_CUE, this.backToCue);
+        window.addEventListener(ReplayerEvent.TO_NEXT_CUE, this.toNextCue);
+        window.addEventListener(
             ReplayerEvent.TO_PREV_CUE,
             this.toPreviousCue,
         );
-        document.addEventListener(
+        window.addEventListener(
             ReplayerEvent.TO_MNEMONIC_CUE,
             this.toMnemonicCue,
         );
-        document.addEventListener(
+        window.addEventListener(
+            ReplayerEvent.PLAY,
+            this.play,
+        );
+        window.addEventListener(
+            ReplayerEvent.PAUSE,
+            this.pause,
+        );
+        window.addEventListener(
             ReplayerEvent.TOGGLE_PLAYBACK,
             this.togglePlayback,
         );
-        document.addEventListener(ReplayerEvent.REWIND, this.rewindFiveSeconds);
-        document.addEventListener(
+        window.addEventListener(ReplayerEvent.REWIND, this.rewindFiveSeconds);
+        window.addEventListener(
             ReplayerEvent.FORWARD,
             this.forwardFiveSeconds,
         );
-        document.addEventListener(ReplayerEvent.VOLUME_DOWN, this.volumeDown);
-        document.addEventListener(ReplayerEvent.VOLUME_UP, this.volumeUp);
+        window.addEventListener(ReplayerEvent.VOLUME_DOWN, this.volumeDown);
+        window.addEventListener(ReplayerEvent.VOLUME_UP, this.volumeUp);
     },
     unmounted: function (): void {
         //Deregister from the global events
-        document.removeEventListener(ReplayerEvent.BACK_TO_CUE, this.backToCue);
-        document.removeEventListener(ReplayerEvent.TO_NEXT_CUE, this.toNextCue);
-        document.removeEventListener(
+        window.removeEventListener(ReplayerEvent.BACK_TO_CUE, this.backToCue);
+        window.removeEventListener(ReplayerEvent.TO_NEXT_CUE, this.toNextCue);
+        window.removeEventListener(
             ReplayerEvent.TO_PREV_CUE,
             this.toPreviousCue,
         );
-        document.removeEventListener(
+        window.removeEventListener(
             ReplayerEvent.TO_MNEMONIC_CUE,
             this.toMnemonicCue,
         );
-        document.removeEventListener(
+        window.removeEventListener(
             ReplayerEvent.TOGGLE_PLAYBACK,
             this.togglePlayback,
         );
-        document.removeEventListener(
+        window.removeEventListener(
             ReplayerEvent.REWIND,
             this.rewindFiveSeconds,
         );
-        document.removeEventListener(
+        window.removeEventListener(
             ReplayerEvent.FORWARD,
             this.forwardFiveSeconds,
         );
-        document.removeEventListener(
+        window.removeEventListener(
             ReplayerEvent.VOLUME_DOWN,
             this.volumeDown,
         );
-        document.removeEventListener(ReplayerEvent.VOLUME_UP, this.volumeUp);
+        window.removeEventListener(ReplayerEvent.VOLUME_UP, this.volumeUp);
     },
     methods: {
         //The functions for registration
+        play(event: Event) {
+            this.$emit(ReplayerEvent.PLAY, event);
+        },
+        pause(event: Event) {
+            this.$emit(ReplayerEvent.PAUSE, event);
+        },
         togglePlayback(event: Event) {
             this.$emit(ReplayerEvent.TOGGLE_PLAYBACK, event);
         },

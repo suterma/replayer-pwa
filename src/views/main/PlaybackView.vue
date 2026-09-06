@@ -11,7 +11,7 @@
         <!-- Handle and translate the keyboard shortcuts into Replayer events -->
         <!-- In edit view, the CTRL modifier helps disambiguate
          between other uses of the shortcut keys-->
-        <CompilationKeyboardHandler :require-ctrl-modifier="isTrackEditable" />
+        <ReplayerKeyboardHandler :require-ctrl-modifier="isTrackEditable" />
 
         <!-- If available, show the compilation -->
         <Compilation v-if="hasCompilation" />
@@ -76,7 +76,7 @@ import FooterLinks from '@/components/FooterLinks.vue';
 import CompilationLoader from '@/components/CompilationLoader.vue';
 import CollapsiblePanel from '@/components/CollapsiblePanel.vue';
 import MediaList from '@/components/MediaList.vue';
-import CompilationKeyboardHandler from '@/components/CompilationKeyboardHandler.vue';
+import ReplayerKeyboardHandler from '@/components/ReplayerKeyboardHandler.vue';
 import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
 import { watch } from 'vue';

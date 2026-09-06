@@ -57,12 +57,18 @@ window.addEventListener(
     },
 );
 
+// Add input handling
+import { useMediaEvents } from './composables/MediaEvents'
+const mediaEvents = useMediaEvents()
+
 /** Register a handler to handle page reloads and tab/browser exits
  */
 window.onbeforeunload = app.unmount;
 
 app.onUnmount(() => {
     log.debug('Replayer app cleanUp...');
+
+    mediaEvents.destroy()
 
     // Destroy higher-up stores first
 
