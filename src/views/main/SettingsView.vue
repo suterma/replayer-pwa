@@ -8,9 +8,9 @@
     <div>
         <h1 class="title">Settings</h1>
 
-        <div class="box">
-            <h3 class="subtitle">Display (General)</h3>
+        <h2 class="title">General</h2>
 
+        <div class="block">
             <div class="field">
                 <div class="control">
                     <LabeledCheckbox
@@ -63,9 +63,10 @@
             </div>
         </div>
 
-        <div class="box">
-            <h3 class="subtitle">Display (Edit)</h3>
-            <div class="field">
+        <h2 class="title">Edit</h2>
+
+        <div class="block">
+             <div class="field">
                 <div class="control">
                     <LabeledCheckbox
                         v-model="showWaveformsOnEdit"
@@ -105,8 +106,9 @@
             </div>
         </div>
 
-        <div class="box">
-            <h3 class="subtitle">Display (Play)</h3>
+        <h2 class="title">Play</h2>
+
+        <div class="block">
             <div class="field">
                 <div class="control">
                     <LabeledCheckbox
@@ -128,9 +130,9 @@
             </div>
         </div>
 
-        <div class="box">
-            <h3 class="subtitle">Transport</h3>
+        <h2 class="title">Transport</h2>
 
+        <div class="block">
             <div class="field">
                 <div class="control">
                     <LabeledCheckbox
@@ -253,8 +255,9 @@
             </div>
         </div>
 
-        <div class="box">
-            <h3 class="subtitle">Video</h3>
+        <h2 class="title">Video</h2>
+
+        <div class="block">
             <div class="field">
                 <div class="control">
                     <LabeledCheckbox
@@ -275,8 +278,9 @@
             </div>
         </div>
 
-        <div class="box">
-            <h3 class="subtitle">Looping</h3>
+        <h2 class="title">Looping</h2>
+
+        <div class="block">
             <div class="field">
                 <div class="control">
                     <LabeledCheckbox
@@ -288,8 +292,9 @@
             </div>
         </div>
 
-        <div class="box">
-            <h3 class="subtitle">Input</h3>
+        <h2 class="title">Input</h2>
+
+        <div class="block">
             <div class="field">
                 <label class="label"
                     >Keyboard shortcut timeout
@@ -322,10 +327,21 @@
                     ></LabeledCheckbox>
                 </div>
             </div>
+
+            <div class="field">
+                <div class="control">
+                    <LabeledCheckbox
+                        v-model="handleMediaEventPauseAsReturnToCue"
+                        label="Media Event pause return to cue"
+                        hint="Handles the Media Session Event 'pause' with an additional return to the selected cue, if any."
+                    ></LabeledCheckbox>
+                </div>
+            </div>
         </div>
 
-        <div class="box">
-            <h3 class="subtitle">Advanced</h3>
+        <h2 class="title">Advanced</h2>
+
+        <div class="block">
             <div class="field">
                 <label class="label"
                     >Reset all data and settings
@@ -343,7 +359,7 @@
         <hr />
 
         <div class="box is-experimental">
-            <h3 class="subtitle">Experimental (Here be dragons)</h3>
+            <h2 class="subtitle">Experimental (Here be dragons)</h2>
 
             <div class="field">
                 <div class="control">
@@ -454,6 +470,7 @@ const {
     showLevelMeterForEdit,
     keyboardShortcutTimeout,
     handleMediaEventTracksAsCues,
+    handleMediaEventPauseAsReturnToCue,
     timeFormat,
     showWaveformsOnEdit,
     showOverviewWaveformOnEdit,

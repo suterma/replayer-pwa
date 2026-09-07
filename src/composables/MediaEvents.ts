@@ -30,7 +30,11 @@ export function useMediaEvents() {
         },
         {
             action: 'pause',
-            handler: () => emitReplayerEvent(ReplayerEvent.PAUSE),
+            handler: () => emitReplayerEvent(
+                settings.handleMediaEventPauseAsReturnToCue
+                    ? ReplayerEvent.BACK_TO_CUE
+                    : ReplayerEvent.PAUSE,
+            ),
         },
         {
             action: 'stop',

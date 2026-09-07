@@ -2,6 +2,7 @@
  * emitted from Replayer-internal input handlers and
  * consumed from suitable components. */
 export enum ReplayerEvent {
+    /** Pauses and returns to the currently selected cue, if any. */
     BACK_TO_CUE = 'backtocue',
     TO_NEXT_CUE = 'tonextcue',
     TO_PREV_CUE = 'topreviouscue',
