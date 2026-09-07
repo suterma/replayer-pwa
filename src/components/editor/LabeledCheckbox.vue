@@ -1,6 +1,6 @@
 <template>
     <!-- Let the disabled attribute go to the label and input element: -->
-    <label class="checkbox" :disabled="disabled ? true : null">
+    <label class="checkbox label" :disabled="disabled ? true : null">
         <input
             v-model.number="vModel"
             type="checkbox"
@@ -56,7 +56,7 @@ const vModel = computed<boolean | null>({
     },
     set(value): void {
         // only actual booleans should be emitted, not (empty or other) strings
-        emit('update:modelValue', value ? true : false);
+        emit('update:modelValue', !!value);
     },
 });
 </script>

@@ -103,6 +103,16 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         1000,
     );
 
+    /** Whether to handle media session prev/next track events as prev/next cue events
+     * @remarks Default is true
+     */
+    const handleMediaEventTracksAsCues = useLocalStorage('handleMediaEventTracksAsCues', true);
+
+    /** Whether to handle the Media Session Event 'pause' with an additional return to the selected cue, if any.
+     * @remarks Default is false
+     */
+    const handleMediaEventPauseAsReturnToCue = useLocalStorage('handleMediaEventPauseAsReturnToCue', false);
+
     /** The time format to use for display
      * @remarks Default is true
      */
@@ -205,6 +215,8 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         defaultPreRollDuration.value = 0;
         showLevelMeterForEdit.value = false;
         keyboardShortcutTimeout.value = 1000;
+        handleMediaEventTracksAsCues.value = true;
+        handleMediaEventPauseAsReturnToCue.value = false;
         timeFormat.value = TimeFormat.Iso8601Extended;
         showWaveformsOnEdit.value = true;
         showOverviewWaveformOnEdit.value = false;
@@ -241,6 +253,8 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         defaultPreRollDuration,
         showLevelMeterForEdit,
         keyboardShortcutTimeout,
+        handleMediaEventTracksAsCues,
+        handleMediaEventPauseAsReturnToCue,
         timeFormat,
         showWaveformsOnEdit,
         showOverviewWaveformOnEdit,

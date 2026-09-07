@@ -35,23 +35,25 @@ import { ref } from 'vue';
 import { useMessageStore } from '@/store/messages';
 
 /** A keyboard handler, which translates specific keyboard events into global
- * Replayer events(at the DOM document level) to handle as
+ * Replayer events (at the DOM level) to handle as
  * - cue actions, for all cues in a compilation
- * - player actions, which get handled by the currently active player (if any)
- * @remarks Events are only handled, when a compilation is currently loaded
+ * - player actions, which get handled by the currently active track player (if any)
+ * @remarks Events are only handled when a compilation is currently loaded
  * @remarks The emitted events are those from the @see Replayer enumeration
- * @privateRemarks The idea is to register for key presses (or other input) at the document level,
- * then translate this input into custom Replayer events, and emit them
- * back at the document level. This should only be done (or handled) if a
- * compilation is loaded.
- * Using a specific Replayer event handler at the appropriate level, these
+ * @privateRemarks The idea is to
+ * 1) register for key presses (or other input) at the DOM level
+ * 2) then translate this input into custom Replayer events, and
+ * 3) emit them back at the DOM level.
+ * Rationale: Using a specific Replayer event bus, these
  * issued Replayer action events can then be handled properly in the suitable
  * Vue component. See also https://developer.mozilla.org/en-US/docs/Web/Events/Creating_and_triggering_events
  * @privateRemarks This keyboard handler is distinct from the general application hotkey
  * handling, which is implemented separately.
+ * @devdoc This handling could have been implemented as a Composable (maybe //TODO later), but the convenience
+ * of the GlobalEvents library was easier to leverage at the Component level.
  */
 defineProps({
-    /** Whether to require the CTRL modfier keys for the keyboard events */
+    /** Whether to require the CTRL modifier keys for the keyboard events */
     requireCtrlModifier: {
         type: Boolean,
         required: false,
@@ -92,7 +94,7 @@ function handleKey(event: KeyboardEvent) {
         event.preventDefault();
         event.stopPropagation();
         DisplayKeyAndAction(event, 'back to cue');
-        document.dispatchEvent(new Event(ReplayerEvent.BACK_TO_CUE));
+        window.dispatchEvent(new Event(ReplayerEvent.BACK_TO_CUE));
     }
     //Next cue?
     else if (event.key === '*') {
@@ -112,7 +114,7 @@ function handleKey(event: KeyboardEvent) {
         event.stopPropagation();
         if (mnemonic.value) {
             DisplayDataAndAction(mnemonic.value, 'mnemonic invoking');
-            document.dispatchEvent(
+            window.dispatchEvent(
                 new CustomEvent(ReplayerEvent.TO_MNEMONIC_CUE, {
                     detail: mnemonic.value,
                 }),
@@ -145,6 +147,7 @@ function handleKey(event: KeyboardEvent) {
 
 /** Toggles playback
  * @remarks Skips repeated events
+ * @remarks A dedicated play and pause event is not available via keyboard, for lack of an obvious button, just this toggling.
  * @privateRemarks Keydown events are used as trigger instead of the non-repetitive keyup events
  * to have a better responsiveness for the user.
  */
@@ -153,21 +156,21 @@ function togglePlayback(event: KeyboardEvent) {
         return;
     }
     DisplayKeyAndAction(event, 'play/pause');
-    document.dispatchEvent(new Event(ReplayerEvent.TOGGLE_PLAYBACK));
+    window.dispatchEvent(new Event(ReplayerEvent.TOGGLE_PLAYBACK));
 }
 /** Rewinds 5 seconds
  * @remarks This handler does accept repetitive events
  */
 function rewind(event: KeyboardEvent) {
     DisplayKeyAndAction(event, 'rewind 5 sec');
-    document.dispatchEvent(new Event(ReplayerEvent.REWIND));
+    window.dispatchEvent(new Event(ReplayerEvent.REWIND));
 }
 /** Forwards 5 seconds
  * @remarks This handler does accept repetitive events
  */
 function forward(event: KeyboardEvent) {
     DisplayKeyAndAction(event, 'forward 5 sec');
-    document.dispatchEvent(new Event(ReplayerEvent.FORWARD));
+    window.dispatchEvent(new Event(ReplayerEvent.FORWARD));
 }
 
 /** Selects the previous cue
@@ -176,7 +179,7 @@ function forward(event: KeyboardEvent) {
 function previousCue(event: KeyboardEvent) {
     event.preventDefault();
     DisplayKeyAndAction(event, 'to previous cue');
-    document.dispatchEvent(new Event(ReplayerEvent.TO_PREV_CUE));
+    window.dispatchEvent(new Event(ReplayerEvent.TO_PREV_CUE));
 }
 /** Selects the next cue
  * @remarks This handler does accept repetitive events
@@ -184,7 +187,7 @@ function previousCue(event: KeyboardEvent) {
 function nextCue(event: KeyboardEvent) {
     event.preventDefault();
     DisplayKeyAndAction(event, 'to next cue');
-    document.dispatchEvent(new Event(ReplayerEvent.TO_NEXT_CUE));
+    window.dispatchEvent(new Event(ReplayerEvent.TO_NEXT_CUE));
 }
 
 /** Decreases the playback volume
@@ -192,14 +195,14 @@ function nextCue(event: KeyboardEvent) {
  */
 function volumeDown(event: KeyboardEvent) {
     DisplayKeyAndAction(event, 'volume down');
-    document.dispatchEvent(new Event(ReplayerEvent.VOLUME_DOWN));
+    window.dispatchEvent(new Event(ReplayerEvent.VOLUME_DOWN));
 }
 /** Increases the playback volume
  * @remarks This handler does accept repetitive events
  */
 function volumeUp(event: KeyboardEvent) {
     DisplayKeyAndAction(event, 'volume up');
-    document.dispatchEvent(new Event(ReplayerEvent.VOLUME_UP));
+    window.dispatchEvent(new Event(ReplayerEvent.VOLUME_UP));
 }
 
 // --- message display ---

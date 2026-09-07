@@ -17,11 +17,13 @@
         <!-- Handle all track-relevant events here
         Note: A check for the active track is done in the handler methods.
         A v-if here would work, but would register the events not in a useful order. -->
-        <ReplayerEventHandler
+        <ReplayerEventSource
             @backtocue="goToSelectedCue"
             @tonextcue="goToSelectedCue"
             @topreviouscue="goToSelectedCue"
             @tomnemoniccue="goToSelectedCue"
+            @play="play"
+            @pause="pause"
             @toggleplayback="togglePlayback"
             @rewind="rewind"
             @forward="forward"
@@ -696,7 +698,7 @@ import CueLevelEditors from '@/components/CueLevelEditors.vue';
 import MeterLevelEditor from '@/components/editor/MeterLevelEditor.vue';
 import TrackMediaElement from '@/components/track/TrackMediaElement.vue';
 import TrackYouTubeElement from '@/components/track/TrackYouTubeElement.vue';
-import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
+import ReplayerEventSource from '@/components/ReplayerEventSource.vue';
 import TrackHeader from '@/components/track/TrackHeader.vue';
 import CueButtonsBar from '@/components/CueButtonsBar.vue';
 import CueButtonsField from '@/components/CueButtonsField.vue';
@@ -738,7 +740,7 @@ import MessageOverlay from '@/components/MessageOverlay.vue';
 import { Subscription } from 'sub-events';
 import { PlaybackState } from '@/code/media/PlaybackState';
 import useLog from '@/composables/LogComposable';
-import { useTrackStore } from '@/store/track';
+import { useTrackStore } from '@/store/track/index.ts';
 import MeterDisplay from '@/components/displays/MeterDisplay.vue';
 import ArtistDisplay from '@/components/displays/ArtistDisplay.vue';
 
@@ -1131,14 +1133,12 @@ function stop(): void {
     app.updateScheduledCueId(CompilationHandler.EmptyId);
 }
 
-//TODO move all these events to app store
 function toPreviousCue() {
-    document.dispatchEvent(new Event(ReplayerEvent.TO_PREV_CUE));
+    window.dispatchEvent(new Event(ReplayerEvent.TO_PREV_CUE));
 }
 
-//TODO move all these events to app store
 function toNextCue() {
-    document.dispatchEvent(new Event(ReplayerEvent.TO_NEXT_CUE));
+    window.dispatchEvent(new Event(ReplayerEvent.TO_NEXT_CUE));
 }
 
 /** Sets this track as the active track, if it is not already the active track.
@@ -1261,6 +1261,20 @@ function goToSelectedCue() {
 }
 
 // --- playback ---
+
+/** Starts playback if this is the active track */
+function play() {
+    if (isActiveTrack.value) {
+        mediaHandler.value?.play();
+    }
+}
+
+/** Pauses playback if this is the active track */
+function pause() {
+    if (isActiveTrack.value) {
+        mediaHandler.value?.pause();
+    }
+}
 
 /** Toggles the playback state if this is the active track */
 function togglePlayback() {

@@ -2,9 +2,11 @@
 <template>
     <div class="compilation" data-cy="compilation">
         <!-- Handle all relevant Replayer events for the compilation level -->
-        <ReplayerEventHandler
+        <ReplayerEventSource
             @tonextcue="app.toNextCue()"
             @topreviouscue="app.toPreviousCue()"
+            @tonexttrack="app.playNextTrack()"
+            @toprevioustrack="app.playPreviousTrack()"
             @tomnemoniccue="app.toMnemonicCue(($event as CustomEvent).detail)"
         />
 
@@ -63,7 +65,7 @@
  */
 import { onMounted, onUnmounted } from 'vue';
 import MediaTrack from '@/components/track/MediaTrack.vue';
-import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
+import ReplayerEventSource from '@/components/ReplayerEventSource.vue';
 import NoticeTrack from '@/components/track/NoticeTrack.vue';
 import PdfTrack from '@/components/track/PdfTrack.vue';
 import CompilationHeader from '@/components/CompilationHeader.vue';
