@@ -740,7 +740,7 @@ import MessageOverlay from '@/components/MessageOverlay.vue';
 import { Subscription } from 'sub-events';
 import { PlaybackState } from '@/code/media/PlaybackState';
 import useLog from '@/composables/LogComposable';
-import { useTrackStore } from '@/store/track';
+import { useTrackStore } from '@/store/track/index.ts';
 import MeterDisplay from '@/components/displays/MeterDisplay.vue';
 import ArtistDisplay from '@/components/displays/ArtistDisplay.vue';
 
