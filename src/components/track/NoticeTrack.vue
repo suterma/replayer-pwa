@@ -59,9 +59,22 @@ onUnmounted(() => {
     trackStore.$dispose();
 });
 
+/** Determines whether the given URL uses an allowed protocol for fetching
+ * @remarks Only http(s) and local blob URL's are allowed, guarding against
+ * fetching of arbitrary, potentially internal or malicious, resources
+ */
+function isFetchableUrl(url: string): boolean {
+    try {
+        const protocol = new URL(url).protocol;
+        return protocol === 'http:' || protocol === 'https:' || protocol === 'blob:';
+    } catch {
+        return false;
+    }
+}
+
 /** Updates the text by fetching the media URL */
 function updateText() {
-    if (mediaUrl.value) {
+    if (mediaUrl.value && isFetchableUrl(mediaUrl.value)) {
         fetch(mediaUrl.value).then((response) => {
             response.text().then((text) => {
                 textContent.value = text;
