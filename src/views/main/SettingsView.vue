@@ -312,12 +312,13 @@
                     </div>
                 </div>
             </div>
+
             <div class="field">
                 <div class="control">
                     <LabeledCheckbox
-                        v-model="useMediaSessionEvents"
-                        label="Use media session events"
-                        hint="Allows control from dedicated media buttons on keyboards, headsets etc..."
+                        v-model="handleMediaEventTracksAsCues"
+                        label="Media Event tracks do handle cues"
+                        hint="Handles the Media Session Event prev/next Track as prev/next Cue events in Replayer"
                     ></LabeledCheckbox>
                 </div>
             </div>
@@ -452,7 +453,7 @@ const {
     defaultPreRollDuration,
     showLevelMeterForEdit,
     keyboardShortcutTimeout,
-    useMediaSessionEvents,
+    handleMediaEventTracksAsCues,
     timeFormat,
     showWaveformsOnEdit,
     showOverviewWaveformOnEdit,

@@ -21,6 +21,8 @@ export default defineComponent({
         ReplayerEvent.BACK_TO_CUE,
         ReplayerEvent.TO_NEXT_CUE,
         ReplayerEvent.TO_PREV_CUE,
+        ReplayerEvent.TO_NEXT_TRACK,
+        ReplayerEvent.TO_PREV_TRACK,
         ReplayerEvent.TO_MNEMONIC_CUE,
         ReplayerEvent.PLAY,
         ReplayerEvent.PAUSE,
@@ -37,6 +39,14 @@ export default defineComponent({
         window.addEventListener(
             ReplayerEvent.TO_PREV_CUE,
             this.toPreviousCue,
+        );
+        window.addEventListener(
+            ReplayerEvent.TO_NEXT_TRACK,
+            this.toNextTrack,
+        );
+        window.addEventListener(
+            ReplayerEvent.TO_PREV_TRACK,
+            this.toPreviousTrack,
         );
         window.addEventListener(
             ReplayerEvent.TO_MNEMONIC_CUE,
@@ -69,6 +79,14 @@ export default defineComponent({
         window.removeEventListener(
             ReplayerEvent.TO_PREV_CUE,
             this.toPreviousCue,
+        );
+        window.removeEventListener(
+            ReplayerEvent.TO_NEXT_TRACK,
+            this.toNextTrack,
+        );
+        window.removeEventListener(
+            ReplayerEvent.TO_PREV_TRACK,
+            this.toPreviousTrack,
         );
         window.removeEventListener(
             ReplayerEvent.TO_MNEMONIC_CUE,
@@ -123,6 +141,12 @@ export default defineComponent({
         },
         toPreviousCue(event: Event) {
             this.$emit(ReplayerEvent.TO_PREV_CUE, event);
+        },
+        toNextTrack(event: Event) {
+            this.$emit(ReplayerEvent.TO_NEXT_TRACK, event);
+        },
+        toPreviousTrack(event: Event) {
+            this.$emit(ReplayerEvent.TO_PREV_TRACK, event);
         },
         toMnemonicCue(event: Event) {
             this.$emit(ReplayerEvent.TO_MNEMONIC_CUE, event);

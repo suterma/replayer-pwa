@@ -5,6 +5,8 @@
         <ReplayerEventSource
             @tonextcue="app.toNextCue()"
             @topreviouscue="app.toPreviousCue()"
+            @tonexttrack="app.playNextTrack()"
+            @toprevioustrack="app.playPreviousTrack()"
             @tomnemoniccue="app.toMnemonicCue(($event as CustomEvent).detail)"
         />
 

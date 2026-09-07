@@ -1,4 +1,5 @@
 import { ReplayerEvent } from '@/code/ui/ReplayerEvent.ts';
+import { useSettingsStore } from '@/store/settings';
 
 /**
  * Dispatch a semantic Replayer application event.
@@ -16,13 +17,14 @@ function emitReplayerEvent(event: ReplayerEvent): void {
  * @devdoc See https://developer.mozilla.org/en-US/docs/Web/API/MediaSession/setActionHandler for details.
  */
 export function useMediaEvents() {
+    const settings = useSettingsStore();
 
     const mediaSessionHandlers: Array<{
-        action: MediaSessionAction
-        handler: MediaSessionActionHandler
+        action: MediaSessionAction;
+        handler: MediaSessionActionHandler;
     }> = [
         //TODO docuemnt all these in the web page
-         {
+        {
             action: 'play',
             handler: () => emitReplayerEvent(ReplayerEvent.PLAY),
         },
@@ -32,15 +34,28 @@ export function useMediaEvents() {
         },
         {
             action: 'stop',
-            handler: () => emitReplayerEvent(ReplayerEvent.BACK_TO_CUE /* NOTE: This also pauses the playback */),
+            handler: () =>
+                emitReplayerEvent(
+                    ReplayerEvent.BACK_TO_CUE /* NOTE: This also pauses the playback */,
+                ),
         },
         {
             action: 'nexttrack',
-            handler: () => emitReplayerEvent(ReplayerEvent.TO_NEXT_CUE),
+            handler: () =>
+                emitReplayerEvent(
+                    settings.handleMediaEventTracksAsCues
+                        ? ReplayerEvent.TO_NEXT_CUE
+                        : ReplayerEvent.TO_NEXT_TRACK,
+                ),
         },
         {
             action: 'previoustrack',
-            handler: () => emitReplayerEvent(ReplayerEvent.TO_PREV_CUE),
+            handler: () =>
+                emitReplayerEvent(
+                    settings.handleMediaEventTracksAsCues
+                        ? ReplayerEvent.TO_PREV_CUE
+                        : ReplayerEvent.TO_PREV_TRACK,
+                ),
         },
         {
             action: 'seekforward',
@@ -50,7 +65,7 @@ export function useMediaEvents() {
             action: 'seekbackward',
             handler: () => emitReplayerEvent(ReplayerEvent.REWIND),
         },
-    ]
+    ];
 
     if ('mediaSession' in navigator) {
         for (const { action, handler } of mediaSessionHandlers) {

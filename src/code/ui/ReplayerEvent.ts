@@ -6,9 +6,7 @@ export enum ReplayerEvent {
     TO_NEXT_CUE = 'tonextcue',
     TO_PREV_CUE = 'topreviouscue',
     TO_MNEMONIC_CUE = 'tomnemoniccue',
-    //TODO must be implemented at the suitable level. Offer an Option to either use next cue as default for replayer or next track.
     TO_NEXT_TRACK = 'tonexttrack',
-    //TODO must be implemented at the suitable level. Offer an Option to either use next cue as default for replayer or next track.
     TO_PREV_TRACK = 'toprevioustrack',
     /** Starts or stops playback at the current position, depending on the current state. Honors pre-roll and fade operations, if applicable. */
     TOGGLE_PLAYBACK = 'toggleplayback',
