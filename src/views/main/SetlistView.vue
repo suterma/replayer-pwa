@@ -19,6 +19,17 @@
                     </button>
                 </div>
             </div>
+            <div class="field">
+                <div class="control">
+                    <button
+                        class="button is-pulled-right"
+                        @click="sortExperimental()"
+                    >
+                        <BaseIcon v-once :path="mdiOrderAlphabeticalAscending" />
+                        <span> Experimental: Order alphabetically</span>
+                    </button>
+                </div>
+            </div>
             <div class="field is-horizontal">
                 <div class="field-label">
                     <label class="label">Options</label>
@@ -172,7 +183,7 @@ import { computed, ref } from 'vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import SetlistItem from '@/components/SetlistItem.vue';
 import ReplayerAd from '@/components/ReplayerAd.vue';
-import { mdiDrag, mdiPrinterOutline } from '@mdi/js';
+import { mdiDrag, mdiPrinterOutline, mdiOrderAlphabeticalAscending } from '@mdi/js';
 import draggable from 'vuedraggable';
 import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
@@ -203,6 +214,11 @@ const showItemTags = ref(false);
 const app = useAppStore();
 const { compilation, allTracks, getAllTags } = storeToRefs(app);
 
+function printWindow() {
+    window.print();
+}
+
+// --- Sorting ---
 const orderedTracks = computed<ITrack[]>({
     get(): ITrack[] {
         return allTracks.value;
@@ -213,8 +229,9 @@ const orderedTracks = computed<ITrack[]>({
     },
 });
 
-function printWindow() {
-    window.print();
+/** Experimental: Sorts the Tracks by Name, then by Tag, using "SAMTB" as the order. */
+function sortExperimental() {
+    app.updateTrackOrderByTitleAlphaTagSamtb();
 }
 
 // --- Tag handling ---

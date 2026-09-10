@@ -1073,6 +1073,29 @@ export const actions = {
         );
     },
 
+    /* Experimental: Order the tracks by title, alphabetically, then by first tag, SAMTB. */
+    updateTrackOrderByTitleAlphaTagSamtb(): void {
+        state.compilation.value.Tracks.sort((a, b) => {
+            const titleCompare = a.Name.localeCompare(b.Name, undefined, {
+                sensitivity: 'base',
+            });
+
+            if (titleCompare !== 0) {
+                return titleCompare;
+            }
+
+            //TODO overwork this, using Sop, Alt, Mez, Ten, Bas
+
+            const tagA = a.Tags.values().next().value ?? '';
+            const tagB = b.Tags.values().next().value ?? '';
+
+            return tagA.localeCompare(tagB, undefined, {
+                sensitivity: 'base',
+            });
+        });
+    },
+
+
     // --- track positioning ---
 
     /** Whether the track is the first track in the set of media tracks */
