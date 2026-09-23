@@ -10,24 +10,31 @@
         <div class="block box is-hidden-print">
             <div class="field">
                 <div class="control">
-                    <button
-                        class="button is-success is-pulled-right"
-                        @click="printWindow()"
-                    >
-                        <BaseIcon v-once :path="mdiPrinterOutline" />
-                        <span> Print (b/w)</span>
-                    </button>
-                </div>
-            </div>
-            <div class="field">
-                <div class="control">
-                    <button
-                        class="button is-pulled-right"
-                        @click="sortExperimental()"
-                    >
-                        <BaseIcon v-once :path="mdiOrderAlphabeticalAscending" />
-                        <span> Experimental: Order alphabetically</span>
-                    </button>
+                    <div class="buttons">
+                        <button
+                            class="button is-success"
+                            @click="printWindow()"
+                        >
+                            <BaseIcon v-once :path="mdiPrinterOutline" />
+                            <span> Print (b/w)</span>
+                        </button>
+                        <template v-if="experimentalShowOrderingButtons">
+                            <button v-experiment="experimentalShowOrderingButtons"
+                                class="button"
+                                @click="sortExperimental()"
+                            >
+                                <BaseIcon v-once :path="mdiOrderAlphabeticalAscending" />
+                                <span> Order alphabetically by title</span>
+                            </button>
+                            <button v-experiment="experimentalShowOrderingButtons"
+                                class="button"
+                                @click="sortExperimentalSatb()"
+                            >
+                                <BaseIcon v-once :path="mdiOrderAlphabeticalAscending" />
+                                <span>Order alphabetically by title, the by tag (SATB)</span>
+                            </button>
+                        </template>
+                    </div>
                 </div>
             </div>
             <div class="field is-horizontal">
@@ -190,6 +197,7 @@ import { useAppStore } from '@/store/app';
 import type { ITrack } from '@/store/ITrack';
 import TagsSelector from '@/components/editor/TagsSelector.vue';
 import useLog from '@/composables/LogComposable';
+import { useSettingsStore } from '@/store/settings';
 const { log } = useLog();
 
 const drag = ref(false);
@@ -209,10 +217,14 @@ const showMediaSource = ref(false);
 const showNumbering = ref(true);
 
 /** Whether to show the tags on the items in the list */
-const showItemTags = ref(false);
+const showItemTags = ref(true);
 
 const app = useAppStore();
 const { compilation, allTracks, getAllTags } = storeToRefs(app);
+
+const settings = useSettingsStore();
+const { experimentalShowOrderingButtons } =
+    storeToRefs(settings);
 
 function printWindow() {
     window.print();
@@ -229,9 +241,13 @@ const orderedTracks = computed<ITrack[]>({
     },
 });
 
-/** Experimental: Sorts the Tracks by Name, then by Tag, using "SAMTB" as the order. */
+/** Experimental: Sorts the Tracks by Name, then by Tag, using "SATB" as the order. */
 function sortExperimental() {
-    app.updateTrackOrderByTitleAlphaTagSamtb();
+    app.updateTrackOrderByTitleAlpha();
+}
+/** Experimental: Sorts the Tracks by Name, then by Tag, using "SATB" as the order. */
+function sortExperimentalSatb() {
+    app.updateTrackOrderByTitleAlphaTagSatb();
 }
 
 // --- Tag handling ---

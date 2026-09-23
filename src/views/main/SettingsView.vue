@@ -422,6 +422,15 @@
             <div class="field">
                 <div class="control">
                     <LabeledCheckbox
+                        v-model="experimentalShowOrderingButtons"
+                        label="Show ordering buttons"
+                    ></LabeledCheckbox>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <LabeledCheckbox
                         v-model="experimentalHideStageMark"
                         label="Hide stage mark"
                         hint="Useful for documentation purposes"
@@ -485,6 +494,7 @@ const {
     experimentalHideStageMark,
     experimentalUseMobileDevTools,
     experimentalShowRemarksEditors,
+    experimentalShowOrderingButtons,
 } = storeToRefs(settings);
 
 const router = useRouter();
