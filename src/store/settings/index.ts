@@ -200,6 +200,13 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         false,
     );
 
+    /** EXPERIMENTAL: Whether to show the ordering buttons in the set list
+     */
+    const experimentalShowOrderingButtons = useLocalStorage(
+        'experimentalShowOrderingButtons',
+        false,
+    );
+
     /** Returns the settings to their default value */
     function $reset() {
         showPdfInline.value = true;
@@ -231,6 +238,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         experimentalHideStageMark.value = false;
         experimentalUseMobileDevTools.value = false;
         experimentalShowRemarksEditors.value = false;
+        experimentalShowOrderingButtons.value = false;
     }
 
     return {
@@ -269,6 +277,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         experimentalHideStageMark,
         experimentalUseMobileDevTools,
         experimentalShowRemarksEditors,
+        experimentalShowOrderingButtons,
         $reset,
     };
 });

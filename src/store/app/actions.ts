@@ -19,10 +19,7 @@ import CompilationParser from '../../code/xml/XmlCompilationParser';
 import { useMessageStore } from '../messages';
 import type { IMeter } from '@/code/music/IMeter';
 import { Meter } from '@/code/music/Meter';
-import {
-    ProgressDisplayKind,
-    ProgressMessage,
-} from '@/store/messages/ProgressMessage';
+import { ProgressDisplayKind, ProgressMessage, } from '@/store/messages/ProgressMessage';
 import { getters } from './getters';
 import useLog from '@/composables/LogComposable';
 
@@ -1072,6 +1069,51 @@ export const actions = {
                 orderedTrackIds.indexOf(a.Id) - orderedTrackIds.indexOf(b.Id),
         );
     },
+
+    /* Experimental: Order the tracks by title, alphabetically. */
+    updateTrackOrderByTitleAlpha(): void {
+        state.compilation.value.Tracks.sort((a, b) => {
+            return a.Name.localeCompare(b.Name, undefined, {
+                sensitivity: 'base',
+            });
+        });
+    },
+
+
+    /* Experimental: Order the tracks by title, alphabetically, then by first tag, SATB. */
+    updateTrackOrderByTitleAlphaTagSatb(): void {
+        const alphabet = 'satbcdefghijklmnopqruvwxyz';
+
+        const compareSatb = (a: string, b: string): number => {
+            const order = (char: string) =>
+                alphabet.indexOf(char.toLowerCase());
+
+            return [...a].reduce((result, charA, i) => {
+                if (result !== 0 || i >= b.length) {
+                    return result;
+                }
+
+                const charB = b[i]!;
+                return order(charA) - order(charB);
+            }, 0) || a.length - b.length;
+        };
+
+        state.compilation.value.Tracks.sort((a, b) => {
+            const titleCompare = a.Name.localeCompare(b.Name, undefined, {
+                sensitivity: 'base',
+            });
+
+            if (titleCompare !== 0) {
+                return titleCompare;
+            }
+
+            const tagA = a.Tags.values().next().value ?? '';
+            const tagB = b.Tags.values().next().value ?? '';
+
+            return compareSatb(tagA, tagB);
+        });
+    },
+
 
     // --- track positioning ---
 

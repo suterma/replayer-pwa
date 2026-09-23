@@ -10,13 +10,31 @@
         <div class="block box is-hidden-print">
             <div class="field">
                 <div class="control">
-                    <button
-                        class="button is-success is-pulled-right"
-                        @click="printWindow()"
-                    >
-                        <BaseIcon v-once :path="mdiPrinterOutline" />
-                        <span> Print (b/w)</span>
-                    </button>
+                    <div class="buttons">
+                        <button
+                            class="button is-success"
+                            @click="printWindow()"
+                        >
+                            <BaseIcon v-once :path="mdiPrinterOutline" />
+                            <span> Print (b/w)</span>
+                        </button>
+                        <template v-if="experimentalShowOrderingButtons">
+                            <button v-experiment="experimentalShowOrderingButtons"
+                                class="button"
+                                @click="sortExperimental()"
+                            >
+                                <BaseIcon v-once :path="mdiOrderAlphabeticalAscending" />
+                                <span> Order alphabetically by title</span>
+                            </button>
+                            <button v-experiment="experimentalShowOrderingButtons"
+                                class="button"
+                                @click="sortExperimentalSatb()"
+                            >
+                                <BaseIcon v-once :path="mdiOrderAlphabeticalAscending" />
+                                <span>Order alphabetically by title, the by tag (SATB)</span>
+                            </button>
+                        </template>
+                    </div>
                 </div>
             </div>
             <div class="field is-horizontal">
@@ -172,13 +190,14 @@ import { computed, ref } from 'vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import SetlistItem from '@/components/SetlistItem.vue';
 import ReplayerAd from '@/components/ReplayerAd.vue';
-import { mdiDrag, mdiPrinterOutline } from '@mdi/js';
+import { mdiDrag, mdiPrinterOutline, mdiOrderAlphabeticalAscending } from '@mdi/js';
 import draggable from 'vuedraggable';
 import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
 import type { ITrack } from '@/store/ITrack';
 import TagsSelector from '@/components/editor/TagsSelector.vue';
 import useLog from '@/composables/LogComposable';
+import { useSettingsStore } from '@/store/settings';
 const { log } = useLog();
 
 const drag = ref(false);
@@ -198,11 +217,20 @@ const showMediaSource = ref(false);
 const showNumbering = ref(true);
 
 /** Whether to show the tags on the items in the list */
-const showItemTags = ref(false);
+const showItemTags = ref(true);
 
 const app = useAppStore();
 const { compilation, allTracks, getAllTags } = storeToRefs(app);
 
+const settings = useSettingsStore();
+const { experimentalShowOrderingButtons } =
+    storeToRefs(settings);
+
+function printWindow() {
+    window.print();
+}
+
+// --- Sorting ---
 const orderedTracks = computed<ITrack[]>({
     get(): ITrack[] {
         return allTracks.value;
@@ -213,8 +241,13 @@ const orderedTracks = computed<ITrack[]>({
     },
 });
 
-function printWindow() {
-    window.print();
+/** Experimental: Sorts the Tracks by Name, then by Tag, using "SATB" as the order. */
+function sortExperimental() {
+    app.updateTrackOrderByTitleAlpha();
+}
+/** Experimental: Sorts the Tracks by Name, then by Tag, using "SATB" as the order. */
+function sortExperimentalSatb() {
+    app.updateTrackOrderByTitleAlphaTagSatb();
 }
 
 // --- Tag handling ---
